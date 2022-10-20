@@ -1,0 +1,7 @@
+com\kristian\dimitrov\HyperlapseRobot\service\ContinuousRotServoService.class
+com\kristian\dimitrov\HyperlapseRobot\service\impl\ContinuousRotServoServiceImpl.class
+com\kristian\dimitrov\HyperlapseRobot\HyperlapseRobotApplication.class
+com\kristian\dimitrov\HyperlapseRobot\hardware\ContinuousRotationServoComponent.class
+com\kristian\dimitrov\HyperlapseRobot\controller\api\ContinuousRotServoController.class
+com\kristian\dimitrov\HyperlapseRobot\config\Config.class
+com\kristian\dimitrov\HyperlapseRobot\controller\api\System.class
