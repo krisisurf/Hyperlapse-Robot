@@ -3,7 +3,9 @@ package com.kristian.dimitrov.HyperlapseRobot.service.impl;
 import com.kristian.dimitrov.HyperlapseRobot.config.Config;
 import com.kristian.dimitrov.HyperlapseRobot.hardware.ContinuousRotationServoComponent;
 import com.kristian.dimitrov.HyperlapseRobot.service.ContinuousRotServoService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ContinuousRotServoServiceImpl implements ContinuousRotServoService {
 
     private ContinuousRotationServoComponent servo;
