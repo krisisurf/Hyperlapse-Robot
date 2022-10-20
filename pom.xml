@@ -32,10 +32,15 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.pi4j/pi4j-core -->
+		<!-- https://mvnrepository.com/artifact/com.pi4j/pi4j-plugin-pigpio -->
 		<dependency>
 			<groupId>com.pi4j</groupId>
+			<artifactId>pi4j-plugin-pigpio</artifactId>
+			<version>2.2.0</version>
+		</dependency>		<dependency>
+			<groupId>com.pi4j</groupId>
 			<artifactId>pi4j-core</artifactId>
-			<version>2.2.1</version>
+			<version>2.2.0</version>
 		</dependency>
 	</dependencies>
 
