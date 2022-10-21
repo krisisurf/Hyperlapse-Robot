@@ -18,23 +18,23 @@ public class ContinuousRotServoController {
     @GetMapping("/stop")
     public String stop(){
         continuousRotServoService.stop();
-        return returnMessage("STOPPED");
+        return createMessage("STOPPED");
     }
 
     @GetMapping("/clockwise")
     public String clockwise(){
         continuousRotServoService.rotateClockwise();
-        return returnMessage("CLOCKWISE ROTATION is active");
+        return createMessage("CLOCKWISE ROTATION is active");
     }
 
 
     @GetMapping("/counter-clockwise")
     public String counterclockwise(){
         continuousRotServoService.rotateCounterClockwise();
-        return returnMessage("COUNTER-CLOCKWISE ROTATION is active");
+        return createMessage("COUNTER-CLOCKWISE ROTATION is active");
     }
 
-    private String returnMessage(String message){
+    private String createMessage(String message){
         return "Continuous Rotation Servo: " + message;
     }
 }

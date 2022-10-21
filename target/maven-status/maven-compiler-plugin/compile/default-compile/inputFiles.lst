@@ -1,7 +1,9 @@
 E:\java 2022 workplace\Hyperlapse-Robot\src\main\java\com\kristian\dimitrov\HyperlapseRobot\HyperlapseRobotApplication.java
 E:\java 2022 workplace\Hyperlapse-Robot\src\main\java\com\kristian\dimitrov\HyperlapseRobot\hardware\ContinuousRotationServoComponent.java
+E:\java 2022 workplace\Hyperlapse-Robot\src\main\java\com\kristian\dimitrov\HyperlapseRobot\utils\Time.java
 E:\java 2022 workplace\Hyperlapse-Robot\src\main\java\com\kristian\dimitrov\HyperlapseRobot\service\impl\ContinuousRotServoServiceImpl.java
 E:\java 2022 workplace\Hyperlapse-Robot\src\main\java\com\kristian\dimitrov\HyperlapseRobot\controller\api\ContinuousRotServoController.java
 E:\java 2022 workplace\Hyperlapse-Robot\src\main\java\com\kristian\dimitrov\HyperlapseRobot\config\Config.java
+E:\java 2022 workplace\Hyperlapse-Robot\src\main\java\com\kristian\dimitrov\HyperlapseRobot\utils\Logger.java
 E:\java 2022 workplace\Hyperlapse-Robot\src\main\java\com\kristian\dimitrov\HyperlapseRobot\service\ContinuousRotServoService.java
 E:\java 2022 workplace\Hyperlapse-Robot\src\main\java\com\kristian\dimitrov\HyperlapseRobot\controller\api\System.java
