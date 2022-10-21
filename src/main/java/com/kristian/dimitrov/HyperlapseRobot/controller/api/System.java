@@ -1,5 +1,6 @@
 package com.kristian.dimitrov.HyperlapseRobot.controller.api;
 
+import com.kristian.dimitrov.HyperlapseRobot.utils.Logger;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,6 +11,8 @@ public class System {
 
     @GetMapping("/turnoff")
     public String turnoff(){
+        Logger.makeLog("TURNING OFF...", new Throwable());
+
         Thread t = new Thread(() -> {
             try {
                 Thread.sleep(1000);

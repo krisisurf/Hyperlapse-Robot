@@ -1,6 +1,8 @@
 com\kristian\dimitrov\HyperlapseRobot\service\ContinuousRotServoService.class
+com\kristian\dimitrov\HyperlapseRobot\utils\Time.class
 com\kristian\dimitrov\HyperlapseRobot\service\impl\ContinuousRotServoServiceImpl.class
 com\kristian\dimitrov\HyperlapseRobot\HyperlapseRobotApplication.class
+com\kristian\dimitrov\HyperlapseRobot\utils\Logger.class
 com\kristian\dimitrov\HyperlapseRobot\hardware\ContinuousRotationServoComponent.class
 com\kristian\dimitrov\HyperlapseRobot\controller\api\ContinuousRotServoController.class
 com\kristian\dimitrov\HyperlapseRobot\config\Config.class

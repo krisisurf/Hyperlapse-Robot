@@ -85,4 +85,16 @@ public class ContinuousRotationServoComponent {
                 .shutdown(0)
                 .build();
     }
+
+    public String getName(){
+        return pwm.getName();
+    }
+
+    public String getDescription(){
+        return pwm.getDescription();
+    }
+
+    public int getAddress() {
+        return pwm.getAddress();
+    }
 }
