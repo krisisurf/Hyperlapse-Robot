@@ -1,6 +1,7 @@
 package com.kristian.dimitrov.HyperlapseRobot.service.impl;
 
 import com.kristian.dimitrov.HyperlapseRobot.config.Config;
+import com.kristian.dimitrov.HyperlapseRobot.exceptions.FrequencyOutOfBoundsException;
 import com.kristian.dimitrov.HyperlapseRobot.hardware.ContinuousRotationServoComponent;
 import com.kristian.dimitrov.HyperlapseRobot.service.ContinuousRotServoService;
 import com.kristian.dimitrov.HyperlapseRobot.utils.Logger;
@@ -22,13 +23,20 @@ public class ContinuousRotServoServiceImpl implements ContinuousRotServoService 
     }
 
     @Override
-    public void rotateClockwise() {
+    public void rotateClockwise(int frequency, int clockwiseRotationDutyCycle) {
+        servo.setClockwiseRotationDutyCycle(clockwiseRotationDutyCycle);
+        try {
+            servo.setFrequency(frequency);
+        }catch (FrequencyOutOfBoundsException e){
+            e.printStackTrace();
+        }
+
         servo.rotateClockwise();
-        makeLog("ROTATING CLOCKWISE", new Throwable());
+        makeLog("ROTATING CLOCKWISE with frequency( " + servo.getFrequency() + ")", new Throwable());
     }
 
     @Override
-    public void rotateCounterClockwise() {
+    public void rotateCounterClockwise(int frequency) {
         servo.rotateCounterclockwise();
         makeLog("ROTATING COUNTER-CLOCKWISE", new Throwable());
     }
