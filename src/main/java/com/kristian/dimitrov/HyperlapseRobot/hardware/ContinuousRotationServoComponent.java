@@ -114,7 +114,7 @@ public class ContinuousRotationServoComponent {
         return pwm.getFrequency();
     }
 
-    public void setClockwiseRotationDutyCycle(int dutyCycle){
+    public void setClockwiseRotationDutyCycle(float dutyCycle){
         this.clockwise_rot_duty_cycle = dutyCycle;
     }
 }

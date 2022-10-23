@@ -23,7 +23,7 @@ public class ContinuousRotServoServiceImpl implements ContinuousRotServoService 
     }
 
     @Override
-    public void rotateClockwise(int frequency, int clockwiseRotationDutyCycle) {
+    public void rotateClockwise(int frequency, float clockwiseRotationDutyCycle) {
         servo.setClockwiseRotationDutyCycle(clockwiseRotationDutyCycle);
         try {
             servo.setFrequency(frequency);

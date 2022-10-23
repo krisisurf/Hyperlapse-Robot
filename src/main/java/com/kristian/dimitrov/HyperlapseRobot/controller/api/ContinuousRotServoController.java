@@ -23,13 +23,13 @@ public class ContinuousRotServoController {
     }
 
     @GetMapping("/clockwise")
-    public String clockwise(@RequestParam(defaultValue = "50") int frequency, @RequestParam(defaultValue = "2") int dutyCycle){
+    public String clockwise(@RequestParam(defaultValue = "50") int frequency, @RequestParam(defaultValue = "2") float dutyCycle){
         continuousRotServoService.rotateClockwise(frequency, dutyCycle);
         return createMessage("CLOCKWISE ROTATION is active");
     }
 
 
-    @GetMapping("/counter-clockwise/{frequency}")
+    @GetMapping("/counter-clockwise")
     public String counterclockwise(){
         continuousRotServoService.rotateCounterClockwise(50);
         return createMessage("COUNTER-CLOCKWISE ROTATION is active");
