@@ -1,5 +1,6 @@
 package com.kristian.dimitrov.HyperlapseRobot.hardware;
 
+import com.kristian.dimitrov.HyperlapseRobot.exceptions.FrequencyOutOfBoundsException;
 import com.pi4j.context.Context;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
@@ -7,6 +8,9 @@ import com.pi4j.io.pwm.PwmConfig;
 public class ContinuousRotationServoComponent {
     // Static
     private static final int DEFAULT_FREQUENCY = 50;
+    private static final int MIN_FREQUENCY = 10;
+    private static final int MAX_FREQUENCY = 8000;
+
     private static final float DEFAULT_CLOCKWISE_ROTATION_DUTY_CYCLE = 2f;
     private static final float DEFAULT_COUNTERCLOCKWISE_ROTATION_DUTY_CYCLE = 8f;
 
@@ -27,9 +31,9 @@ public class ContinuousRotationServoComponent {
     }
 
     /**
-     * @param pi4j pi4j context
+     * @param pi4j    pi4j context
      * @param gpioPin raspberry BCM pin number
-     * @param name name
+     * @param name    name
      */
     public ContinuousRotationServoComponent(Context pi4j, int gpioPin, String name) {
         this(pi4j, gpioPin, DEFAULT_FREQUENCY, DEFAULT_CLOCKWISE_ROTATION_DUTY_CYCLE, DEFAULT_COUNTERCLOCKWISE_ROTATION_DUTY_CYCLE, name, null);
@@ -38,13 +42,13 @@ public class ContinuousRotationServoComponent {
     /**
      * Full configuration constructor
      *
-     * @param pi4j pi4j context
-     * @param gpioPin raspberry BCM pin number
-     * @param frequency frequency which the pwm will produce
-     * @param clockwise_rot_duty_cycle duty cycle to rotate the servo clockwise
+     * @param pi4j                            pi4j context
+     * @param gpioPin                         raspberry BCM pin number
+     * @param frequency                       frequency which the pwm will produce
+     * @param clockwise_rot_duty_cycle        duty cycle to rotate the servo clockwise
      * @param counterclockwise_rot_duty_cycle duty cycle to rotate the servo counter-clockwise
-     * @param name name
-     * @param description description
+     * @param name                            name
+     * @param description                     description
      */
     private ContinuousRotationServoComponent(Context pi4j, int gpioPin, int frequency, float clockwise_rot_duty_cycle, float counterclockwise_rot_duty_cycle, String name, String description) {
         this.frequency = frequency;
@@ -86,15 +90,31 @@ public class ContinuousRotationServoComponent {
                 .build();
     }
 
-    public String getName(){
+    public String getName() {
         return pwm.getName();
     }
 
-    public String getDescription(){
+    public String getDescription() {
         return pwm.getDescription();
     }
 
     public int getAddress() {
         return pwm.getAddress();
+    }
+
+    public void setFrequency(int frequency) throws FrequencyOutOfBoundsException {
+        if (frequency < MIN_FREQUENCY || frequency > MAX_FREQUENCY)
+            throw new FrequencyOutOfBoundsException(frequency, MIN_FREQUENCY, MAX_FREQUENCY);
+
+        this.frequency = frequency;
+        pwm.setFrequency(frequency);
+    }
+
+    public int getFrequency() {
+        return pwm.getFrequency();
+    }
+
+    public void setClockwiseRotationDutyCycle(float dutyCycle){
+        this.clockwise_rot_duty_cycle = dutyCycle;
     }
 }
