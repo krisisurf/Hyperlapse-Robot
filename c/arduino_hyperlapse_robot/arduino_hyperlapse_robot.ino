@@ -4,30 +4,47 @@
 #include <AccelStepper.h>
 #include <MultiStepper.h>
 
-// Motor pin definitions:
-#define motorPin1  22     // IN1 on the ULN2003 driver
-#define motorPin2  23     // IN2 on the ULN2003 driver
-#define motorPin3  24     // IN3 on the ULN2003 driver
-#define motorPin4  25     // IN4 on the ULN2003 driver
+// Motor pin definitions
+// Right side step motor:
+#define motorRightPin1  22     // IN1 on the ULN2003 driver
+#define motorRightPin2  23     // IN2 on the ULN2003 driver
+#define motorRightPin3  24     // IN3 on the ULN2003 driver
+#define motorRightPin4  25     // IN4 on the ULN2003 driver
+// Left side step motor:
+#define motorLeftPin1  26     // IN1 on the ULN2003 driver
+#define motorLeftPin2  27     // IN2 on the ULN2003 driver
+#define motorLeftPin3  28     // IN3 on the ULN2003 driver
+#define motorLeftPin4  29     // IN4 on the ULN2003 driver
 
 // Define the AccelStepper interface type; 4 wire motor in half step mode:
 #define MotorInterfaceType 8
 
 // Initialize with pin sequence IN1-IN3-IN2-IN4 for using the AccelStepper library with 28BYJ-48 stepper motor:
-AccelStepper stepperRight = AccelStepper(MotorInterfaceType, motorPin1, motorPin3, motorPin2, motorPin4);
+AccelStepper stepperRight = AccelStepper(MotorInterfaceType, motorRightPin1, motorRightPin3, motorRightPin2, motorRightPin4);
+// By reordering the sequence of left side motor pins, we can flip the rotating direction since the left motor should move opposite to the right motor
+AccelStepper stepperLeft = AccelStepper(MotorInterfaceType, motorLeftPin4, motorLeftPin2, motorLeftPin3, motorLeftPin1);
 
 const int STEPS_PER_REVOLUTION_28BYJ48 = 64;
 const int LIB_STEPS_PER_REVOLUTION = 4096;
 
 void setup() {
-  pinMode(motorPin1, OUTPUT);
-  pinMode(motorPin2, OUTPUT);
-  pinMode(motorPin3, OUTPUT);
-  pinMode(motorPin4, OUTPUT);
+  // Right side step motor
+  pinMode(motorRightPin1, OUTPUT);
+  pinMode(motorRightPin2, OUTPUT);
+  pinMode(motorRightPin3, OUTPUT);
+  pinMode(motorRightPin4, OUTPUT);
 
-  Serial.begin(9600);
+  // Left side step motor
+  pinMode(motorLeftPin1, OUTPUT);
+  pinMode(motorLeftPin2, OUTPUT);
+  pinMode(motorLeftPin3, OUTPUT);
+  pinMode(motorLeftPin4, OUTPUT);
+
   // Set the maximum steps per second:
   stepperRight.setMaxSpeed(1024);
+  stepperRight.setMaxSpeed(1024);
+
+  Serial.begin(9600);
 }
 
 void loop() {
