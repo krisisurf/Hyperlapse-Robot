@@ -5,25 +5,29 @@
 #include <MultiStepper.h>
 
 // Motor pin definitions:
-#define motorPin1  8      // IN1 on the ULN2003 driver
-#define motorPin2  9      // IN2 on the ULN2003 driver
-#define motorPin3  10     // IN3 on the ULN2003 driver
-#define motorPin4  11     // IN4 on the ULN2003 driver
+#define motorPin1  22     // IN1 on the ULN2003 driver
+#define motorPin2  23     // IN2 on the ULN2003 driver
+#define motorPin3  24     // IN3 on the ULN2003 driver
+#define motorPin4  25     // IN4 on the ULN2003 driver
 
 // Define the AccelStepper interface type; 4 wire motor in half step mode:
 #define MotorInterfaceType 8
 
 // Initialize with pin sequence IN1-IN3-IN2-IN4 for using the AccelStepper library with 28BYJ-48 stepper motor:
-AccelStepper stepper = AccelStepper(MotorInterfaceType, motorPin1, motorPin3, motorPin2, motorPin4);
+AccelStepper stepperRight = AccelStepper(MotorInterfaceType, motorPin1, motorPin3, motorPin2, motorPin4);
 
 const int STEPS_PER_REVOLUTION_28BYJ48 = 64;
 const int LIB_STEPS_PER_REVOLUTION = 4096;
-const int MAX_SPEED = 1024;
 
 void setup() {
+  pinMode(motorPin1, OUTPUT);
+  pinMode(motorPin2, OUTPUT);
+  pinMode(motorPin3, OUTPUT);
+  pinMode(motorPin4, OUTPUT);
+
   Serial.begin(9600);
   // Set the maximum steps per second:
-  stepper.setMaxSpeed(MAX_SPEED);
+  stepperRight.setMaxSpeed(1024);
 }
 
 void loop() {
@@ -36,7 +40,7 @@ void loop() {
 
     // That will rotate the step motor to the given number of steps and speed of 1024 steps per second
     // This process will take: [ time_to_complete_in_seconds = steps/speed ]
-    rotateStepper(steps, STEPS_PER_REVOLUTION_28BYJ48, 1024);
+    rotateStepper(stepperRight, steps, STEPS_PER_REVOLUTION_28BYJ48, 1024);
   }
 }
 
@@ -51,7 +55,7 @@ void loop() {
     
     This process will take: [ time_to_complete_in_seconds = steps/speed ]
 */
-void rotateStepper(long steps, const int stepsPerRevolution, int speed){
+void rotateStepper(AccelStepper stepper, long steps, const int stepsPerRevolution, int speed){
   // Does not make anything when the speed is 0
   if(speed == 0)
     return;
@@ -68,7 +72,7 @@ void rotateStepper(long steps, const int stepsPerRevolution, int speed){
   // Maps the given params steps and stepsPerRevolution to the AccelStepper.h library steps per revolution, which is 4096 by default.
   long libSteps = map(steps, -stepsPerRevolution, stepsPerRevolution, -LIB_STEPS_PER_REVOLUTION, LIB_STEPS_PER_REVOLUTION);
   
-  double timeToCompleteInSeconds = 1.0 * abs(libSteps) / speed;
+  double timeToCompleteInSeconds = stepsToSeconds(abs(libSteps), speed);
 
   // Prints a log to the console ----------------
   String message = String("Moving stepper ");
@@ -104,6 +108,9 @@ void rotateStepper(long steps, const int stepsPerRevolution, int speed){
     * centimeters               -> distance in centimeters
     * wheelRadiusInCentimeters  -> Radius of the rotational wheel placed on the stepper motor
     * stepsPerRevolution        -> The number of steps that the motor makes for one revolution (360 degrees)
+
+    Returns:
+    * The number of steps that it takes to travel the given distance
 */
 int convertCentimetersToSteps(double centimeters, double wheelRadiusInCentimeters, const int stepsPerRevolution){
   double pi = 3.141592;  
@@ -113,4 +120,15 @@ int convertCentimetersToSteps(double centimeters, double wheelRadiusInCentimeter
   
   int steps = stepsPerRevolution * revolutionsToMake;
   return steps;  
+}
+
+/*
+    Calculates the time in seconds that will take to rotate a step motor for a certain number of steps.
+    Parameters:
+    * steps -> number of steps
+    * speed -> steps per second, rotational speed of the step motor.
+*/
+double stepsToSeconds(int steps, double speed){
+  double timeToCompleteInSeconds = 1.0 * steps / speed;
+  return timeToCompleteInSeconds;
 }
