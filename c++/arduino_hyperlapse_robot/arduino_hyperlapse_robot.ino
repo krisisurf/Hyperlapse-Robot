@@ -5,45 +5,62 @@
 #include <MultiStepper.h>
 
 // Motor pin definitions
-// Right side step motor:
-#define motorRightPin1  22     // IN1 on the ULN2003 driver
-#define motorRightPin2  23     // IN2 on the ULN2003 driver
-#define motorRightPin3  24     // IN3 on the ULN2003 driver
-#define motorRightPin4  25     // IN4 on the ULN2003 driver
 // Left side step motor:
-#define motorLeftPin1  26     // IN1 on the ULN2003 driver
-#define motorLeftPin2  27     // IN2 on the ULN2003 driver
-#define motorLeftPin3  28     // IN3 on the ULN2003 driver
-#define motorLeftPin4  29     // IN4 on the ULN2003 driver
+#define motorLeftPin1  22     // IN1 on the ULN2003 driver
+#define motorLeftPin2  23     // IN2 on the ULN2003 driver
+#define motorLeftPin3  24     // IN3 on the ULN2003 driver
+#define motorLeftPin4  25     // IN4 on the ULN2003 driver
+// Right side step motor:
+#define motorRightPin1  26     // IN1 on the ULN2003 driver
+#define motorRightPin2  27     // IN2 on the ULN2003 driver
+#define motorRightPin3  28     // IN3 on the ULN2003 driver
+#define motorRightPin4  29     // IN4 on the ULN2003 driver
+// Horizontal step motor:
+#define motorHorizontalPin1  44     // IN1 on the ULN2003 driver
+#define motorHorizontalPin2  45     // IN2 on the ULN2003 driver
+#define motorHorizontalPin3  46     // IN3 on the ULN2003 driver
+#define motorHorizontalPin4  47     // IN4 on the ULN2003 driver
 
 // Define the AccelStepper interface type; 4 wire motor in half step mode:
 #define MotorInterfaceType 8
 
 // Initialize with pin sequence IN1-IN3-IN2-IN4 for using the AccelStepper library with 28BYJ-48 stepper motor:
+AccelStepper stepperLeft = AccelStepper(MotorInterfaceType, motorLeftPin1, motorLeftPin3, motorLeftPin2, motorLeftPin4);
 AccelStepper stepperRight = AccelStepper(MotorInterfaceType, motorRightPin1, motorRightPin3, motorRightPin2, motorRightPin4);
-// By reordering the sequence of left side motor pins, we can flip the rotating direction since the left motor should move opposite to the right motor
-AccelStepper stepperLeft = AccelStepper(MotorInterfaceType, motorLeftPin4, motorLeftPin2, motorLeftPin3, motorLeftPin1);
+AccelStepper stepperHorizontal = AccelStepper(MotorInterfaceType, motorHorizontalPin1, motorHorizontalPin3, motorHorizontalPin2, motorHorizontalPin4);
 
-const int STEPS_PER_REVOLUTION_28BYJ48 = 64;
+
+// Define a StepperMotor structure to help organizing the motors
+typedef struct{
+  int id;                           // In this program the id is an array index
+  String name;                      // A way in which we could conversationally name the specific motor
+  AccelStepper &stepper;            // Instance of the stepper
+  const int STEPS_PER_REVOLUTION;   // How much steps does the motor works with
+} StepMotor;
+
+// Initialize a stepper motors array
+StepMotor steppers[3] = {
+    {0, "Left Motor", stepperLeft, 64},
+    {1, "Right Motor", stepperRight, 64},
+    {2, "Horizontal Motor", stepperLeft, 64}
+};
+
+// The number of steps for a 360 degrees rotation in the AccelStepper library.
+// NOTE: Values for step motor with different number of steps per revolution should be mapped/scaled to this
 const int LIB_STEPS_PER_REVOLUTION = 4096;
 
 void setup() {
-  // Right side step motor
-  pinMode(motorRightPin1, OUTPUT);
-  pinMode(motorRightPin2, OUTPUT);
-  pinMode(motorRightPin3, OUTPUT);
-  pinMode(motorRightPin4, OUTPUT);
-
-  // Left side step motor
-  pinMode(motorLeftPin1, OUTPUT);
-  pinMode(motorLeftPin2, OUTPUT);
-  pinMode(motorLeftPin3, OUTPUT);
-  pinMode(motorLeftPin4, OUTPUT);
-
   // Set the maximum steps per second:
-  stepperRight.setMaxSpeed(1024);
-  stepperRight.setMaxSpeed(1024);
+  stepperLeft.setMaxSpeed(1024);
+  stepperLeft.setMinPulseWidth(80000);
+  stepperLeft.setPinsInverted(true, true, false, false, false);   // This will lead the left side motor to rotate in the opposite direction to the right side motor
 
+  stepperRight.setMaxSpeed(1024);
+  stepperRight.setMinPulseWidth(80000);
+
+  stepperHorizontal.setMaxSpeed(1024);
+  stepperHorizontal.setMinPulseWidth(80000);
+  
   Serial.begin(9600);
 }
 
@@ -57,7 +74,17 @@ void loop() {
 
     // That will rotate the step motor to the given number of steps and speed of 1024 steps per second
     // This process will take: [ time_to_complete_in_seconds = steps/speed ]
-    rotateStepper(stepperRight, steps, STEPS_PER_REVOLUTION_28BYJ48, 1024);
+    //rotateStepper(stepperLeft, steps, STEPS_PER_REVOLUTION_28BYJ48, 1024);
+  }
+
+  motorsHandler();
+}
+
+void motorsHandler(){
+  for(StepMotor stepMotor : steppers){
+    AccelStepper &as = stepMotor.stepper;
+    as.setSpeed(as.speed());
+    as.runSpeed();
   }
 }
 
@@ -72,7 +99,7 @@ void loop() {
     
     This process will take: [ time_to_complete_in_seconds = steps/speed ]
 */
-void rotateStepper(AccelStepper stepper, long steps, const int stepsPerRevolution, int speed){
+void rotateStepper(AccelStepper stepper, long steps, const int stepsPerRevolution, double speed){
   // Does not make anything when the speed is 0
   if(speed == 0)
     return;
@@ -82,7 +109,7 @@ void rotateStepper(AccelStepper stepper, long steps, const int stepsPerRevolutio
   // Calculating directional speed:
   // * negative value -> clockwise rotation
   // * positive value -> counter-clockwise direction
-  int directionalSpeed = speed;
+  double directionalSpeed = speed;
   if(steps < 0)
     directionalSpeed = -speed;
     
@@ -107,7 +134,7 @@ void rotateStepper(AccelStepper stepper, long steps, const int stepsPerRevolutio
 
   stepper.setCurrentPosition(0);
 
-  // Run the motor forward at 500 steps/second until the motor reaches 4096 steps (1 revolution):
+  // Run the motor until it reach the given number of steps
   while (stepper.currentPosition() != libSteps) {
     stepper.setSpeed(directionalSpeed);
     stepper.runSpeed();
