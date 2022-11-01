@@ -1,5 +1,3 @@
-/* Sketch to control a stepper motor with ULN2003 driver board with AccelStepper library and Arduino UNO: number of steps/revolutions. More info: https://www.makerguides.com */
-
 // Include the AccelStepper library:
 #include <AccelStepper.h>
 #include <MultiStepper.h>
@@ -30,13 +28,13 @@ AccelStepper stepperRight = AccelStepper(MotorInterfaceType, motorRightPin1, mot
 AccelStepper stepperHorizontal = AccelStepper(MotorInterfaceType, motorHorizontalPin1, motorHorizontalPin3, motorHorizontalPin2, motorHorizontalPin4);
 
 
-// Define a StepperMotor structure to help organizing the motors
-typedef struct{
+// Define a StepMotor structure to help organizing the motors
+struct StepMotor{
   int id;                           // In this program the id is an array index
   String name;                      // A way in which we could conversationally name the specific motor
   AccelStepper &stepper;            // Instance of the stepper
   const int STEPS_PER_REVOLUTION;   // How much steps does the motor works with
-} StepMotor;
+};
 
 // Initialize a stepper motors array
 StepMotor steppers[3] = {
@@ -68,13 +66,17 @@ void loop() {
 
   // Rotates the motor to keyboard inputted targetPosition in steps
   if(Serial.available()){
-    long steps = atol(Serial.readString().c_str());
-    Serial.print("Target position in steps has been set to: ");
-    Serial.println(steps);
+    String command = Serial.readString();
+    executeCommand(command);    
+    
+    // long steps = atol(Serial.readString().c_str());
+    // Serial.print("Target position in steps has been set to: ");
+    // Serial.println(steps);
 
     // That will rotate the step motor to the given number of steps and speed of 1024 steps per second
     // This process will take: [ time_to_complete_in_seconds = steps/speed ]
     //rotateStepper(stepperLeft, steps, STEPS_PER_REVOLUTION_28BYJ48, 1024);
+    switch
   }
 
   motorsHandler();
@@ -86,6 +88,26 @@ void motorsHandler(){
     as.setSpeed(as.speed());
     as.runSpeed();
   }
+}
+
+void executeCommand(String command){
+    String commandParts[3];
+    int stringCount = 0;
+    while (input.length() > 0) {
+      int index = input.indexOf(' ');
+      
+      if (index == -1){ // No space found
+        commands[stringCount++] = command;
+        break;
+      } else {
+        commands[stringCount++] = input.substring(0, index);
+        command = input.substring(index + 1);
+      }
+    }
+
+    String movingType = command[0];
+    int motorId = command[1].toInt();
+    int steps = command[2].toInt();
 }
 
 /*
