@@ -3,69 +3,38 @@
 #include <MultiStepper.h>
 #include <ArduinoJson.h>
 
-// Motor pin definitions
-// Left side step motor:
-#define motorLeftPin1  22     // IN1 on the ULN2003 driver
-#define motorLeftPin2  23     // IN2 on the ULN2003 driver
-#define motorLeftPin3  24     // IN3 on the ULN2003 driver
-#define motorLeftPin4  25     // IN4 on the ULN2003 driver
-// Right side step motor:
-#define motorRightPin1  26     // IN1 on the ULN2003 driver
-#define motorRightPin2  27     // IN2 on the ULN2003 driver
-#define motorRightPin3  28     // IN3 on the ULN2003 driver
-#define motorRightPin4  29     // IN4 on the ULN2003 driver
-// Pan step motor:
-#define motorPanPin1  44     // IN1 on the ULN2003 driver
-#define motorPanPin2  45     // IN2 on the ULN2003 driver
-#define motorPanPin3  46     // IN3 on the ULN2003 driver
-#define motorPanPin4  47     // IN4 on the ULN2003 driver
-// Tilt step motor:
-#define motorTiltPin1  48     // IN1 on the ULN2003 driver
-#define motorTiltPin2  49     // IN2 on the ULN2003 driver
-#define motorTiltPin3  50     // IN3 on the ULN2003 driver
-#define motorTiltPin4  51     // IN4 on the ULN2003 driver
-
 // Define the AccelStepper interface type; 4 wire motor in half step mode:
 #define MotorInterfaceType 8
 
 // Initialize with pin sequence IN1-IN3-IN2-IN4 for using the AccelStepper library with 28BYJ-48 stepper motor:
-AccelStepper stepperLeft = AccelStepper(MotorInterfaceType, motorLeftPin1, motorLeftPin3, motorLeftPin2, motorLeftPin4);
-AccelStepper stepperRight = AccelStepper(MotorInterfaceType, motorRightPin1, motorRightPin3, motorRightPin2, motorRightPin4);
-AccelStepper stepperPan = AccelStepper(MotorInterfaceType, motorPanPin1, motorPanPin3, motorPanPin2, motorPanPin4);
-AccelStepper stepperTilt = AccelStepper(MotorInterfaceType, motorTiltPin1, motorTiltPin3, motorTiltPin2, motorTiltPin4);
+AccelStepper stepperLeft = AccelStepper(MotorInterfaceType, 25, 23, 24, 22);  // IMPORTANT!!! THE PINS FOR THE LEFT SIDE MOTOR ARE FLIPPED. This will lead the left side motor to rotate in the opposite direction to the right side motor
+AccelStepper stepperRight = AccelStepper(MotorInterfaceType, 26, 28, 27, 29);
+AccelStepper stepperPan = AccelStepper(MotorInterfaceType, 44, 46, 45, 47);
+AccelStepper stepperTilt = AccelStepper(MotorInterfaceType, 48, 50, 49, 51);
 
 
 // Define a StepMotor structure to help organizing the motors
 struct StepMotor{
-  int id;                           // In this program the id is an array index
   String name;                      // A way in which we could conversationally name the specific motor
   AccelStepper &stepper;            // Instance of the stepper
-  double speed;                     // Run speed of the motor
-  const int STEPS_PER_REVOLUTION;   // How much steps does the motor works with
 };
 
 // Initialize a stepper motors array
 StepMotor steppers[4] = {
-    {0, "motorLeft", stepperLeft, 500, 64},
-    {1, "motorRight", stepperRight, 500, 64},
-    {2, "Motor Pan", stepperPan, 500, 64},
-    {3, "Motor Tilt", stepperTilt, 500, 64}
+    {"motorLeft", stepperLeft},
+    {"motorRight", stepperRight},
+    {"Motor Pan", stepperPan},
+    {"Motor Tilt", stepperTilt}
   };
 
 // The number of steps for a 360 degrees rotation in the AccelStepper library.
 // NOTE: Values for step motor with different number of steps per revolution should be mapped/scaled to this
 const int LIB_STEPS_PER_REVOLUTION = 4096;
 
-// Logic
-StaticJsonDocument<500> rules;
-int currentRuleIndex = 0;
-int rulesCount = 0;
-
 void setup() {
   // Set the maximum steps per second:
   stepperLeft.setMaxSpeed(1024);
   stepperLeft.setMinPulseWidth(80000);
-  stepperLeft.setPinsInverted(true, true, false, false, false);   // This will lead the left side motor to rotate in the opposite direction to the right side motor
 
   stepperRight.setMaxSpeed(1024);
   stepperRight.setMinPulseWidth(80000);
@@ -76,31 +45,58 @@ void setup() {
   stepperTilt.setMaxSpeed(1024);
   stepperTilt.setMinPulseWidth(80000);
   
+  setStepMotorsOutputs(false);  // Disable motors pinouts by default to save power.
+  
   Serial.begin(9600);
 }
 
 void loop() {
+  static DynamicJsonDocument rules(500);    // Json object that will contain the movement rules
+  static int currentRuleIndex;
+  static int rulesCount;
+  static bool rulesFinished;
+  
+  // Waits for JSON format with movement rules to be inputted to the Serial
   if(Serial.available()){
     String json = Serial.readString();
-    deserializeJSON(json);
+    deserializeJSON(rules, json);
+
+    rulesCount = rules["rulesCount"];
+    currentRuleIndex = 0;
+    rulesFinished = false;
+    
+    setStepMotorsOutputs(true);
   }
 
-  // Rotates the motor to keyboard inputted targetPosition in steps
-  // if(Serial.available()){
-  //   long steps = atol(Serial.readString().c_str());
-  //   Serial.print("Target position in steps has been set to: ");
-  //   Serial.println(steps);
+  // Does not move the motors, if there are no movement rules or they have been already finished
+  if(rulesCount == 0 || rulesFinished)
+    return;
 
-  //   // That will rotate the step motor to the given number of steps and speed of 1024 steps per second
-  //   // This process will take: [ time_to_complete_in_seconds = steps/speed ]
-  //   rotateStepper(stepperRight, steps, 64, 1024);
-  // }
+  // Run motors  
+  bool hasFinished = runMotorsToPosition();
 
-  if(rulesCount > 0)
-    motorsHandler();
+  // Stops there if the motors have not reached their target positions
+  if(!hasFinished)
+    return;
+  
+  if(currentRuleIndex < rulesCount){
+    // Loads the next rule from the Json Document
+    loadRule(rules, currentRuleIndex);
+    currentRuleIndex++;
+  }else{
+    rulesFinished = true;
+    // All rules have been finished, so we disable motor outputs to save power
+    setStepMotorsOutputs(false);
+  }
 }
 
-void motorsHandler(){
+/*
+  Rotates every step motor, which has not yet reached its target position.
+  Returns:
+    * true   -> if all the motors have reached their target position
+    * false  -> if one or more step motors have not yet reached their target position
+*/
+bool runMotorsToPosition(){
   int steppersFinished = 0;
   
   for(StepMotor stepMotor : steppers){
@@ -109,32 +105,50 @@ void motorsHandler(){
     as.setSpeed(as.speed());
     as.runSpeedToPosition();
 
-    if(as.distanceToGo() == 0){
+    if(as.distanceToGo() == 0)
       steppersFinished++;
-    }
   }
 
-  // Stops executing rules after all of them finish
-  if(currentRuleIndex >= rulesCount)
-    rulesCount = 0;
+  return steppersFinished == 4;
+}
 
-  // Checks if all the steppers has finished their work for the current rule ()
-  if(steppersFinished == 4){
-    currentRuleIndex++;
-    Serial.print("Initializing rule No.");Serial.println(currentRuleIndex);
+
+// deserializes json string
+void deserializeJSON(DynamicJsonDocument& rules, String json){
+  // Deserialize the JSON document
+  DeserializationError error = deserializeJson(rules, json);
+
+  // Test if parsing succeeds.
+  if (error) {
+    Serial.print(F("deserializeJson() failed: "));
+    Serial.println(error.f_str());
+    return;
+  }
+}
+
+
+/*
+  Loads a rule from json document and sets the motors target position and speed and etc.
+  Parameters:
+  * rules             -> json document with structure for the rules
+  * ruleIndexToLoad   -> index of the rule from the rules document, which will be loaded
+*/
+bool loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
+    Serial.print("Initializing rule No.");Serial.println(ruleIndexToLoad);
     
     // Sets left and right side step motors
     for(int i = 0; i < 2; i++){
       StepMotor stepMotor = steppers[i];
-      double distance = rules["robotRules"][currentRuleIndex][stepMotor.name]["distance"];
-      double executionTime = rules["robotRules"][currentRuleIndex][stepMotor.name]["executionTime"];
+      double distance = rules["robotRules"][ruleIndexToLoad][stepMotor.name]["distance"];
+      double executionTime = rules["robotRules"][ruleIndexToLoad][stepMotor.name]["executionTime"];
       
-      int steps = convertCentimetersToSteps(distance, 5.0, 4096);
+      int steps = convertCentimetersToSteps(distance, 5.0, LIB_STEPS_PER_REVOLUTION);
       int speed = convertStepsAndCompletionTimeToSpeed(steps, executionTime);
 
       stepMotor.stepper.move(steps);
       stepMotor.stepper.setSpeed(speed);   
 
+      // Displays received and calculated data
       Serial.print("Motor: ");Serial.println(stepMotor.name);
       Serial.print("Distance: ");Serial.println(distance);
       Serial.print("Execution time: ");Serial.println(executionTime);
@@ -147,93 +161,28 @@ void motorsHandler(){
     // Sets pan and tilt step motors
     for(int i = 0; i < 2; i++){
       StepMotor stepMotor = steppers[i + 2];
-      double degrees = rules["robotRules"][currentRuleIndex][stepMotor.name]["degrees"];
-      double executionTime = rules["robotRules"][currentRuleIndex][stepMotor.name]["executionTime"];
+      double degrees = rules["robotRules"][ruleIndexToLoad][stepMotor.name]["degrees"];
+      double executionTime = rules["robotRules"][ruleIndexToLoad][stepMotor.name]["executionTime"];
 
       // Not finished !!!
       //stepMotor.stepper.move(steps);
       //stepMotor.stepper.setSpeed(rules["robotRules"]["leftMotor"]["speed"]);      
     }
-  }
 }
-
-// deserializes json string and saves the data in the global variable 'rules'
-void deserializeJSON(String json){
-  // Deserialize the JSON document
-  DeserializationError error = deserializeJson(rules, json);
-
-  // Test if parsing succeeds.
-  if (error) {
-    Serial.print(F("deserializeJson() failed: "));
-    Serial.println(error.f_str());
-    return;
-  }
-  
-  rulesCount = rules["rulesCount"];
-  currentRuleIndex = 0;
-  Serial.print("Json received. Rules count: ");Serial.println(rulesCount);
-}
-
-
-
 
 /*
-    Rotate Stepper
-
-    Runs the motor with a given parameter 'speed' (steps/second), until the motor reaches the number of given parameter 'steps'
-    Parameters:
-    * steps              -> The number of steps that the step motor will make.
-    * stepsPerRevolution -> The hardware given number of steps that the step motor makes per one revolution.
-    * speed              -> Rotating speed counted in steps per second.
-    
-    This process will take: [ time_to_complete_in_seconds = steps/speed ]
+  Enables or disables pinout outputs for every step motor in the array 'steppers'
+  Parameters:
+  * enabledOutputs  -> value of 'true' will enable outputs and value 'false' will disable outputs to save power
 */
-void rotateStepper(AccelStepper stepper, long steps, const int stepsPerRevolution, double speed){
-  // Does not make anything when the speed is 0
-  if(speed == 0)
-    return;
-    
-  speed = abs(speed);
-  
-  // Calculating directional speed:
-  // * negative value -> clockwise rotation
-  // * positive value -> counter-clockwise direction
-  double directionalSpeed = speed;
-  if(steps < 0)
-    directionalSpeed = -speed;
-    
-  // Maps the given params steps and stepsPerRevolution to the AccelStepper.h library steps per revolution, which is 4096 by default.
-  long libSteps = map(steps, -stepsPerRevolution, stepsPerRevolution, -LIB_STEPS_PER_REVOLUTION, LIB_STEPS_PER_REVOLUTION);
-  
-  double timeToCompleteInSeconds = convertStepsToSeconds(abs(libSteps), speed);
-
-  // Prints a log to the console ----------------
-  String message = String("Moving stepper ");
-  if(speed < 0)
-    message.concat("counter-");
-  message.concat("clockwise for ( ");
-  message.concat(steps);
-  message.concat(" ) steps with speed of ( ");
-  message.concat(speed);
-  message.concat(" ) steps per second. The process will take: ");
-  message.concat(timeToCompleteInSeconds);
-  message.concat(" seconds.");
-  Serial.println(message);
-  //---------------------------------------------
-
-  stepper.setCurrentPosition(0);
-
-  // Run the motor until it reach the given number of steps
-  while (stepper.currentPosition() != libSteps) {
-    stepper.setSpeed(directionalSpeed);
-    stepper.runSpeed();
-  }
-  
-  Serial.print("Target position ( ");
-  Serial.print(steps);
-  Serial.println(" ) in steps reached.");
+void setStepMotorsOutputs(bool enabledOutputs){
+  if(enabledOutputs)
+    for(StepMotor stepMotor : steppers)
+      stepMotor.stepper.enableOutputs();
+  else
+    for(StepMotor stepMotor : steppers)
+      stepMotor.stepper.disableOutputs();
 }
-
 
 /*
     Converts distance to number of steps (step motor), that it takes for a wheel with radius to travel the given distance.
