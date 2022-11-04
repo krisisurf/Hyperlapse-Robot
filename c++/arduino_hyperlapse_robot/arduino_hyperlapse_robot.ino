@@ -15,7 +15,7 @@ AccelStepper stepperTilt = AccelStepper(MotorInterfaceType, 48, 50, 49, 51);
 
 // Define a StepMotor structure to help organizing the motors
 struct StepMotor{
-  String name;                      // A way in which we could conversationally name the specific motor
+  String name;                      // name of the stepper motor as defined in the JSON rule document
   AccelStepper &stepper;            // Instance of the stepper
 };
 
@@ -23,8 +23,8 @@ struct StepMotor{
 StepMotor steppers[4] = {
     {"motorLeft", stepperLeft},
     {"motorRight", stepperRight},
-    {"Motor Pan", stepperPan},
-    {"Motor Tilt", stepperTilt}
+    {"motorPan", stepperPan},
+    {"motorTilt", stepperTilt}
   };
 
 // The number of steps for a 360 degrees rotation in the AccelStepper library.
