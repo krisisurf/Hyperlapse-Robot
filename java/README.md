@@ -5,7 +5,10 @@ The connection is one-directional (`RaspberryPI -> Arduino`) and it is made via 
 
 ## Setup Instructions
 1. Open java/Hyperlapse-Robot project with IntelliJ or other Java IDE.
-2. Run maven command: ```mvn clean install```
+2. Run Maven command:
+          ```
+          mvn clean install
+          ```
 3. After the build is ready, copy the exported jar file `./target/Hyperlapse-Robot-0.0.1-SNAPSHOT.jar` to the Raspberry Pi
 4. Enable I2C on the Raspberry Pi. You can see how [here](https://ozzmaker.com/i2c/).
 5. Wire Raspberry Pi with the Arduino using pinouts.<table>
@@ -28,7 +31,7 @@ The connection is one-directional (`RaspberryPI -> Arduino`) and it is made via 
     </table>
 6. Power on the Arduino and Raspberry Pi.
 7. Run the java application on the Raspberry Pi. Navigate to the location of the jar file and run the command:
-```
-sudo java -jar Hyperlapse-Robot-0.0.1-SNAPSHOT.jar
-```
+          ```
+          sudo java -jar Hyperlapse-Robot-0.0.1-SNAPSHOT.jar
+          ```
 8. You are ready to open the GUI interface in the browser.
