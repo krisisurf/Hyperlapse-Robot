@@ -4,7 +4,7 @@ The Graphical User Interface of the project, which manages services to control t
 The connection is one-directional (`RaspberryPI -> Arduino`) and it is made via `I2C protocol`.
 
 ## Setup Instructions
-1. Open java/Hyperlapse-Robot project with IntelliJ or other Java IDE.
+1. Open `java/Hyperlapse-Robot` project with IntelliJ or other Java IDE.
 2. Run Maven command:
           ```
           mvn clean install
