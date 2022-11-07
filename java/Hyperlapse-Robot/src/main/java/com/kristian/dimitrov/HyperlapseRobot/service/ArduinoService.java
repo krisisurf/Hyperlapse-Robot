@@ -7,4 +7,10 @@ public interface ArduinoService {
      * @param json json string with rules.
      */
     void sendJsonString(String json);
+
+    /**
+     * FOR TEST (TEMPORARY)
+     * @param c
+     */
+    void sendChar(char c);
 }
