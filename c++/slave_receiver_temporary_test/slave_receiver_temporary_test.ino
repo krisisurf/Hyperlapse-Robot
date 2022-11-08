@@ -9,7 +9,6 @@
 
 // This example code is in the public domain.
 
-#define BUFFER_LENGTH 180
 #include <Wire.h>
 
 void setup() {
