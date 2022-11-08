@@ -17,7 +17,7 @@ public class ArduinoController {
     }
 
     @GetMapping("/sendString")
-    public String sendChar(@RequestParam(defaultValue = "This string comes from Raspberry Pi") String str){
+    public String sendChar(@RequestParam(defaultValue = "This string comes from Raspberry Pi") String str) {
         arduinoService.sendJsonString(str);
         return "String sent to Arduino: " + str;
     }

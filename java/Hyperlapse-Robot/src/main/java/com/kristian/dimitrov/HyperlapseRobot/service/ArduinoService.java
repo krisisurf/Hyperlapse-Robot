@@ -8,9 +8,4 @@ public interface ArduinoService {
      */
     void sendJsonString(String json);
 
-    /**
-     * FOR TEST (TEMPORARY)
-     * @param c
-     */
-    void sendChar(char c);
 }

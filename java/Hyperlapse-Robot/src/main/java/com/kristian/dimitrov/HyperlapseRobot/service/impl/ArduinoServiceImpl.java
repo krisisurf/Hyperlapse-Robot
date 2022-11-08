@@ -8,6 +8,9 @@ import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class ArduinoServiceImpl implements ArduinoService {
@@ -23,29 +26,16 @@ public class ArduinoServiceImpl implements ArduinoService {
 
             Logger.makeLog("Creating I2C device", new Throwable());
             I2CDevice device = bus.getDevice(DEVICE_ADDRESS);
-            byte[] writeData = json.getBytes();
 
-            Logger.makeLog("Writing bytes: " + writeData, new Throwable());
-            device.write(writeData, 0, writeData.length);
+            int chunkLength = 32;
+            int chunksCount = json.length() / chunkLength + 1;
+            for (int i = 0; i < chunksCount; i++) {
+                String chunk = json.substring(i * chunkLength, Math.min((i + 1) * chunkLength, json.length()));
+                Logger.makeLog("Writing chunk (No. " + (i + 1) + " ), data: " + chunk, new Throwable());
 
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Override
-    public void sendChar(char c) {
-        try {
-            Logger.makeLog("Creating I2C bus", new Throwable());
-            I2CBus bus = I2CFactory.getInstance(BUS_NUMBER);
-
-            Logger.makeLog("Creating I2C device", new Throwable());
-            I2CDevice device = bus.getDevice(DEVICE_ADDRESS);
-            byte[] writeData = new byte[1];
-            writeData[0] = (byte) c;
-
-            Logger.makeLog("Writing bytes: " + writeData, new Throwable());
-            device.write(writeData, 0, writeData.length);
+                byte writeData[] = chunk.getBytes();
+                device.write(chunk.getBytes(), 0, writeData.length);
+            }
 
         } catch (IOException ex) {
             ex.printStackTrace();
