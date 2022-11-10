@@ -28,7 +28,7 @@ The connection is one-directional (`RaspberryPI -> Arduino`) and it is made via 
             <td>GPIO 3 Serial Clock (I2C)</td>
             <td>SCL (D21)</td>
           </tr>
-    </table>
+    </table><p><span class="small">Optional for Arduino MEGA 2560: Digital IO Pins 20 and 21 can be configured as SDA (20) and SCL (21) to support I2C or I2C or Two Wire Interface (TWI) communication.</span></p>
 6. Power on the Arduino and Raspberry Pi.
 7. Run the java application on the Raspberry Pi. Navigate to the location of the jar file and run the command:
           ```
