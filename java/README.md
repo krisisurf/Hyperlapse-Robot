@@ -22,11 +22,11 @@ The connection is one-directional (`RaspberryPI -> Arduino`) and it is made via 
           </tr>
           <tr>
             <td>GPIO 2 Serial Data (I2C)</td>
-            <td>SDA (PWM)</td>
+            <td>SDA (D20)</td>
           </tr>
           <tr>
             <td>GPIO 3 Serial Clock (I2C)</td>
-            <td>SCL (PWM)</td>
+            <td>SCL (D21)</td>
           </tr>
     </table>
 6. Power on the Arduino and Raspberry Pi.
