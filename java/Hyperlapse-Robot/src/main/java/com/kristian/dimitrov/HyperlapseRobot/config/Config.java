@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan("com.kristian.dimitrov.HyperlapseRobot")
 public class Config {
 
-    private static final ArduinoRobot robotProperties;
+    private final ArduinoRobot robotProperties;
 
     public Config() {
-        robotProperties = new ArduinoRobot(5.5f, 65, );
+        robotProperties = new ArduinoRobot(5.5f, 64, 16, 64, 16);
     }
 }

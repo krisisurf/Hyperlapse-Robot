@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class ArduinoServiceImpl implements ArduinoService {
+public class  ArduinoServiceImpl implements ArduinoService {
 
     private final int DEVICE_ADDRESS = 0x08;
     private final int BUS_NUMBER = I2CBus.BUS_1;
