@@ -11,7 +11,7 @@ The connection is one-directional (`RaspberryPI -> Arduino`) and it is made via 
           ```
 3. After the build is ready, copy the exported jar file `./target/Hyperlapse-Robot-0.0.1-SNAPSHOT.jar` to the Raspberry Pi
 4. Enable I2C on the Raspberry Pi. You can see how [here](https://ozzmaker.com/i2c/).
-5. Wire Raspberry Pi with the Arduino-MEGA-2560 using pinouts.<table>
+5. Wire RaspberryPi-Zero-2W with the Arduino-MEGA-2560 using pinouts.<table>
           <tr>
             <th>Raspberry Pi</th>
             <th>Arduino</th>
