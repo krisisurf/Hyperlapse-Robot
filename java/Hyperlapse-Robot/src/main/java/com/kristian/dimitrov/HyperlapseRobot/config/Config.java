@@ -1,6 +1,6 @@
 package com.kristian.dimitrov.HyperlapseRobot.config;
 
-import com.kristian.dimitrov.HyperlapseRobot.entity.ArduinoRobot;
+import com.pi4j.io.i2c.I2CBus;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -8,9 +8,18 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan("com.kristian.dimitrov.HyperlapseRobot")
 public class Config {
 
-    private final ArduinoRobot robotProperties;
+    private final int ARDUINO_I2C_ADDRESS = 0x08;
+    private final int ARDUINO_I2C_BUS_NUMBER = I2CBus.BUS_1;
 
     public Config() {
-        robotProperties = new ArduinoRobot(5.5f, 64, 16, 64, 16);
+
+    }
+
+    public int getArduinoI2CAddress() {
+        return ARDUINO_I2C_ADDRESS;
+    }
+
+    public int getArduinoI2CBusNumber() {
+        return ARDUINO_I2C_BUS_NUMBER;
     }
 }

@@ -1,5 +1,8 @@
 package com.kristian.dimitrov.HyperlapseRobot.entity;
 
+import com.kristian.dimitrov.HyperlapseRobot.entity.stepper.CameraStepMotorEntity;
+import com.kristian.dimitrov.HyperlapseRobot.entity.stepper.MovementStepMotorEntity;
+
 public class RuleEntity {
 
     private MovementStepMotorEntity leftMotor;
@@ -14,8 +17,6 @@ public class RuleEntity {
         this.tiltMotor = tiltMotor;
     }
 
-
-
     @Override
     public String toString() {
         return "{" +
@@ -23,18 +24,6 @@ public class RuleEntity {
                 ", rightMotor: " + rightMotor +
                 ", panMotor: " + panMotor +
                 ", tiltMotor: " + tiltMotor +
-                '}';
-    }
-
-    /**
-     Shortened variant of toString()
-     */
-    public String toStringShort() {
-        return "{" +
-                "lm: " + leftMotor +
-                ", rm: " + rightMotor +
-                ", pm: " + panMotor +
-                ", tm: " + tiltMotor +
                 '}';
     }
 }

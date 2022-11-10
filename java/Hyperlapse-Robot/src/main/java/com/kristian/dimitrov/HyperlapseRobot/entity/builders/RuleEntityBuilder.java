@@ -1,8 +1,9 @@
 package com.kristian.dimitrov.HyperlapseRobot.entity.builders;
 
-import com.kristian.dimitrov.HyperlapseRobot.entity.CameraStepMotorEntity;
-import com.kristian.dimitrov.HyperlapseRobot.entity.MovementStepMotorEntity;
+import com.kristian.dimitrov.HyperlapseRobot.entity.stepper.CameraStepMotorEntity;
+import com.kristian.dimitrov.HyperlapseRobot.entity.stepper.MovementStepMotorEntity;
 import com.kristian.dimitrov.HyperlapseRobot.entity.RuleEntity;
+import com.kristian.dimitrov.HyperlapseRobot.exception.IncompatibleStepMotorArguments;
 
 public class RuleEntityBuilder {
 
@@ -18,27 +19,23 @@ public class RuleEntityBuilder {
         tiltMotor = new CameraStepMotorEntity();
     }
 
-    public RuleEntityBuilder setLeftMotor(float distance, float executionTime) {
-        leftMotor.setDistance(distance);
-        leftMotor.setExecutionTime(executionTime);
+    public RuleEntityBuilder setLeftMotor(float distance, float executionTime) throws IncompatibleStepMotorArguments {
+        leftMotor.setData(distance, executionTime);
         return this;
     }
 
-    public RuleEntityBuilder setRightMotor(float distance, float executionTime) {
-        rightMotor.setDistance(distance);
-        rightMotor.setExecutionTime(executionTime);
+    public RuleEntityBuilder setRightMotor(float distance, float executionTime) throws IncompatibleStepMotorArguments {
+        rightMotor.setData(distance, executionTime);
         return this;
     }
 
-    public RuleEntityBuilder setPanMotor(float degree, float executionTime) {
-        panMotor.setDegree(degree);
-        panMotor.setExecutionTime(executionTime);
+    public RuleEntityBuilder setPanMotor(float degree, float executionTime) throws IncompatibleStepMotorArguments {
+        panMotor.setData(degree, executionTime);
         return this;
     }
 
-    public RuleEntityBuilder setTiltMotor(float degree, float executionTime) {
-        tiltMotor.setDegree(degree);
-        tiltMotor.setExecutionTime(executionTime);
+    public RuleEntityBuilder setTiltMotor(float degree, float executionTime) throws IncompatibleStepMotorArguments {
+        tiltMotor.setData(degree, executionTime);
         return this;
     }
 

@@ -1,5 +1,7 @@
 package com.kristian.dimitrov.HyperlapseRobot.service.impl;
 
+import com.kristian.dimitrov.HyperlapseRobot.config.Config;
+import com.kristian.dimitrov.HyperlapseRobot.entity.RulesManagerEntity;
 import com.kristian.dimitrov.HyperlapseRobot.service.ArduinoService;
 import com.kristian.dimitrov.HyperlapseRobot.utils.Logger;
 import org.springframework.stereotype.Service;
@@ -8,37 +10,48 @@ import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Service
-public class  ArduinoServiceImpl implements ArduinoService {
+public class ArduinoServiceImpl implements ArduinoService {
 
-    private final int DEVICE_ADDRESS = 0x08;
-    private final int BUS_NUMBER = I2CBus.BUS_1;
+    private final int deviceAddress;
+    private final int busNumber;
+
+    public ArduinoServiceImpl(Config config) {
+        deviceAddress = config.getArduinoI2CAddress();
+        busNumber = config.getArduinoI2CBusNumber();
+    }
 
     @Override
-    public void sendJsonString(String json) {
-        try {
-            Logger.makeLog("Creating I2C bus", new Throwable());
-            I2CBus bus = I2CFactory.getInstance(BUS_NUMBER);
+    public void sendRules(RulesManagerEntity rulesManagerEntity) {
+        Thread t = new Thread(() -> {
+            try {
+                Logger.makeLog("Creating I2C bus at number: " + busNumber, new Throwable());
+                I2CBus bus = I2CFactory.getInstance(busNumber);
 
-            Logger.makeLog("Creating I2C device", new Throwable());
-            I2CDevice device = bus.getDevice(DEVICE_ADDRESS);
+                Logger.makeLog("Creating I2C device at address: " + deviceAddress, new Throwable());
+                I2CDevice device = bus.getDevice(deviceAddress);
 
-            int chunkLength = 32;
-            int chunksCount = json.length() / chunkLength + 1;
-            for (int i = 0; i < chunksCount; i++) {
-                String chunk = json.substring(i * chunkLength, Math.min((i + 1) * chunkLength, json.length()));
-                Logger.makeLog("Writing chunk (No. " + (i + 1) + " ), data: " + chunk, new Throwable());
+                String json = rulesManagerEntity.getShortenedJson();
 
-                byte writeData[] = chunk.getBytes();
-                device.write(chunk.getBytes(), 0, writeData.length);
+                int chunkLength = 32;
+                int chunksCount = json.length() / chunkLength + 1;
+                for (int i = 0; i < chunksCount; i++) {
+                    String chunk = json.substring(i * chunkLength, Math.min((i + 1) * chunkLength, json.length()));
+                    Logger.makeLog("Writing string chunk (No. " + (i + 1) + " ), data: " + chunk, new Throwable());
+
+                    byte[] writeData = chunk.getBytes();
+                    device.write(chunk.getBytes(), 0, writeData.length);
+                }
+
+                Logger.makeLog("All rules has been sent to Arduino.", new Throwable());
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
+        });
 
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        t.start();
     }
+
+
 }

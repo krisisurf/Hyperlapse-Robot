@@ -21,10 +21,10 @@ struct StepMotor{
 
 // Initialize a stepper motors array
 StepMotor steppers[4] = {
-    {"motorLeft", stepperLeft},
-    {"motorRight", stepperRight},
-    {"motorPan", stepperPan},
-    {"motorTilt", stepperTilt}
+    {"ml", stepperLeft},
+    {"mr", stepperRight},
+    {"mp", stepperPan},
+    {"mt", stepperTilt}
   };
 
 // The number of steps for a 360 degrees rotation in the AccelStepper library.
@@ -139,8 +139,8 @@ bool loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
     // Sets left and right side step motors
     for(int i = 0; i < 2; i++){
       StepMotor stepMotor = steppers[i];
-      double distance = rules["robotRules"][ruleIndexToLoad][stepMotor.name]["distance"];
-      double executionTime = rules["robotRules"][ruleIndexToLoad][stepMotor.name]["executionTime"];
+      double distance = rules["r"][ruleIndexToLoad][stepMotor.name]["ds"];
+      double executionTime = rules["r"][ruleIndexToLoad][stepMotor.name]["t"];
       
       int steps = convertCentimetersToSteps(distance, 5.0, LIB_STEPS_PER_REVOLUTION);
       int speed = convertStepsAndCompletionTimeToSpeed(steps, executionTime);
