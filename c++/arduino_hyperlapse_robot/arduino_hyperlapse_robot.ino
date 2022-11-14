@@ -1,7 +1,8 @@
 // Include the AccelStepper library:
-#include <AccelStepper.h>
-#include <MultiStepper.h>
-#include <ArduinoJson.h>
+#include <AccelStepper.h> // library by Patrick Wasp
+#include <MultiStepper.h> // library by Patrick Wasp
+#include <ArduinoJson.h> // library by Benoit Blanchon
+#include <Wire.h>
 
 // Define the AccelStepper interface type; 4 wire motor in half step mode:
 #define MotorInterfaceType 8
@@ -31,6 +32,9 @@ StepMotor steppers[4] = {
 // NOTE: Values for step motor with different number of steps per revolution should be mapped/scaled to this
 const int LIB_STEPS_PER_REVOLUTION = 4096;
 
+String receivedStringFromMaster = "";
+bool isFullyReceivedFromMaster = false;
+
 void setup() {
   // Set the maximum steps per second:
   stepperLeft.setMaxSpeed(1024);
@@ -47,6 +51,9 @@ void setup() {
   
   setStepMotorsOutputs(false);  // Disable motors pinouts by default to save power.
   
+  Wire.begin(8);                // join I2C bus with address #8
+  Wire.onReceive(receiveEvent); // register event
+  
   Serial.begin(9600);
 }
 
@@ -57,9 +64,10 @@ void loop() {
   static bool rulesFinished;
   
   // Waits for JSON format with movement rules to be inputted to the Serial
-  if(Serial.available()){
-    String json = Serial.readString();
-    deserializeJSON(rules, json);
+  if(isFullyReceivedFromMaster){
+    deserializeJSON(rules, receivedStringFromMaster);
+    receivedStringFromMaster = "";
+    isFullyReceivedFromMaster = false;
 
     rulesCount = rules["rulesCount"];
     currentRuleIndex = 0;
@@ -168,6 +176,24 @@ bool loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
       //stepMotor.stepper.move(steps);
       //stepMotor.stepper.setSpeed(rules["robotRules"]["leftMotor"]["speed"]);      
     }
+}
+
+/* 
+  Function that executes whenever data is received from master (in our case master is the Raspberry Pi).
+  This function is registered as an event, see setup()
+*/
+void receiveEvent(int howMany) {
+  static const char STOP_SIGNAL = '\n'; // When arduino receive this character, it will stop load the received json document
+  
+  while (Wire.available()) { // loop through all but the last
+    char c = Wire.read(); // receive byte as a character
+    if(c == STOP_SIGNAL){
+      isFullyReceivedFromMaster = true;
+      break;
+    }
+    
+    receivedStringFromMaster.concat(c);
+  }
 }
 
 /*

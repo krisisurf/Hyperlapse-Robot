@@ -16,6 +16,7 @@ public class ArduinoServiceImpl implements ArduinoService {
 
     private final int deviceAddress;
     private final int busNumber;
+    private final static String STOP_SIGNAL = "\n";
 
     public ArduinoServiceImpl(Config config) {
         deviceAddress = config.getArduinoI2CAddress();
@@ -33,6 +34,9 @@ public class ArduinoServiceImpl implements ArduinoService {
                 I2CDevice device = bus.getDevice(deviceAddress);
 
                 String json = rulesManagerEntity.getShortenedJson();
+
+                // Arduino will know that it should not receive more data after the STOP_SIGNAL character appear.
+                json += STOP_SIGNAL;
 
                 int chunkLength = 32;
                 int chunksCount = json.length() / chunkLength + 1;
