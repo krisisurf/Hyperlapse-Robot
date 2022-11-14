@@ -44,6 +44,8 @@ public class ArduinoController {
             e.printStackTrace();
         }
 
+        arduinoService.sendRules(rulesManagerEntity);
+
         return "Rules sent to Arduino: " + rulesManagerEntity;
     }
 }

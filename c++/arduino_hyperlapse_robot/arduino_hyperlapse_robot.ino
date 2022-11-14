@@ -22,10 +22,10 @@ struct StepMotor{
 
 // Initialize a stepper motors array
 StepMotor steppers[4] = {
-    {"ml", stepperLeft},
-    {"mr", stepperRight},
-    {"mp", stepperPan},
-    {"mt", stepperTilt}
+    {"lm", stepperLeft},
+    {"rm", stepperRight},
+    {"pm", stepperPan},
+    {"tm", stepperTilt}
   };
 
 // The number of steps for a 360 degrees rotation in the AccelStepper library.
@@ -69,7 +69,7 @@ void loop() {
     receivedStringFromMaster = "";
     isFullyReceivedFromMaster = false;
 
-    rulesCount = rules["rulesCount"];
+    rulesCount = rules["rc"];
     currentRuleIndex = 0;
     rulesFinished = false;
     
@@ -165,7 +165,8 @@ bool loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
       Serial.print("Motor target position: ");Serial.println( stepMotor.stepper.targetPosition());
       Serial.println();
     }
-    
+
+    /* TODO:
     // Sets pan and tilt step motors
     for(int i = 0; i < 2; i++){
       StepMotor stepMotor = steppers[i + 2];
@@ -176,6 +177,7 @@ bool loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
       //stepMotor.stepper.move(steps);
       //stepMotor.stepper.setSpeed(rules["robotRules"]["leftMotor"]["speed"]);      
     }
+    */
 }
 
 /* 
@@ -183,12 +185,14 @@ bool loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
   This function is registered as an event, see setup()
 */
 void receiveEvent(int howMany) {
-  static const char STOP_SIGNAL = '\n'; // When arduino receive this character, it will stop load the received json document
+  static const char STOP_SIGNAL = '\n'; // When arduino receive this character, it will load the received json document
   
   while (Wire.available()) { // loop through all but the last
     char c = Wire.read(); // receive byte as a character
     if(c == STOP_SIGNAL){
       isFullyReceivedFromMaster = true;
+      Serial.println("Received data from master:");
+      Serial.println(receivedStringFromMaster);
       break;
     }
     
