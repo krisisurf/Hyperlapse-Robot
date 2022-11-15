@@ -65,10 +65,13 @@ void loop() {
   
   // Waits for JSON format with movement rules to be inputted to the Serial
   if(isFullyReceivedFromMaster){
+    Serial.println("New rules received");
+    rules.clear();
     deserializeJSON(rules, receivedStringFromMaster);
     receivedStringFromMaster = "";
     isFullyReceivedFromMaster = false;
-
+    
+    resetMotors();
     rulesCount = rules["rc"];
     currentRuleIndex = 0;
     rulesFinished = false;
@@ -176,8 +179,28 @@ bool loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
       int speed = convertStepsAndCompletionTimeToSpeed(steps, executionTime);
 
       stepMotor.stepper.move(steps);
-      stepMotor.stepper.setSpeed(speed);     
+      stepMotor.stepper.setSpeed(speed);
+      
+      // Displays received and calculated data
+      Serial.print("Motor: ");Serial.println(stepMotor.name);
+      Serial.print("Degrees: ");Serial.println(degrees);
+      Serial.print("Execution time: ");Serial.println(executionTime);
+      Serial.print("Steps: ");Serial.println(steps);
+      Serial.print("Speed: ");Serial.println(speed);
+      Serial.print("Motor target position: ");Serial.println( stepMotor.stepper.targetPosition());
+      Serial.println();
     }
+}
+
+/*
+  Removes target positions of all the motors.
+*/
+void resetMotors(){
+   for(int i = 0; i < 2; i++){
+      StepMotor stepMotor = steppers[i];
+      stepMotor.stepper.setCurrentPosition(0);
+      stepMotor.stepper.moveTo(0);
+   }
 }
 
 /* 
@@ -186,6 +209,7 @@ bool loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
 */
 void receiveEvent(int howMany) {
   static const char STOP_SIGNAL = '\n'; // When arduino receive this character, it will load the received json document
+  isFullyReceivedFromMaster = false;
   
   while (Wire.available()) { // loop through all but the last
     char c = Wire.read(); // receive byte as a character
