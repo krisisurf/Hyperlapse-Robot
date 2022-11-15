@@ -1,11 +1,14 @@
 package com.kristian.dimitrov.HyperlapseRobot.service;
 
+import com.kristian.dimitrov.HyperlapseRobot.entity.RulesManagerEntity;
+
 public interface ArduinoService {
 
     /**
      * Sends json formatted string with rules for the arduino over I2C protocol.
-     * @param json json string with rules.
+     *
+     * @param rules Object with created rules.
      */
-    void sendJsonString(String json);
+    void sendRules(RulesManagerEntity rules);
 
 }

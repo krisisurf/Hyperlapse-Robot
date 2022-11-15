@@ -1,7 +1,8 @@
 // Include the AccelStepper library:
-#include <AccelStepper.h>
-#include <MultiStepper.h>
-#include <ArduinoJson.h>
+#include <AccelStepper.h> // library by Patrick Wasp
+#include <MultiStepper.h> // library by Patrick Wasp
+#include <ArduinoJson.h> // library by Benoit Blanchon
+#include <Wire.h>
 
 // Define the AccelStepper interface type; 4 wire motor in half step mode:
 #define MotorInterfaceType 8
@@ -9,8 +10,8 @@
 // Initialize with pin sequence IN1-IN3-IN2-IN4 for using the AccelStepper library with 28BYJ-48 stepper motor:
 AccelStepper stepperLeft = AccelStepper(MotorInterfaceType, 25, 23, 24, 22);  // IMPORTANT!!! THE PINS FOR THE LEFT SIDE MOTOR ARE FLIPPED. This will lead the left side motor to rotate in the opposite direction to the right side motor
 AccelStepper stepperRight = AccelStepper(MotorInterfaceType, 26, 28, 27, 29);
-AccelStepper stepperPan = AccelStepper(MotorInterfaceType, 44, 46, 45, 47);
-AccelStepper stepperTilt = AccelStepper(MotorInterfaceType, 48, 50, 49, 51);
+AccelStepper stepperPan = AccelStepper(MotorInterfaceType, 42, 46, 44, 48);
+AccelStepper stepperTilt = AccelStepper(MotorInterfaceType, 43, 47, 45, 49);
 
 
 // Define a StepMotor structure to help organizing the motors
@@ -21,15 +22,18 @@ struct StepMotor{
 
 // Initialize a stepper motors array
 StepMotor steppers[4] = {
-    {"motorLeft", stepperLeft},
-    {"motorRight", stepperRight},
-    {"motorPan", stepperPan},
-    {"motorTilt", stepperTilt}
+    {"lm", stepperLeft},
+    {"rm", stepperRight},
+    {"pm", stepperPan},
+    {"tm", stepperTilt}
   };
 
 // The number of steps for a 360 degrees rotation in the AccelStepper library.
 // NOTE: Values for step motor with different number of steps per revolution should be mapped/scaled to this
 const int LIB_STEPS_PER_REVOLUTION = 4096;
+
+String receivedStringFromMaster = "";
+bool isFullyReceivedFromMaster = false;
 
 void setup() {
   // Set the maximum steps per second:
@@ -47,6 +51,9 @@ void setup() {
   
   setStepMotorsOutputs(false);  // Disable motors pinouts by default to save power.
   
+  Wire.begin(8);                // join I2C bus with address #8
+  Wire.onReceive(receiveEvent); // register event
+  
   Serial.begin(9600);
 }
 
@@ -57,11 +64,15 @@ void loop() {
   static bool rulesFinished;
   
   // Waits for JSON format with movement rules to be inputted to the Serial
-  if(Serial.available()){
-    String json = Serial.readString();
-    deserializeJSON(rules, json);
-
-    rulesCount = rules["rulesCount"];
+  if(isFullyReceivedFromMaster){
+    Serial.println("New rules received");
+    rules.clear();
+    deserializeJSON(rules, receivedStringFromMaster);
+    receivedStringFromMaster = "";
+    isFullyReceivedFromMaster = false;
+    
+    resetMotors();
+    rulesCount = rules["rc"];
     currentRuleIndex = 0;
     rulesFinished = false;
     
@@ -139,8 +150,8 @@ bool loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
     // Sets left and right side step motors
     for(int i = 0; i < 2; i++){
       StepMotor stepMotor = steppers[i];
-      double distance = rules["robotRules"][ruleIndexToLoad][stepMotor.name]["distance"];
-      double executionTime = rules["robotRules"][ruleIndexToLoad][stepMotor.name]["executionTime"];
+      double distance = rules["r"][ruleIndexToLoad][stepMotor.name]["ds"];
+      double executionTime = rules["r"][ruleIndexToLoad][stepMotor.name]["t"];
       
       int steps = convertCentimetersToSteps(distance, 5.0, LIB_STEPS_PER_REVOLUTION);
       int speed = convertStepsAndCompletionTimeToSpeed(steps, executionTime);
@@ -157,17 +168,60 @@ bool loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
       Serial.print("Motor target position: ");Serial.println( stepMotor.stepper.targetPosition());
       Serial.println();
     }
-    
+
     // Sets pan and tilt step motors
     for(int i = 0; i < 2; i++){
       StepMotor stepMotor = steppers[i + 2];
-      double degrees = rules["robotRules"][ruleIndexToLoad][stepMotor.name]["degrees"];
-      double executionTime = rules["robotRules"][ruleIndexToLoad][stepMotor.name]["executionTime"];
+      double degrees = rules["r"][ruleIndexToLoad][stepMotor.name]["dg"];
+      double executionTime = rules["r"][ruleIndexToLoad][stepMotor.name]["t"];
 
-      // Not finished !!!
-      //stepMotor.stepper.move(steps);
-      //stepMotor.stepper.setSpeed(rules["robotRules"]["leftMotor"]["speed"]);      
+      int steps = convertDegreesToSteps(degrees, LIB_STEPS_PER_REVOLUTION);
+      int speed = convertStepsAndCompletionTimeToSpeed(steps, executionTime);
+
+      stepMotor.stepper.move(steps);
+      stepMotor.stepper.setSpeed(speed);
+      
+      // Displays received and calculated data
+      Serial.print("Motor: ");Serial.println(stepMotor.name);
+      Serial.print("Degrees: ");Serial.println(degrees);
+      Serial.print("Execution time: ");Serial.println(executionTime);
+      Serial.print("Steps: ");Serial.println(steps);
+      Serial.print("Speed: ");Serial.println(speed);
+      Serial.print("Motor target position: ");Serial.println( stepMotor.stepper.targetPosition());
+      Serial.println();
     }
+}
+
+/*
+  Removes target positions of all the motors.
+*/
+void resetMotors(){
+   for(int i = 0; i < 2; i++){
+      StepMotor stepMotor = steppers[i];
+      stepMotor.stepper.setCurrentPosition(0);
+      stepMotor.stepper.moveTo(0);
+   }
+}
+
+/* 
+  Function that executes whenever data is received from master (in our case master is the Raspberry Pi).
+  This function is registered as an event, see setup()
+*/
+void receiveEvent(int howMany) {
+  static const char STOP_SIGNAL = '\n'; // When arduino receive this character, it will load the received json document
+  isFullyReceivedFromMaster = false;
+  
+  while (Wire.available()) { // loop through all but the last
+    char c = Wire.read(); // receive byte as a character
+    if(c == STOP_SIGNAL){
+      isFullyReceivedFromMaster = true;
+      Serial.println("Received data from master:");
+      Serial.println(receivedStringFromMaster);
+      break;
+    }
+    
+    receivedStringFromMaster.concat(c);
+  }
 }
 
 /*
@@ -228,4 +282,16 @@ double convertStepsToSeconds(int steps, double speed){
 double convertStepsAndCompletionTimeToSpeed(int steps, double timeToComplete){
   double speed = 1.0 * steps / timeToComplete;
   return speed;  
+}
+
+/*
+    Converts degrees to number of steps (step motor), that it takes for a motor to move to the given number of degrees.
+    Parameters:
+    * degrees            -> degrees from current position
+    * stepsPerRevolution -> The number of steps that the motor makes for one revolution (360 degrees)
+    Returns:
+    * The number of steps that it takes to move the given number of degrees
+ */
+int convertDegreesToSteps(double degrees, const int stepsPerRevolution) {
+    return (int) (stepsPerRevolution * degrees / 360);
 }
