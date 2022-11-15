@@ -1,5 +1,8 @@
 package com.kristian.dimitrov.HyperlapseRobot.entity.stepper;
 
+import com.kristian.dimitrov.HyperlapseRobot.config.ArduinoRobot;
+import com.kristian.dimitrov.HyperlapseRobot.exception.IncompatibleStepMotorArguments;
+
 public class StepMotorEntity {
 
     /**
@@ -22,8 +25,9 @@ public class StepMotorEntity {
 
     /**
      * Initialization of step motor entity.
+     *
      * @param stepsPerRevolution Hardware limit of the motor steps count for one revolution (360 degrees)
-     * @param maxSpeed Max speed in steps per second
+     * @param maxSpeed           Max speed in steps per second
      */
     public StepMotorEntity(int stepsPerRevolution, float maxSpeed) {
         this.stepsPerRevolution = stepsPerRevolution;

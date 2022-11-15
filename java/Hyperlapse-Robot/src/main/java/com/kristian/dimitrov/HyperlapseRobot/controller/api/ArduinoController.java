@@ -40,12 +40,11 @@ public class ArduinoController {
                             .setTiltMotor(40, 0)
                             .build()
             );
+            arduinoService.sendRules(rulesManagerEntity);
+            return "Rules sent to Arduino: " + rulesManagerEntity;
         } catch (IncompatibleStepMotorArguments e) {
             e.printStackTrace();
+            return "ERROR, could not send rules to arduino: " + e.getMessage();
         }
-
-        arduinoService.sendRules(rulesManagerEntity);
-
-        return "Rules sent to Arduino: " + rulesManagerEntity;
     }
 }

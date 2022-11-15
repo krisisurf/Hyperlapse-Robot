@@ -29,10 +29,12 @@ public class MovementStepMotorEntity extends StepMotorEntity {
     }
 
     /**
-     * Sets the rules distance and its travel completion time
-     * @param distance Distance to travel in centimeters
+     * Sets the distance data and its travel completion time.
+     *
+     * @param distance      Distance to travel in centimeters
      * @param executionTime Time to complete in seconds
      * @throws IncompatibleStepMotorArguments When it is impossible to travel the given distance for the execution time, because of hardware limitations.
+     * @see com.kristian.dimitrov.HyperlapseRobot.entity.RuleEntity
      */
     public void setData(float distance, float executionTime) throws IncompatibleStepMotorArguments {
         int stepsRequired = ArduinoRobot.convertCentimetersToSteps(distance, ArduinoRobot.wheelRadius, stepsPerRevolution);

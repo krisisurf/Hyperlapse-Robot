@@ -4,6 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.util.Arrays;
+
 @SpringBootApplication
 public class HyperlapseRobotApplication {
 
@@ -12,7 +14,7 @@ public class HyperlapseRobotApplication {
 
         // Keyboard Interrupt shutdown
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System system = context.getBean("System", System.class);
+            System system = context.getBean("system", System.class);
             system.turnoff();
         }));
     }

@@ -63,4 +63,15 @@ public final class ArduinoRobot {
     public static double convertStepsAndCompletionTimeToSpeed(int steps, double timeToComplete) {
         return (double) steps / timeToComplete;
     }
+
+    /**
+     * Converts degrees to number of steps (step motor), that it takes for a motor to move to the given number of degrees.
+     *
+     * @param degrees            degrees from current position
+     * @param stepsPerRevolution The number of steps that the motor makes for one revolution (360 degrees)
+     * @return The number of steps that it takes to move the given number of degrees
+     */
+    public static int convertDegreesToSteps(double degrees, final int stepsPerRevolution) {
+        return (int) (stepsPerRevolution * degrees / 360);
+    }
 }
