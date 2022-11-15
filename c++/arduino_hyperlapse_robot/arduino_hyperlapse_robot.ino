@@ -10,8 +10,8 @@
 // Initialize with pin sequence IN1-IN3-IN2-IN4 for using the AccelStepper library with 28BYJ-48 stepper motor:
 AccelStepper stepperLeft = AccelStepper(MotorInterfaceType, 25, 23, 24, 22);  // IMPORTANT!!! THE PINS FOR THE LEFT SIDE MOTOR ARE FLIPPED. This will lead the left side motor to rotate in the opposite direction to the right side motor
 AccelStepper stepperRight = AccelStepper(MotorInterfaceType, 26, 28, 27, 29);
-AccelStepper stepperPan = AccelStepper(MotorInterfaceType, 44, 46, 45, 47);
-AccelStepper stepperTilt = AccelStepper(MotorInterfaceType, 48, 50, 49, 51);
+AccelStepper stepperPan = AccelStepper(MotorInterfaceType, 42, 46, 44, 48);
+AccelStepper stepperTilt = AccelStepper(MotorInterfaceType, 43, 47, 45, 49);
 
 
 // Define a StepMotor structure to help organizing the motors

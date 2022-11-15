@@ -28,8 +28,8 @@ public class ArduinoController {
                     new RuleEntityBuilder()
                             .setLeftMotor(100, 180)
                             .setRightMotor(100, 180)
-                            .setPanMotor(0, 0)
-                            .setTiltMotor(20, 0)
+                            .setPanMotor(360, 4)
+                            .setTiltMotor(360, 4)
                             .build()
             );
             rulesManagerEntity.addRule(
@@ -37,7 +37,7 @@ public class ArduinoController {
                             .setLeftMotor(50, 180)
                             .setRightMotor(50, 180)
                             .setPanMotor(0, 0)
-                            .setTiltMotor(40, 0)
+                            .setTiltMotor(40, 2)
                             .build()
             );
             arduinoService.sendRules(rulesManagerEntity);
