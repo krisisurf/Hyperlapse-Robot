@@ -166,18 +166,18 @@ bool loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
       Serial.println();
     }
 
-    /* TODO:
     // Sets pan and tilt step motors
     for(int i = 0; i < 2; i++){
       StepMotor stepMotor = steppers[i + 2];
-      double degrees = rules["robotRules"][ruleIndexToLoad][stepMotor.name]["degrees"];
-      double executionTime = rules["robotRules"][ruleIndexToLoad][stepMotor.name]["executionTime"];
+      double degrees = rules["r"][ruleIndexToLoad][stepMotor.name]["dg"];
+      double executionTime = rules["r"][ruleIndexToLoad][stepMotor.name]["t"];
 
-      // Not finished !!!
-      //stepMotor.stepper.move(steps);
-      //stepMotor.stepper.setSpeed(rules["robotRules"]["leftMotor"]["speed"]);      
+      int steps = convertDegreesToSteps(degrees, LIB_STEPS_PER_REVOLUTION);
+      int speed = convertStepsAndCompletionTimeToSpeed(steps, executionTime);
+
+      stepMotor.stepper.move(steps);
+      stepMotor.stepper.setSpeed(speed);     
     }
-    */
 }
 
 /* 
@@ -258,4 +258,16 @@ double convertStepsToSeconds(int steps, double speed){
 double convertStepsAndCompletionTimeToSpeed(int steps, double timeToComplete){
   double speed = 1.0 * steps / timeToComplete;
   return speed;  
+}
+
+/*
+    Converts degrees to number of steps (step motor), that it takes for a motor to move to the given number of degrees.
+    Parameters:
+    * degrees            -> degrees from current position
+    * stepsPerRevolution -> The number of steps that the motor makes for one revolution (360 degrees)
+    Returns:
+    * The number of steps that it takes to move the given number of degrees
+ */
+int convertDegreesToSteps(double degrees, const int stepsPerRevolution) {
+    return (int) (stepsPerRevolution * degrees / 360);
 }
