@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Hyperlapse_Robot_Mobile_Controller</string>
+    <string name="app_name">Hyperlapse Robot Controller</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
