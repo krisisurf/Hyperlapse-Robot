@@ -1,10 +1,11 @@
-package com.kristian.dimitrov.hyperlapse_robot_mobile_controller;
+package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.ConfigureConnectionActivity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -23,7 +24,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton buttonSendRules = findViewById(R.id.btn_send_rules);
-        //fab.setOnClickListener(this::openCreateRuleActivity);
+
+        FloatingActionButton buttonConfigureConnection = findViewById(R.id.btn_configure_connection);
+        buttonConfigureConnection.setOnClickListener(this::openConfigureConnectionActivity);
 
         Button buttonAddRule = findViewById(R.id.btn_add_rule);
         buttonAddRule.setOnClickListener(this::openCreateRuleActivity);
@@ -31,6 +34,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void openCreateRuleActivity(View view){
         Intent intent = new Intent(MainActivity.this, CreateRuleActivity.class);
+        startActivity(intent);
+    }
+
+
+    private void openConfigureConnectionActivity(View view){
+        Intent intent = new Intent(MainActivity.this, ConfigureConnectionActivity.class);
         startActivity(intent);
     }
 }

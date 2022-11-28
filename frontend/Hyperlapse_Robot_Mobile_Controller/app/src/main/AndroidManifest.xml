@@ -9,8 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Hyperlapse_Robot_Mobile_Controller">
+        <activity android:name=".ConfigureConnectionActivity"></activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.Hyperlapse_Robot_Mobile_Controller.NoActionBar">
             <intent-filter>
@@ -19,7 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CreateRuleActivity" />
+        <activity android:name=".activities.CreateRuleActivity" />
     </application>
 
 </manifest>
