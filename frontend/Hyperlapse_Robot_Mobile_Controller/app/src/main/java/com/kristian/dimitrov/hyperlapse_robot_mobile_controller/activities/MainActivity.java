@@ -1,5 +1,6 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Hyperlapse Robot Controller");
         setSupportActionBar(toolbar);

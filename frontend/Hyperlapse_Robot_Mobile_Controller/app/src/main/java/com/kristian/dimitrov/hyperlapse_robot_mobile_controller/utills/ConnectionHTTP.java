@@ -1,24 +1,24 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.utills;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.IOException;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class ConnectionHTTP {
 
-    public static String HTTP_GET(String urlToRead) throws Exception {
-        StringBuilder result = new StringBuilder();
-        URL url = new URL(urlToRead);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(conn.getInputStream()))) {
-            for (String line; (line = reader.readLine()) != null; ) {
-                result.append(line);
-            }
+    final OkHttpClient client = new OkHttpClient();
+
+    public static String HTTP_GET(String url) throws IOException {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            return response.body().string();
         }
-        return result.toString();
     }
 
 }
