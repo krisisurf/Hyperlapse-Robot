@@ -18,7 +18,7 @@ public class ArduinoServiceImpl implements ArduinoService {
     private final int busNumber;
     private final static String STOP_SIGNAL = "\n";
 
-    private Thread thread;
+    private final Thread thread;
     private RulesManagerEntity rulesManagerEntity;
 
     public ArduinoServiceImpl(Config config) {
@@ -30,6 +30,7 @@ public class ArduinoServiceImpl implements ArduinoService {
 
     @Override
     public void sendRules(RulesManagerEntity rulesManagerEntity) {
+        // TODO 1: Problem will appear when you try to send new rules, before the old ones are not completely sent
         if(thread.isAlive())
             return;
 
