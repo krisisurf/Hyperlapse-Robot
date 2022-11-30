@@ -1,11 +1,9 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities;
 
-import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.ConfigureConnectionActivity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 
 import androidx.appcompat.app.AppCompatActivity;
