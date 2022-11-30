@@ -18,44 +18,51 @@ public class ArduinoServiceImpl implements ArduinoService {
     private final int busNumber;
     private final static String STOP_SIGNAL = "\n";
 
+    private Thread thread;
+    private RulesManagerEntity rulesManagerEntity;
+
     public ArduinoServiceImpl(Config config) {
         deviceAddress = config.getArduinoI2CAddress();
         busNumber = config.getArduinoI2CBusNumber();
+
+        thread = new Thread(this::run);
     }
 
     @Override
     public void sendRules(RulesManagerEntity rulesManagerEntity) {
-        Thread t = new Thread(() -> {
-            try {
-                Logger.makeLog("Creating I2C bus at number: " + busNumber, new Throwable());
-                I2CBus bus = I2CFactory.getInstance(busNumber);
+        if(thread.isAlive())
+            return;
 
-                Logger.makeLog("Creating I2C device at address: " + deviceAddress, new Throwable());
-                I2CDevice device = bus.getDevice(deviceAddress);
-
-                String json = rulesManagerEntity.getShortenedJson();
-
-                // Arduino will know that it should not receive more data after the STOP_SIGNAL character appear.
-                json += STOP_SIGNAL;
-
-                int chunkLength = 32;
-                int chunksCount = json.length() / chunkLength + 1;
-                for (int i = 0; i < chunksCount; i++) {
-                    String chunk = json.substring(i * chunkLength, Math.min((i + 1) * chunkLength, json.length()));
-                    Logger.makeLog("Writing string chunk (No. " + (i + 1) + " ), data: " + chunk, new Throwable());
-
-                    byte[] writeData = chunk.getBytes();
-                    device.write(chunk.getBytes(), 0, writeData.length);
-                }
-
-                Logger.makeLog("All rules has been sent to Arduino.", new Throwable());
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        });
-
-        t.start();
+        this.rulesManagerEntity = rulesManagerEntity;
+        thread.start();
     }
 
+    private void run() {
+        try {
+            Logger.makeLog("Creating I2C bus at number: " + busNumber, new Throwable());
+            I2CBus bus = I2CFactory.getInstance(busNumber);
 
+            Logger.makeLog("Creating I2C device at address: " + deviceAddress, new Throwable());
+            I2CDevice device = bus.getDevice(deviceAddress);
+
+            String json = rulesManagerEntity.getShortenedJson();
+
+            // Arduino will know that it should not receive more data after the STOP_SIGNAL character appear.
+            json += STOP_SIGNAL;
+
+            int chunkLength = 32;
+            int chunksCount = json.length() / chunkLength + 1;
+            for (int i = 0; i < chunksCount; i++) {
+                String chunk = json.substring(i * chunkLength, Math.min((i + 1) * chunkLength, json.length()));
+                Logger.makeLog("Writing string chunk (No. " + (i + 1) + " ), data: " + chunk, new Throwable());
+
+                byte[] writeData = chunk.getBytes();
+                device.write(chunk.getBytes(), 0, writeData.length);
+            }
+
+            Logger.makeLog("All rules has been sent to Arduino.", new Throwable());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 }
