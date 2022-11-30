@@ -1,4 +1,4 @@
-package com.kristian.dimitrov.HyperlapseRobot.config;
+package com.kristian.dimitrov.HyperlapseRobot.entity;
 
 import com.kristian.dimitrov.HyperlapseRobot.entity.stepper.StepMotorEntity;
 
@@ -10,19 +10,27 @@ public final class ArduinoRobot {
     /**
      * Wheel radius in centimeters.
      */
-    public static final double wheelRadius;
+    public final double wheelRadius;
 
-    public static final StepMotorEntity leftMotor;
-    public static final StepMotorEntity rightMotor;
-    public static final StepMotorEntity cameraPanMotor;
-    public static final StepMotorEntity cameraTiltMotor;
+    public final StepMotorEntity leftMotor;
+    public final StepMotorEntity rightMotor;
+    public final StepMotorEntity cameraPanMotor;
+    public final StepMotorEntity cameraTiltMotor;
 
-    static {
-        wheelRadius = 5f;
-        leftMotor = new StepMotorEntity(64, 16);
-        rightMotor = new StepMotorEntity(64, 16);
-        cameraPanMotor = new StepMotorEntity(64, 16);
-        cameraTiltMotor = new StepMotorEntity(64, 16);
+//    static {
+//        wheelRadius = 5f;
+//        leftMotor = new StepMotorEntity(64, 16);
+//        rightMotor = new StepMotorEntity(64, 16);
+//        cameraPanMotor = new StepMotorEntity(64, 16);
+//        cameraTiltMotor = new StepMotorEntity(64, 16);
+//    }
+
+    public ArduinoRobot(double wheelRadius, StepMotorEntity leftMotor, StepMotorEntity rightMotor, StepMotorEntity cameraPanMotor, StepMotorEntity cameraTiltMotor) {
+        this.wheelRadius = wheelRadius;
+        this.leftMotor = leftMotor;
+        this.rightMotor = rightMotor;
+        this.cameraPanMotor = cameraPanMotor;
+        this.cameraTiltMotor = cameraTiltMotor;
     }
 
     /**

@@ -1,6 +1,6 @@
 package com.kristian.dimitrov.HyperlapseRobot.entity.stepper;
 
-import com.kristian.dimitrov.HyperlapseRobot.config.ArduinoRobot;
+import com.kristian.dimitrov.HyperlapseRobot.entity.ArduinoRobot;
 import com.kristian.dimitrov.HyperlapseRobot.exception.IncompatibleStepMotorArguments;
 
 public class MovementStepMotorEntity extends StepMotorEntity {
@@ -8,11 +8,14 @@ public class MovementStepMotorEntity extends StepMotorEntity {
     private float distance;
     private float executionTime;
 
+    private final double wheelRadius;
+
     /**
      * <p>Default initialization of step motor entity with rule for distance and execution time.</p>
      * <b>NOTE:</b> THE HARDWARE STEP MOTOR STEPS COUNT ARE FIXED WITH DEFAULT VALUES
      */
-    public MovementStepMotorEntity() {
+    public MovementStepMotorEntity(double wheelRadius) {
+        this.wheelRadius = wheelRadius;
     }
 
     /**
@@ -23,8 +26,9 @@ public class MovementStepMotorEntity extends StepMotorEntity {
      * @param distance           Distance which will be moved
      * @param executionTime      Time for which the given distance will be traveled
      */
-    public MovementStepMotorEntity(int stepsPerRevolution, float maxSpeed, float distance, float executionTime) throws IncompatibleStepMotorArguments {
+    public MovementStepMotorEntity(double wheelRadius, int stepsPerRevolution, float maxSpeed, float distance, float executionTime) throws IncompatibleStepMotorArguments {
         super(stepsPerRevolution, maxSpeed);
+        this.wheelRadius = wheelRadius;
         setData(distance, executionTime);
     }
 
@@ -37,7 +41,7 @@ public class MovementStepMotorEntity extends StepMotorEntity {
      * @see com.kristian.dimitrov.HyperlapseRobot.entity.RuleEntity
      */
     public void setData(float distance, float executionTime) throws IncompatibleStepMotorArguments {
-        int stepsRequired = ArduinoRobot.convertCentimetersToSteps(distance, ArduinoRobot.wheelRadius, stepsPerRevolution);
+        int stepsRequired = ArduinoRobot.convertCentimetersToSteps(distance, wheelRadius, stepsPerRevolution);
         double minimalTimeRequired = ArduinoRobot.convertStepsToSeconds(stepsRequired, maxSpeed);
 
         if (minimalTimeRequired > executionTime)

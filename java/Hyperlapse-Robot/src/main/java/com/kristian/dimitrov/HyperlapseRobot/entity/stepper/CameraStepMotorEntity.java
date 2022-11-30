@@ -1,6 +1,6 @@
 package com.kristian.dimitrov.HyperlapseRobot.entity.stepper;
 
-import com.kristian.dimitrov.HyperlapseRobot.config.ArduinoRobot;
+import com.kristian.dimitrov.HyperlapseRobot.entity.ArduinoRobot;
 import com.kristian.dimitrov.HyperlapseRobot.exception.IncompatibleStepMotorArguments;
 
 public class CameraStepMotorEntity extends StepMotorEntity {

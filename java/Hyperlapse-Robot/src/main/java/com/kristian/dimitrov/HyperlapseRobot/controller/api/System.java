@@ -17,8 +17,22 @@ public class System {
         this.arduinoService = arduinoService;
     }
 
+    /**
+     * HTTP Get which test the connection.
+     * @return OK message
+     */
+    @GetMapping("/testConnection")
+    public String testConnection() {
+        return "OK";
+    }
+
+    /**
+     * Exits the java application after 1 second, when this method is called.
+     *
+     * @return turn off message
+     */
     @GetMapping("/turnoff")
-    public String turnoff(){
+    public String turnoff() {
         Logger.makeLog("TURNING OFF...", new Throwable());
 
         Thread t = new Thread(() -> {

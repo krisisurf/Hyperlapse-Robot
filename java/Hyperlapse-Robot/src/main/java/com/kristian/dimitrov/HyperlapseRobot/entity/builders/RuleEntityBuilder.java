@@ -1,5 +1,6 @@
 package com.kristian.dimitrov.HyperlapseRobot.entity.builders;
 
+import com.kristian.dimitrov.HyperlapseRobot.entity.ArduinoRobot;
 import com.kristian.dimitrov.HyperlapseRobot.entity.stepper.CameraStepMotorEntity;
 import com.kristian.dimitrov.HyperlapseRobot.entity.stepper.MovementStepMotorEntity;
 import com.kristian.dimitrov.HyperlapseRobot.entity.RuleEntity;
@@ -7,14 +8,18 @@ import com.kristian.dimitrov.HyperlapseRobot.exception.IncompatibleStepMotorArgu
 
 public class RuleEntityBuilder {
 
+    private final ArduinoRobot arduinoRobot;
+
     private MovementStepMotorEntity leftMotor;
     private MovementStepMotorEntity rightMotor;
     private CameraStepMotorEntity panMotor;
     private CameraStepMotorEntity tiltMotor;
 
-    public RuleEntityBuilder() {
-        leftMotor = new MovementStepMotorEntity();
-        rightMotor = new MovementStepMotorEntity();
+    public RuleEntityBuilder(ArduinoRobot arduinoRobot) {
+        this.arduinoRobot = arduinoRobot;
+
+        leftMotor = new MovementStepMotorEntity(arduinoRobot.wheelRadius);
+        rightMotor = new MovementStepMotorEntity(arduinoRobot.wheelRadius);
         panMotor = new CameraStepMotorEntity();
         tiltMotor = new CameraStepMotorEntity();
     }
