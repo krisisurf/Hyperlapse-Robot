@@ -3,17 +3,15 @@
 ## Описание:
 > Електрически мобилен робот с отдалечено управление за създаване на "hyperlapse" видеоклипове с помощта на RaspberryPi компютър. Улеснява процеса на заснемането на така наречената "hyperlapse/time-lapse" фотография, като между отделните снимки се извършва прецизно преместване на позицията на робота, за да се придаде дълбочинен ефект на крайния видеоклип.
 <table>
-  <tr>
-    <th>Софтуерна Архитектура</th>
-  </tr>
-  <tr>
-    <td>
-      <picture>
-        <img alt="Software Architecture" src="https://user-images.githubusercontent.com/61236255/205655081-3bcbe266-a052-41d1-bb01-a1cb441ebf27.png">
-      </picture>
-    </td>
-  </tr>
-</table>
+      <tr>
+        <th>Софтуерна архитектура</th>
+      </tr>
+      <tr>
+        <td>
+          <img alt="Software Architecture" src="https://user-images.githubusercontent.com/61236255/205655081-3bcbe266-a052-41d1-bb01-a1cb441ebf27.png">
+        </td>
+      </tr>
+    </table>
 
 ## Главни функционалности (на POC до момента):
 
@@ -41,9 +39,7 @@
       </tr>
       <tr>
         <td>
-          <picture>
-            <img alt="Software Architecture" src="https://user-images.githubusercontent.com/61236255/205662820-f8bea474-e4ec-4c0f-8cb2-7d6e48166b0e.png">
-          </picture>
+          <img alt="Hardware Wire Architecture" src="https://user-images.githubusercontent.com/61236255/205662820-f8bea474-e4ec-4c0f-8cb2-7d6e48166b0e.png">
         </td>
       </tr>
     </table>
@@ -52,14 +48,10 @@
     <table>
     <th>
       <td>
-        <picture>
           <img alt="Android App Concept" src="https://user-images.githubusercontent.com/61236255/205665030-26153516-7c7a-4e35-860b-e8bee4cdbec9.png">
-        </picture>
       </td>
       <td>
-        <picture>
           <img alt="Component Diagram" src="https://user-images.githubusercontent.com/61236255/205666403-f396560f-9822-4ea2-a923-83595a230cb3.png">
-        </picture>
       </td>
     </th>
     </table>
