@@ -32,3 +32,39 @@
 - TODO: `Android Application front-end`
   - Прозорец за тестване на връзката към `Java Spring Boot back-end`
   - TODO: Изпращане на HTTP заявки до back-end
+
+## Диаграми и изображения:
+1. Начинат на свързване на отделните електрически компоненти:
+    <table>
+      <tr>
+        <th>Hardware Wire диаграма</th>
+      </tr>
+      <tr>
+        <td>
+          <picture>
+            <img alt="Software Architecture" src="https://user-images.githubusercontent.com/61236255/205662820-f8bea474-e4ec-4c0f-8cb2-7d6e48166b0e.png">
+          </picture>
+        </td>
+      </tr>
+    </table>
+    
+2. Концепция за изгледът на мобилното приложение:
+    <table>
+    <th>
+      <td>
+        <picture>
+          <img alt="Android App Concept" src="https://user-images.githubusercontent.com/61236255/205665030-26153516-7c7a-4e35-860b-e8bee4cdbec9.png">
+        </picture>
+      </td>
+      <td>
+        <picture>
+          <img alt="Component Diagram" src="https://user-images.githubusercontent.com/61236255/205666403-f396560f-9822-4ea2-a923-83595a230cb3.png">
+        </picture>
+      </td>
+    </th>
+    </table>
+3. Изработка на 3D-модел на робота (3D принтер):
+   ![image](https://user-images.githubusercontent.com/61236255/205667209-8b177f33-c008-4231-b9d3-cafc775e5091.png)
+
+
+
