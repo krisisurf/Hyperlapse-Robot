@@ -65,6 +65,18 @@
     </table>
 3. Изработка на 3D-модел на робота (3D принтер):
    ![image](https://user-images.githubusercontent.com/61236255/205667209-8b177f33-c008-4231-b9d3-cafc775e5091.png)
+   
+## Използвани технологии
+- IntelliJ IDEA Community Edition
+  - Разработка, чрез [Java Spring Boot](https://spring.io/projects/spring-boot)
+  - библиотека [pi4j](https://mvnrepository.com/artifact/com.pi4j/pi4j-core), позволява изпращане/получаване на данни по I2C протокол.
+- Arduino IDE
+  - използвани библиотеки:
+    - [Wire](https://www.arduino.cc/reference/en/language/functions/communication/wire/), позволява изпращане/получаване на данни по I2C протокол.
+    - [AccelStepper](https://www.airspayce.com/mikem/arduino/AccelStepper/), позволява контролирането на стъпкови мотори
+    - [ArduinoJson](https://arduinojson.org/), позволява работа с JSON тип
+- Blender - софтуер за 3D моделиране
+
 
 
 
