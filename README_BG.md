@@ -4,7 +4,18 @@
 Електрически мобилен робот с отдалечено управление за създаване на "hyperlapse" видеоклипове с помощта на RaspberryPi компютър. Улеснява процеса на заснемането на така наречената "hyperlapse/time-lapse" фотография, като между отделните снимки се извършва прецизно преместване на позицията на робота, за да се придаде дълбочинен ефект на крайния видеоклип.
 
 ### Главни функционалности (на POC до момента):
-![image](https://user-images.githubusercontent.com/61236255/205655081-3bcbe266-a052-41d1-bb01-a1cb441ebf27.png)
+<table>
+  <tr>
+    <th>Софтуерна Архитектура</th>
+  </tr>
+  <tr>
+    <td>
+      <picture>
+        <img alt="Software Architecture" src="https://user-images.githubusercontent.com/61236255/205655081-3bcbe266-a052-41d1-bb01-a1cb441ebf27.png">
+      </picture>
+    </td>
+  </tr>
+</table>
 
 - `Java Spring Boot back-end` софтуер, предназначен за Raspberry компютър
   - HTTP крайни точки позволяващи контрол върху робота
