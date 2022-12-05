@@ -32,7 +32,6 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.pi4j/pi4j-core -->
-		<!-- https://mvnrepository.com/artifact/com.pi4j/pi4j-plugin-pigpio -->
 		<dependency>
 			<groupId>com.pi4j</groupId>
 			<artifactId>pi4j-core</artifactId>

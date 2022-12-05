@@ -33,7 +33,7 @@ public class System {
      */
     @GetMapping("/turnoff")
     public String turnoff() {
-        Logger.makeLog("TURNING OFF...", new Throwable());
+        Logger.makeLog("\n\n\nTURNING OFF...", new Throwable());
 
         Thread t = new Thread(() -> {
             try {

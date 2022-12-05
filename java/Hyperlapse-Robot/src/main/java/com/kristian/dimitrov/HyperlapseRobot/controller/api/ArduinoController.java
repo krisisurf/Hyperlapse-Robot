@@ -1,6 +1,7 @@
 package com.kristian.dimitrov.HyperlapseRobot.controller.api;
 
 import com.kristian.dimitrov.HyperlapseRobot.config.Config;
+import com.kristian.dimitrov.HyperlapseRobot.entity.ArduinoRobot;
 import com.kristian.dimitrov.HyperlapseRobot.entity.RulesManagerEntity;
 import com.kristian.dimitrov.HyperlapseRobot.entity.builders.RuleEntityBuilder;
 import com.kristian.dimitrov.HyperlapseRobot.exception.IncompatibleStepMotorArguments;
@@ -52,8 +53,7 @@ public class ArduinoController {
     }
 
     @GetMapping("/getRobotHardwareProperties")
-    public String getRobotHardwareProperties() {
-        //TODO: Write something
-        return "Unfinished work!";
+    public ArduinoRobot getRobotHardwareProperties() {
+        return config.getArduinoRobot();
     }
 }
