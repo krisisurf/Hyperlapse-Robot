@@ -44,9 +44,7 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
         Button buttonCancle = findViewById(R.id.btn_cancle);
         buttonCancle.setOnClickListener(this::cancleButton);
 
-        if (ContextCompat.checkSelfPermission(ConfigureConnectionActivity.this, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
-            editText_ipAddress.setText("grandted!");
-        } else {
+        if (ContextCompat.checkSelfPermission(ConfigureConnectionActivity.this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(ConfigureConnectionActivity.this, Manifest.permission.INTERNET)) {
                 new AlertDialog.Builder(ConfigureConnectionActivity.this)
                         .setMessage("We need permission for internet.")
@@ -64,7 +62,6 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_INTERNET) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //Permission granted
-                editText_ipAddress.setText("granted");
             } else {
                 //Permission NOT granted
                 if (!ActivityCompat.shouldShowRequestPermissionRationale(ConfigureConnectionActivity.this, Manifest.permission.INTERNET)) {
@@ -73,12 +70,13 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
                             .setPositiveButton("OK", (dialogInterface, i) -> {
                             });
                     // Permanently denied permission
-                    editText_portNumber.setText("deny");
                     Intent intent = new Intent();
                     intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                 } else {
-                    //
-                    editText_portNumber.setText("not");
+                    new AlertDialog.Builder(ConfigureConnectionActivity.this)
+                            .setMessage("We don't have permissions for INTERNET.")
+                            .setPositiveButton("OK", (dialogInterface, i) -> {
+                            });
                 }
             }
         }
