@@ -34,6 +34,7 @@ const int LIB_STEPS_PER_REVOLUTION = 4096;
 
 String receivedStringFromMaster = "";
 bool isFullyReceivedFromMaster = false;
+bool readRequest = false;
 
 void setup() {
   // Set the maximum steps per second:
@@ -62,6 +63,11 @@ void loop() {
   static int currentRuleIndex;
   static int rulesCount;
   static bool rulesFinished;
+
+  if(readRequest){
+    readAndAnswerRequestFromMaster();
+    readRequest = false;
+  }
   
   // Waits for JSON format with movement rules to be inputted to the Serial
   if(isFullyReceivedFromMaster){
@@ -208,19 +214,43 @@ void resetMotors(){
   This function is registered as an event, see setup()
 */
 void receiveEvent(int howMany) {
-  static const char STOP_SIGNAL = '\n'; // When arduino receive this character, it will load the received json document
+  static const char STOP_RULES_SIGNAL = '\n'; // When arduino receive this character, it will load the received json document with rules
+  static const char STOP_REQUEST_SIGNAL = '^'; // When arduino receive this character, it will load the received json document with rules
   isFullyReceivedFromMaster = false;
   
   while (Wire.available()) { // loop through all but the last
     char c = Wire.read(); // receive byte as a character
-    if(c == STOP_SIGNAL){
+    if(c == STOP_RULES_SIGNAL){
       isFullyReceivedFromMaster = true;
       Serial.println("Received data from master:");
       Serial.println(receivedStringFromMaster);
-      break;
+      return;
+    }else if(c == STOP_REQUEST_SIGNAL){
+      readRequest = true;
+      return;
     }
     
     receivedStringFromMaster.concat(c);
+  }
+}
+
+void readAndAnswerRequestFromMaster(){
+  static DynamicJsonDocument requests(200);
+  
+  requests.clear();
+  deserializeJSON(requests, receivedStringFromMaster);
+
+  Serial.print("Received request from master: ");
+  Serial.println(receivedStringFromMaster);
+  receivedStringFromMaster = "";
+
+  String requestData = requests["rd"];
+  Serial.print("RequestData: ");
+  Serial.println(requestData);
+  if(requestData.equals("ROBOT_HARDWARE_PROPERTIES")){
+    Serial.println("Trying to send 'testing' message to master");
+    Wire.write('b');
+    Serial.println("Data should have been sent???");
   }
 }
 
