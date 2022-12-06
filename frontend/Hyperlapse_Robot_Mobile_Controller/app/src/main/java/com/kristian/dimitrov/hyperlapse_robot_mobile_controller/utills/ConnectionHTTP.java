@@ -27,38 +27,4 @@ public class ConnectionHTTP {
             return response.body().string();
         }
     }
-
-    public static String HTTP_REQUEST(String address) {
-        HttpURLConnection urlConnection = null;
-
-        try {
-            URL url = new URL(address);
-            urlConnection = (HttpURLConnection) url.openConnection();
-
-            int code = urlConnection.getResponseCode();
-            if (code !=  200) {
-                throw new IOException("Invalid response from server: " + code);
-            }
-
-            BufferedReader rd = new BufferedReader(new InputStreamReader(
-                    urlConnection.getInputStream()));
-
-            StringBuilder result = new StringBuilder();
-            String line;
-            while ((line = rd.readLine()) != null) {
-               result.append(line);
-            }
-
-            return result.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-        }
-
-        return "ERROR in ConnectonHTTP.HTTP_REQUES";
-    }
-
 }

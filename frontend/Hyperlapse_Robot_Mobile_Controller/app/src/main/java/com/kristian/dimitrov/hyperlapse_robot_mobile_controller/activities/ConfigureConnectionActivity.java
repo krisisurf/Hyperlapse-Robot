@@ -22,6 +22,9 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.utills.Connectio
 
 public class ConfigureConnectionActivity extends AppCompatActivity {
 
+    private static final String DEFAULT_IP_ADDRESS = "192.168.0.108";
+    private static final String DEFAULT_PORT_NUMBER = "8080";
+
     private EditText editText_ipAddress;
     private EditText editText_portNumber;
 
@@ -37,6 +40,9 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
 
         editText_ipAddress = findViewById(R.id.editText_ip_address);
         editText_portNumber = findViewById(R.id.editText_port_number);
+        // Fill text boxes with default values
+        editText_ipAddress.setText(DEFAULT_IP_ADDRESS);
+        editText_portNumber.setText(DEFAULT_PORT_NUMBER);
 
         Button buttonTestConnection = findViewById(R.id.btn_test);
         buttonTestConnection.setOnClickListener(this::testConnection);
@@ -93,7 +99,7 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
 
                 Log.i("configureConnection", "Trying to reach host: " + address);
                 try {
-                    String result = ConnectionHTTP.HTTP_REQUEST(address);
+                    String result = ConnectionHTTP.HTTP_GET(address);
                     Log.i("configureConnection", result);
                 } catch (Exception e) {
                     e.printStackTrace();

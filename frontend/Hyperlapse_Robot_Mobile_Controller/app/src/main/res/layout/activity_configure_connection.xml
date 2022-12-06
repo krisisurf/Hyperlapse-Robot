@@ -47,8 +47,7 @@
                     android:digits="0123456789."
                     android:ems="20"
                     android:inputType="number|numberDecimal"
-                    android:maxLength="15"
-                    android:text="192.168." />
+                    android:maxLength="15"/>
 
                 <TextView
                     android:id="@+id/label_port_number"
@@ -71,8 +70,7 @@
                     android:digits="0123456789"
                     android:ems="20"
                     android:inputType="number|numberDecimal"
-                    android:maxLength="4"
-                    android:text="8080" />
+                    android:maxLength="4"/>
             </RelativeLayout>
 
             <RelativeLayout
