@@ -1,28 +1,29 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
-import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.utills.Permission;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ArduinoRobot arduinoRobot;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        arduinoRobot = new ArduinoRobot();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Hyperlapse Robot Controller");
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void openConfigureConnectionActivity(View view){
         Intent intent = new Intent(MainActivity.this, ConfigureConnectionActivity.class);
+        intent.putExtra("arduinoRobot", arduinoRobot);
         startActivity(intent);
     }
 

@@ -10,4 +10,11 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="title_activity_main">MainActivity</string>
+
+    <string name="ipAddress">192.168.0.108</string>
+    <string name="portNumber">8080</string>
+
+    <string name="conn_status_unknown">Unknown Connection Status</string>
+    <string name="conn_status_established">Connection Established</string>
+    <string name="conn_status_not_established">Connection Not Established</string>
 </resources>
