@@ -18,19 +18,17 @@ public class HyperlapseRobotApplication {
 
         // Keyboard Interrupt shutdown
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if(System.hasTurnedOff())
+            if (System.hasTurnedOff())
                 return;
 
             System system = context.getBean("system", System.class);
             system.turnoff();
         }));
 
-        // Read properties
         Config config = context.getBean("config", Config.class);
-        ArduinoService arduinoService = context.getBean("arduinoServiceImpl", ArduinoServiceImpl.class);
-
         //TODO: Set arduino robot data by requesting it from the arduino
-        //String result = arduinoService.requestData(ArduinoRequest.ROBOT_HARDWARE_PROPERTIES);
+//        ArduinoService arduinoService = context.getBean("arduinoServiceImpl", ArduinoServiceImpl.class);
+//        String result = arduinoService.requestData(ArduinoRequest.ROBOT_HARDWARE_PROPERTIES);
 
         final double wheelRadius = 5;
         final StepMotorEntity leftMotor = new StepMotorEntity(64, 16);

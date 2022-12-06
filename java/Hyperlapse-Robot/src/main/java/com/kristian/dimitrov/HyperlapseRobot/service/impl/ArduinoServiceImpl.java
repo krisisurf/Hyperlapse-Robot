@@ -11,7 +11,6 @@ import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class ArduinoServiceImpl implements ArduinoService {
@@ -30,9 +29,10 @@ public class ArduinoServiceImpl implements ArduinoService {
         busNumber = config.getArduinoI2CBusNumber();
 
         try {
-            Logger.makeLog("Creating I2C bus at number: " + busNumber, new Throwable());
+            Throwable t = new Throwable();
+            Logger.makeLog("Creating I2C bus at number: " + busNumber, t);
             bus = I2CFactory.getInstance(busNumber);
-            Logger.makeLog("Creating I2C device at address: " + deviceAddress, new Throwable());
+            Logger.makeLog("Creating I2C device at address: " + deviceAddress, t);
             device = bus.getDevice(deviceAddress);
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,7 +65,8 @@ public class ArduinoServiceImpl implements ArduinoService {
     private void sendDataToArduino(String data, char STOP_SIGNAL) {
         sendingData = true;
         try {
-            Logger.makeLog("Attempting to send data to arduino...", new Throwable());
+            Throwable t = new Throwable();
+            Logger.makeLog("Attempting to send data to arduino...", t);
             // Arduino will know that it should not receive more data after the STOP_SIGNAL character appear.
             data += STOP_SIGNAL;
 
@@ -73,24 +74,26 @@ public class ArduinoServiceImpl implements ArduinoService {
             int chunksCount = data.length() / chunkLength + 1;
             for (int i = 0; i < chunksCount; i++) {
                 String chunk = data.substring(i * chunkLength, Math.min((i + 1) * chunkLength, data.length()));
-                Logger.makeLog("Writing string chunk (No. " + (i + 1) + " ), data: " + chunk, new Throwable());
+                Logger.makeLog("Writing string chunk (No. " + (i + 1) + " ), data: " + chunk, t);
 
                 byte[] writeData = chunk.getBytes();
                 device.write(chunk.getBytes(), 0, writeData.length);
             }
 
-            Logger.makeLog("All rules has been sent to Arduino.", new Throwable());
+            Logger.makeLog("All rules has been sent to Arduino.", t);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         sendingData = false;
     }
 
+    //TODO: The code bellow does not work
     private String receiveData(char STOP_SIGNAL) {
         receivingData = true;
         String result = null;
         try {
-            Logger.makeLog("Attempting to receive data from arduino...", new Throwable());
+            Throwable t = new Throwable();
+            Logger.makeLog("Attempting to receive data from arduino...", t);
 //            StringBuilder receivedData = new StringBuilder();
 //            char lastCharacter;
 //            while ((lastCharacter = (char) device.read()) != STOP_SIGNAL) {
@@ -100,7 +103,7 @@ public class ArduinoServiceImpl implements ArduinoService {
 //            result = receivedData.toString();
 
             int i = device.read();
-            Logger.makeLog("Data has been received from arduino: " + i, new Throwable());
+            Logger.makeLog("Data has been received from arduino: " + i, t);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
