@@ -18,6 +18,9 @@ public class HyperlapseRobotApplication {
 
         // Keyboard Interrupt shutdown
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if(System.hasTurnedOff())
+                return;
+
             System system = context.getBean("system", System.class);
             system.turnoff();
         }));
