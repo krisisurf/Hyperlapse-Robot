@@ -62,14 +62,15 @@
    
 ## Използвани технологии
 - IntelliJ IDEA Community Edition
-  - Разработка, чрез [Java Spring Boot](https://spring.io/projects/spring-boot)
+  - Разработка, чрез [Java Spring Boot](https://spring.io/projects/spring-boot).
   - библиотека [pi4j](https://mvnrepository.com/artifact/com.pi4j/pi4j-core), позволява изпращане/получаване на данни по I2C протокол.
 - Arduino IDE
   - използвани библиотеки:
     - [Wire](https://www.arduino.cc/reference/en/language/functions/communication/wire/), позволява изпращане/получаване на данни по I2C протокол.
-    - [AccelStepper](https://www.airspayce.com/mikem/arduino/AccelStepper/), позволява контролирането на стъпкови мотори
-    - [ArduinoJson](https://arduinojson.org/), позволява работа с JSON тип
-- Blender - софтуер за 3D моделиране
+    - [AccelStepper](https://www.airspayce.com/mikem/arduino/AccelStepper/), позволява контролирането на стъпкови мотори.
+    - [ArduinoJson](https://arduinojson.org/), позволява работа с JSON тип.
+- Android Studio - софтуер за разработка на мобилни приложения. 
+- Blender - софтуер за 3D моделиране.
 
 
 
