@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ConfigureConnectionActivity">
+    tools:context=".activities.ConfigureConnectionActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,11 +15,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:background="@color/gray"
-            android:padding="10dp"
             android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@color/gray"
+            android:orientation="vertical"
+            android:padding="10dp"
             android:weightSum="4">
 
             <RelativeLayout
@@ -48,7 +48,7 @@
                     android:ems="20"
                     android:inputType="number|numberDecimal"
                     android:maxLength="15"
-                    android:text="192.168." />
+                    android:text="@string/ipAddress" />
 
                 <TextView
                     android:id="@+id/label_port_number"
@@ -72,47 +72,48 @@
                     android:ems="20"
                     android:inputType="number|numberDecimal"
                     android:maxLength="4"
-                    android:text="8080" />
+                    android:text="@string/portNumber" />
+
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="40dp"
+                android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:background="@color/white"
-                android:layout_margin="10dp"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:paddingHorizontal="40dp">
 
                 <Button
                     android:id="@+id/btn_test"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|start"
-                    android:text="Test Connection"/>
+                    android:text="Test Connection" />
 
 
-                <View
-                    android:id="@+id/label_connection_status_icon"
+                <ImageView
+                    android:id="@+id/imageView_connection_status_icon"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:layout_centerInParent="true"
                     android:layout_below="@id/btn_test"
-                    android:foreground="@drawable/ic_error"
-                    android:layout_marginTop="20dp"/>
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="20dp"
+                    android:foreground="@drawable/ic_error" />
 
                 <TextView
-                    android:id="@+id/label_connection_status"
+                    android:id="@+id/textView_connection_status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/imageView_connection_status_icon"
+                    android:layout_marginTop="10dp"
                     android:background="@color/blue_700"
-                    android:text="Unknown Connection Status"
+                    android:padding="5dp"
+                    android:text="@string/conn_status_unknown"
                     android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:textSize="15dp"
-
-                    android:padding="5dp"
-                    android:layout_below="@id/label_connection_status_icon"/>
+                    android:textSize="15dp" />
 
             </RelativeLayout>
         </LinearLayout>

@@ -1,15 +1,22 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.utills;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import okhttp3.MediaType;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class ConnectionHTTP {
 
-    final OkHttpClient client = new OkHttpClient();
+    private final static OkHttpClient client;
+
+    static {
+        client = new OkHttpClient();
+    }
 
     public static String HTTP_GET(String url) throws IOException {
         Request request = new Request.Builder()
@@ -20,5 +27,4 @@ public class ConnectionHTTP {
             return response.body().string();
         }
     }
-
 }
