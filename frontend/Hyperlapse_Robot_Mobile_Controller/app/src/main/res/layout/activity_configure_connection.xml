@@ -37,7 +37,7 @@
                     android:padding="5dp"
                     android:text="IP address of the robot"
                     android:textColor="@color/white"
-                    android:textSize="25dp" />
+                    android:textSize="25sp" />
 
                 <EditText
                     android:id="@+id/editText_ip_address"
@@ -130,7 +130,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:layout_weight="1"
-                android:text="cancle" />
+                android:text="@string/button_cancle" />
 
             <Button
                 android:id="@+id/btn_apply"
@@ -138,7 +138,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:layout_weight="1"
-                android:text="apply" />
+                android:text="@string/button_apply" />
         </LinearLayout>
 
 

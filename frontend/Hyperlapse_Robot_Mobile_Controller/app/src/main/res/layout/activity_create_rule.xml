@@ -13,14 +13,47 @@
         android:weightSum="10">
 
 
-        <View
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="10dp"
             android:layout_weight="1"
             android:background="@color/blue_500"
-            android:layout_margin="10dp">
+            android:padding="15dp">
 
-        </View>
+            <TextView
+                android:id="@+id/textView_ruleNumber"
+                style="@style/TextLabel"
+                android:text="@string/rule_number"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toTopOf="@id/divider"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/divider"
+                style="@style/Divider"
+                app:layout_constraintBottom_toTopOf="@id/movementLabel"
+                app:layout_constraintTop_toBottomOf="@id/textView_ruleNumber" />
+
+            <TextView
+                android:id="@+id/movementLabel"
+                style="@style/TextLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/label_movement"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@id/movementView"
+                app:layout_constraintTop_toBottomOf="@id/divider" />
+
+            <View
+                android:id="@+id/movementView"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="@color/blue_700"
+                app:layout_constraintTop_toBottomOf="@id/movementLabel" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,17 +65,17 @@
                 android:id="@+id/btn_cancle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="cancle"
+                android:layout_marginHorizontal="10dp"
                 android:layout_weight="1"
-                android:layout_marginHorizontal="10dp"/>
+                android:text="@string/button_cancle" />
 
             <Button
                 android:id="@+id/btn_apply"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="apply"
+                android:layout_marginHorizontal="10dp"
                 android:layout_weight="1"
-                android:layout_marginHorizontal="10dp"/>
+                android:text="@string/button_apply" />
         </LinearLayout>
 
 

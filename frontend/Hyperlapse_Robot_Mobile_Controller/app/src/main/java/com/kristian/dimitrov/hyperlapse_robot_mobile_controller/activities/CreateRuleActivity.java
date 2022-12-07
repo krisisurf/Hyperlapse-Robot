@@ -18,40 +18,19 @@ public class CreateRuleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_rule);
-        setTitle("Create a new rule");
+        setTitle(R.string.title_create_rule_activity);
 
         Button buttonCancle = findViewById(R.id.btn_cancle);
         buttonCancle.setOnClickListener(this::cancleButton);
 
-        Log.i(TAG, "onCreate");
-    }
-
-
-    @Override
-    protected void onStart(){
-        super.onStart();
-        Log.i(TAG, "onStart");
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-        Log.i(TAG, "onResume");
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-        Log.i(TAG, "onPause");
-    }
-
-    @Override
-    protected void onStop(){
-        super.onStop();
-        Log.i(TAG, "onStop");
+        Button buttonApply = findViewById(R.id.btn_apply);
+        buttonApply.setOnClickListener(this::applyButton);
     }
 
     private void cancleButton(View view) {
         finish();
+    }
+
+    private void applyButton(View view) {
     }
 }
