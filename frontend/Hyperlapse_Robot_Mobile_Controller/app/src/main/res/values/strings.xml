@@ -13,4 +13,5 @@
 
     <string name="rule_number">Rule №</string>
     <string name="label_movement">Movement:</string>
+    <string name="label_camera">Camera:</string>
 </resources>
