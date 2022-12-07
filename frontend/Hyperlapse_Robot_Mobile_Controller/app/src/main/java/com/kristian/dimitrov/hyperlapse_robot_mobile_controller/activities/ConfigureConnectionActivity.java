@@ -129,7 +129,7 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
             imageView_connectionStatusIcon.setForeground(drawable_connectionStatusIcon_established);
             imageView_connectionStatusIcon.setBackgroundColor(color_connectionSatusIcon_established);
         } else {
-            textView_connectionStatus.setText(R.string.conn_status_not_established);
+            textView_connectionStatus.setText(R.string.conn_status_unknown);
             imageView_connectionStatusIcon.setForeground(getDrawable_connectionStatusIcon_notEstablished);
             imageView_connectionStatusIcon.setBackgroundColor(0);
         }

@@ -27,13 +27,15 @@
                 android:text="@string/rule_number"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toTopOf="@id/divider"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="MissingConstraints" />
 
             <View
                 android:id="@+id/divider"
                 style="@style/Divider"
                 app:layout_constraintBottom_toTopOf="@id/movementLabel"
-                app:layout_constraintTop_toBottomOf="@id/textView_ruleNumber" />
+                app:layout_constraintTop_toBottomOf="@id/textView_ruleNumber"
+                tools:ignore="MissingConstraints" />
 
             <TextView
                 android:id="@+id/movementLabel"

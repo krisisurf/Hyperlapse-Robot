@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Hyperlapse Robot Controller</string>
+    <string name="title_activity_main">MainActivity</string>
+
     <string name="ipAddress">192.168.0.108</string>
     <string name="portNumber">8080</string>
 
