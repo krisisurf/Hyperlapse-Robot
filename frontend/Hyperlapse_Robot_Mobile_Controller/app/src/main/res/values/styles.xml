@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Divider">
+    <style name="DividerHorizontal">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">10dp</item>
-        <item name="backgroundColor">@color/blue_700</item>
-        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+    <style name="DividerVertical" style="DividerHorizontal">
+        <item name="android:layout_width">10dp</item>
+        <item name="android:layout_height">match_parent</item>
     </style>
 
     <style name="TextLabel">

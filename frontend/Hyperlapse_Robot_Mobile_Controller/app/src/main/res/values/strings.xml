@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Hyperlapse Robot Controller</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Hyperlapse Robot</string>
 
     <string name="ipAddress">192.168.0.108</string>
     <string name="portNumber">8080</string>
@@ -13,7 +13,13 @@
     <string name="button_cancle">cancle</string>
     <string name="button_apply">apply</string>
 
-    <string name="rule_number">Rule №</string>
+    <string name="label_rule_number">Rule №</string>
     <string name="label_movement">Movement:</string>
     <string name="label_camera">Camera:</string>
+    <string name="direction_type">Direction type</string>
+    <string name="label_degree">Degree:</string>
+    <string name="label_execution_time">Execution time:</string>
+
+    <string name="label_pan">Pan</string>
+    <string name="label_tilt">Tilt</string>
 </resources>
