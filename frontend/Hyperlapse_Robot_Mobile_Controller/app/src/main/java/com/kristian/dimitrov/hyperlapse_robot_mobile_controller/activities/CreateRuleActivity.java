@@ -6,6 +6,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
@@ -13,6 +15,10 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 public class CreateRuleActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateRuleActivity";
+
+    private final String[] directionStringOptions = {"Forward", "Backward", "Turning"};
+    private AutoCompleteTextView directionAutoComplete;
+    private ArrayAdapter<String> directionAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +31,10 @@ public class CreateRuleActivity extends AppCompatActivity {
 
         Button buttonApply = findViewById(R.id.btn_apply);
         buttonApply.setOnClickListener(this::applyButton);
+
+        directionAutoComplete = findViewById(R.id.auto_complete_txt);
+        directionAdapter = new ArrayAdapter<>(this, R.layout.list_item, directionStringOptions);
+        directionAutoComplete.setAdapter(directionAdapter);
     }
 
     private void cancleButton(View view) {
