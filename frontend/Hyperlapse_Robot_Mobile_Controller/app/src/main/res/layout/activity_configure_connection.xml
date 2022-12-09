@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:background="@color/gray"
+            android:background="@drawable/rounded_corner_gray"
             android:orientation="vertical"
             android:padding="10dp"
             android:weightSum="4">
@@ -32,7 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|start"
-                    android:background="@color/blue_500"
+                    android:background="@drawable/rounded_corner_blue_500_small_radius"
                     android:labelFor="@id/editText_ip_address"
                     android:padding="5dp"
                     android:text="IP address of the robot"
@@ -56,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/editText_ip_address"
                     android:layout_marginTop="15dp"
-                    android:background="@color/blue_500"
+                    android:background="@drawable/rounded_corner_blue_500_small_radius"
                     android:labelFor="@id/editText_port_number"
                     android:padding="5dp"
                     android:text="Port number"
@@ -79,11 +79,11 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
+                android:layout_marginBottom="20dp"
                 android:layout_weight="1"
-                android:background="@color/white"
-                android:padding="10dp"
-                android:paddingHorizontal="40dp">
+                android:background="@drawable/rounded_corner_white_small_radius"
+                android:padding="10dp">
 
                 <Button
                     android:id="@+id/btn_test"
