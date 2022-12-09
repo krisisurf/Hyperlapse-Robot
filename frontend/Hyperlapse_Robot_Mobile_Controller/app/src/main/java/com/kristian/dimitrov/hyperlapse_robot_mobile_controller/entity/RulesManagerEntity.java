@@ -20,6 +20,10 @@ public class RulesManagerEntity implements Serializable {
         rules.remove(ruleEntity);
     }
 
+    public int size() {
+        return rules.size();
+    }
+
     public void clearRules() {
         rules.clear();
     }
