@@ -11,10 +11,16 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RulesManagerEntity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.builders.RuleEntityBuilder;
 
 public class CreateRuleActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateRuleActivity";
+
+    private ArduinoRobot arduinoRobot;
+    private RuleEntityBuilder ruleEntityBuilder;
 
     private final String[] directionStringOptions = {"Forward", "Backward", "Turning"};
     private AutoCompleteTextView directionAutoComplete;
@@ -25,6 +31,9 @@ public class CreateRuleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_rule);
         setTitle(R.string.title_create_rule_activity);
+
+        arduinoRobot = (ArduinoRobot) getIntent().getSerializableExtra("arduinoRobot");
+        ruleEntityBuilder = new RuleEntityBuilder(arduinoRobot);
 
         Button buttonCancle = findViewById(R.id.btn_cancle);
         buttonCancle.setOnClickListener(this::cancleButton);

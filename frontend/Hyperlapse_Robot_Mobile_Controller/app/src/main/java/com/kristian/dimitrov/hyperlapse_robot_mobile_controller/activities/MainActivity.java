@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RulesManagerEntity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -13,6 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,19 +40,21 @@ public class MainActivity extends AppCompatActivity {
         buttonAddRule.setOnClickListener(this::openCreateRuleActivity);
     }
 
-    private void openCreateRuleActivity(View view){
+    private void openCreateRuleActivity(View view) {
+        if (!arduinoRobot.isConnectionEstablished()) {
+            Toast.makeText(MainActivity.this, "Please, connect with the Robot, before adding a rule", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Intent intent = new Intent(MainActivity.this, CreateRuleActivity.class);
+        intent.putExtra("arduinoRobot", arduinoRobot);
         startActivity(intent);
+
     }
 
-
-    private void openConfigureConnectionActivity(View view){
+    private void openConfigureConnectionActivity(View view) {
         Intent intent = new Intent(MainActivity.this, ConfigureConnectionActivity.class);
         intent.putExtra("arduinoRobot", arduinoRobot);
         startActivity(intent);
     }
-
-
-
-
 }
