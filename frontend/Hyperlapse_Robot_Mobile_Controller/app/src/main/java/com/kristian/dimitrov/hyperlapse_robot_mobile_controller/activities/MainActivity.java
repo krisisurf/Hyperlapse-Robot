@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private void openCreateRuleActivity(View view) {
         if (!arduinoRobot.isConnectionEstablished()) {
             Toast.makeText(MainActivity.this, "Please, connect with the Robot, before adding a rule", Toast.LENGTH_SHORT).show();
-            return;
+            //return;
         }
 
         Intent intent = new Intent(MainActivity.this, CreateRuleActivity.class);

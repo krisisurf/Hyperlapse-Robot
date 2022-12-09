@@ -1,7 +1,7 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper;
 
-import com.kristian.dimitrov.HyperlapseRobot.entity.ArduinoRobot;
-import com.kristian.dimitrov.HyperlapseRobot.exception.IncompatibleStepMotorArguments;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.exception.IncompatibleStepMotorArguments;
 
 public class MovementStepMotorEntity extends StepMotorEntity {
 
@@ -38,7 +38,6 @@ public class MovementStepMotorEntity extends StepMotorEntity {
      * @param distance      Distance to travel in centimeters
      * @param executionTime Time to complete in seconds
      * @throws IncompatibleStepMotorArguments When it is impossible to travel the given distance for the execution time, because of hardware limitations.
-     * @see com.kristian.dimitrov.HyperlapseRobot.entity.RuleEntity
      */
     public void setData(float distance, float executionTime) throws IncompatibleStepMotorArguments {
         int stepsRequired = ArduinoRobot.convertCentimetersToSteps(distance, wheelRadius, stepsPerRevolution);

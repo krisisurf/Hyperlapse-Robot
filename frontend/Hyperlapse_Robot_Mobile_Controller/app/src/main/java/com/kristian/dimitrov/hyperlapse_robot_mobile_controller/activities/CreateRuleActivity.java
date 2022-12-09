@@ -32,14 +32,16 @@ public class CreateRuleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_rule);
         setTitle(R.string.title_create_rule_activity);
 
-        arduinoRobot = (ArduinoRobot) getIntent().getSerializableExtra("arduinoRobot");
-        ruleEntityBuilder = new RuleEntityBuilder(arduinoRobot);
 
         Button buttonCancle = findViewById(R.id.btn_cancle);
         buttonCancle.setOnClickListener(this::cancleButton);
 
         Button buttonApply = findViewById(R.id.btn_apply);
         buttonApply.setOnClickListener(this::applyButton);
+
+        arduinoRobot = (ArduinoRobot) getIntent().getSerializableExtra("arduinoRobot");
+        assert arduinoRobot != null : buttonCancle.performClick();
+        ruleEntityBuilder = new RuleEntityBuilder(arduinoRobot);
 
         directionAutoComplete = findViewById(R.id.auto_complete_txt);
         directionAdapter = new ArrayAdapter<>(this, R.layout.list_item, directionStringOptions);
@@ -51,5 +53,7 @@ public class CreateRuleActivity extends AppCompatActivity {
     }
 
     private void applyButton(View view) {
+        RulesManagerEntity rulesManagerEntity = arduinoRobot.getRulesManagerEntity();
+        rulesManagerEntity.addRule(ruleEntityBuilder.build());
     }
 }

@@ -1,7 +1,7 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper;
 
-import com.kristian.dimitrov.HyperlapseRobot.entity.ArduinoRobot;
-import com.kristian.dimitrov.HyperlapseRobot.exception.IncompatibleStepMotorArguments;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.exception.IncompatibleStepMotorArguments;
 
 public class CameraStepMotorEntity extends StepMotorEntity {
 
@@ -21,7 +21,6 @@ public class CameraStepMotorEntity extends StepMotorEntity {
      * @param degree        How many degrees to move (newDegrees = currentDegree + degree)
      * @param executionTime Time to complete the rotation in seconds.
      * @throws IncompatibleStepMotorArguments
-     * @see com.kristian.dimitrov.HyperlapseRobot.entity.RuleEntity
      */
     public void setData(float degree, float executionTime) throws IncompatibleStepMotorArguments {
         int stepsRequired = ArduinoRobot.convertDegreesToSteps(degree, stepsPerRevolution);
