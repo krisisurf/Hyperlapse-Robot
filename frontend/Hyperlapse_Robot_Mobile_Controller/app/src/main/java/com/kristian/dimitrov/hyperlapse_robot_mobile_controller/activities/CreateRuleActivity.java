@@ -2,10 +2,12 @@ package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -15,6 +17,8 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RulesManagerEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.builders.RuleEntityBuilder;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.fragments.ForwardBackwardFragment;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.fragments.TurningFragment;
 
 public class CreateRuleActivity extends AppCompatActivity {
 
@@ -24,8 +28,9 @@ public class CreateRuleActivity extends AppCompatActivity {
     private RuleEntityBuilder ruleEntityBuilder;
 
     private final String[] directionStringOptions = {"Forward", "Backward", "Turning"};
-    private AutoCompleteTextView directionAutoComplete;
-    private ArrayAdapter<String> directionAdapter;
+
+    private Fragment forwardBackwardFragment;
+    private Fragment turningFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +48,12 @@ public class CreateRuleActivity extends AppCompatActivity {
         assert arduinoRobot != null : buttonCancle.performClick();
         ruleEntityBuilder = new RuleEntityBuilder(arduinoRobot);
 
-        directionAutoComplete = findViewById(R.id.auto_complete_txt);
-        directionAdapter = new ArrayAdapter<>(this, R.layout.list_item, directionStringOptions);
-        directionAutoComplete.setAdapter(directionAdapter);
+        AutoCompleteTextView directionAutoComplete = findViewById(R.id.auto_complete_txt);
+        directionAutoComplete.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, directionStringOptions));
+        directionAutoComplete.setOnItemClickListener(this::directionOnItemClickListener);
+
+        forwardBackwardFragment = new ForwardBackwardFragment();
+        turningFragment = new TurningFragment();
 
         TextView textView_ruleNumber = findViewById(R.id.textView_ruleNumber);
         textView_ruleNumber.setText(getString(R.string.label_rule_number, String.valueOf(arduinoRobot.getRulesManagerEntity().size() + 1)));
@@ -58,5 +66,22 @@ public class CreateRuleActivity extends AppCompatActivity {
     private void applyButton(View view) {
         RulesManagerEntity rulesManagerEntity = arduinoRobot.getRulesManagerEntity();
         rulesManagerEntity.addRule(ruleEntityBuilder.build());
+    }
+
+    private void directionOnItemClickListener(AdapterView<?> adapterView, View view, int index, long id) {
+        String item = adapterView.getItemAtPosition(index).toString();
+
+        if (index == 0) {
+            ((ForwardBackwardFragment) forwardBackwardFragment).setDirection(true);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.directionTypeFragment, forwardBackwardFragment).commit();
+        } else if (index == 1) {
+            ((ForwardBackwardFragment) forwardBackwardFragment).setDirection(false);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.directionTypeFragment, forwardBackwardFragment).commit();
+        } else if (index == 2) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.directionTypeFragment, turningFragment).commit();
+        }
     }
 }
