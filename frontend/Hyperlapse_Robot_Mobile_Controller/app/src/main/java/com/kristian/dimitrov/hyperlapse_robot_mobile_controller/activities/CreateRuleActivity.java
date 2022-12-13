@@ -2,6 +2,7 @@ package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -34,8 +35,8 @@ public class CreateRuleActivity extends AppCompatActivity {
     private final String[] directionStringOptions = {"Forward", "Turning"};
     private int selectedDirectionIndex = -1;
 
-    private ForwardBackwardFragment forwardBackwardFragment;
-    private TurningFragment turningFragment;
+    private Fragment forwardBackwardFragment;
+    private Fragment turningFragment;
 
     private EditText editTextPanDegree;
     private EditText editTextPanExecutionTime;
@@ -103,8 +104,9 @@ public class CreateRuleActivity extends AppCompatActivity {
             errorBuilder.append(++errorsCount).append(". Not selected ").append(getString(R.string.direction_type)).append(".\n");
         } else {
             if (selectedDirectionIndex == 0) {
-                float distance = forwardBackwardFragment.getDistance();
-                float executionTime = forwardBackwardFragment.getExecutionTime();
+                ForwardBackwardFragment fragment = ((ForwardBackwardFragment) forwardBackwardFragment);
+                float distance = fragment.getDistance();
+                float executionTime = fragment.getExecutionTime();
                 try {
                     ruleEntityBuilder.setLeftMotor(distance, executionTime);
                     ruleEntityBuilder.setRightMotor(distance, executionTime);
@@ -140,14 +142,10 @@ public class CreateRuleActivity extends AppCompatActivity {
 
         selectedDirectionIndex = index;
         if (index == 0) {
-            ((ForwardBackwardFragment) forwardBackwardFragment).setDirection(true);
+            ((ForwardBackwardFragment)forwardBackwardFragment).setDirection(true);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.directionTypeFragment, forwardBackwardFragment).commit();
-        } else if (index == 1) {
-            ((ForwardBackwardFragment) forwardBackwardFragment).setDirection(false);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.directionTypeFragment, forwardBackwardFragment).commit();
-        } else if (index == 2) {
+        } else {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.directionTypeFragment, turningFragment).commit();
         }
