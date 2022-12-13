@@ -9,6 +9,7 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobotConnection;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RuleEntity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.StepMotorEntity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,7 +46,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        final double wheelRadius = 5;
+        final StepMotorEntity leftMotor = new StepMotorEntity(64, 16);
+        final StepMotorEntity rightMotor = new StepMotorEntity(64, 16);
+        final StepMotorEntity cameraPanMotor = new StepMotorEntity(64, 16);
+        final StepMotorEntity cameraTiltMotor = new StepMotorEntity(64, 16);
+
         arduinoRobot = new ArduinoRobot();
+        arduinoRobot.setHardwareData(wheelRadius, leftMotor, rightMotor, cameraPanMotor, cameraTiltMotor);
         arduinoRobotConnection = new ArduinoRobotConnection(5000) {
             @Override
             public void onConnectionStatusListener(boolean isConnectionEstablished) {

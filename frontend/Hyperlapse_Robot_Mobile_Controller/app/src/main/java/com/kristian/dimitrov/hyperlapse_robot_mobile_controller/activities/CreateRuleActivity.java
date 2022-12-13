@@ -2,8 +2,6 @@ package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,7 +13,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
@@ -34,7 +31,7 @@ public class CreateRuleActivity extends AppCompatActivity {
     private ArduinoRobot arduinoRobot;
     private RuleEntityBuilder ruleEntityBuilder;
 
-    private final String[] directionStringOptions = {"Forward", "Backward", "Turning"};
+    private final String[] directionStringOptions = {"Forward", "Turning"};
     private int selectedDirectionIndex = -1;
 
     private ForwardBackwardFragment forwardBackwardFragment;
@@ -105,7 +102,7 @@ public class CreateRuleActivity extends AppCompatActivity {
         if (selectedDirectionIndex == -1) {
             errorBuilder.append(++errorsCount).append(". Not selected ").append(getString(R.string.direction_type)).append(".\n");
         } else {
-            if (selectedDirectionIndex == 0 || selectedDirectionIndex == 1) {
+            if (selectedDirectionIndex == 0) {
                 float distance = forwardBackwardFragment.getDistance();
                 float executionTime = forwardBackwardFragment.getExecutionTime();
                 try {

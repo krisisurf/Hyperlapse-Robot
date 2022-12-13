@@ -3,7 +3,9 @@ package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.exception.IncompatibleStepMotorArguments;
 
-public class MovementStepMotorEntity extends StepMotorEntity {
+import java.io.Serializable;
+
+public class MovementStepMotorEntity extends StepMotorEntity implements Serializable {
 
     private float distance;
     private float executionTime;

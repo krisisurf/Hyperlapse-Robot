@@ -1,6 +1,8 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper;
 
-public class StepMotorEntity {
+import java.io.Serializable;
+
+public class StepMotorEntity implements Serializable {
 
     /**
      * Step motor default steps count for one revolution (360 degrees)
