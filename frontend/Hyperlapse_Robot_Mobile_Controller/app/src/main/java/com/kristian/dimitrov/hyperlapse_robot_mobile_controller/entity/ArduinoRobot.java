@@ -6,16 +6,7 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.utills.Connectio
 import java.io.Serializable;
 import java.text.MessageFormat;
 
-public class ArduinoRobot implements Serializable, Runnable {
-
-    /**
-     * Connection
-     */
-    private final Thread connectionThread;
-    private final int testConnDelay;
-    private boolean isConnectionEstablished;
-    private String ipAddress;
-    private String portNumber;
+public class ArduinoRobot implements Serializable {
 
     /**
      * Wheel radius in centimeters.
@@ -29,16 +20,8 @@ public class ArduinoRobot implements Serializable, Runnable {
 
     private final RulesManagerEntity rulesManagerEntity;
 
-    public ArduinoRobot(int testConnectionDelayMillis) {
-        connectionThread = new Thread(this);
-        this.testConnDelay = testConnectionDelayMillis;
-        connectionThread.start();
+    public ArduinoRobot() {
         rulesManagerEntity = new RulesManagerEntity();
-    }
-
-    public void setConnectionData(String ipAddress, String portNumber) {
-        this.ipAddress = ipAddress;
-        this.portNumber = portNumber;
     }
 
     public void setHardwareData(double wheelRadius, StepMotorEntity leftMotor, StepMotorEntity rightMotor, StepMotorEntity cameraPanMotor, StepMotorEntity cameraTiltMotor) {
@@ -51,18 +34,6 @@ public class ArduinoRobot implements Serializable, Runnable {
 
     public RulesManagerEntity getRulesManagerEntity() {
         return rulesManagerEntity;
-    }
-
-    public boolean isConnectionEstablished() {
-        return isConnectionEstablished;
-    }
-
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
-    public String getPortNumber() {
-        return portNumber;
     }
 
     public double getWheelRadius() {
@@ -117,28 +88,5 @@ public class ArduinoRobot implements Serializable, Runnable {
      */
     public static int convertDegreesToSteps(double degrees, final int stepsPerRevolution) {
         return (int) (stepsPerRevolution * degrees / 360);
-    }
-
-    @Override
-    public void run() {
-        while (true) {
-            if (ipAddress == null || portNumber == null) {
-                isConnectionEstablished = false;
-            }
-
-            String testUrl = MessageFormat.format("http://{0}:{1}/api/testConnection", ipAddress, portNumber);
-            try {
-                ConnectionHTTP.HTTP_GET(testUrl);
-                isConnectionEstablished = true;
-            } catch (Exception e) {
-                isConnectionEstablished = false;
-            }
-
-            try {
-                Thread.sleep(testConnDelay);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

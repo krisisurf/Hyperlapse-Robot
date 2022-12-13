@@ -1,35 +1,54 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
-import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RulesManagerEntity;
-import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.utills.ConnectionHTTP;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobotConnection;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Lifecycle;
 
-import android.os.Looper;
-import android.os.Parcelable;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int REQUEST_CODE_CONFIGURE_CONNECTION = 222;
+
     private ArduinoRobot arduinoRobot;
+    private ArduinoRobotConnection arduinoRobotConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        arduinoRobot = new ArduinoRobot(5000);
+        TextView tvConnectionStatus = findViewById(R.id.tvConnStatus);
+        Thread uiThread = new Thread(() -> {
+            if (arduinoRobotConnection.isConnectionEstablished()) {
+                tvConnectionStatus.setText(getString(R.string.connected_status));
+                tvConnectionStatus.setTextColor(getColor(R.color.green));
+            } else {
+                tvConnectionStatus.setText(getString(R.string.not_connected_status));
+                tvConnectionStatus.setTextColor(getColor(R.color.red));
+            }
+        });
+
+        arduinoRobot = new ArduinoRobot();
+        arduinoRobotConnection = new ArduinoRobotConnection(5000) {
+            @Override
+            public void onConnectionStatusListener(boolean isConnectionEstablished) {
+                runOnUiThread(uiThread);
+            }
+        };
+        arduinoRobotConnection.start();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Hyperlapse Robot Controller");
@@ -47,13 +66,10 @@ public class MainActivity extends AppCompatActivity {
         buttonTemp.setOnClickListener((v) -> {
             Toast.makeText(MainActivity.this, "Staged Rules count: " + arduinoRobot.getRulesManagerEntity().size(), Toast.LENGTH_SHORT).show();
         });
-
-        Thread t = new Thread(this::run);
-        t.start();
     }
 
     private void openCreateRuleActivity(View view) {
-        if (!arduinoRobot.isConnectionEstablished()) {
+        if (!arduinoRobotConnection.isConnectionEstablished()) {
             Toast.makeText(MainActivity.this, "Please, connect with the Robot, before adding a rule", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -65,26 +81,23 @@ public class MainActivity extends AppCompatActivity {
 
     private void openConfigureConnectionActivity(View view) {
         Intent intent = new Intent(MainActivity.this, ConfigureConnectionActivity.class);
-        intent.putExtra("arduinoRobot", arduinoRobot);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_CONFIGURE_CONNECTION);
     }
 
-    public void run() {
-        boolean activityRunning = true;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        Thread uiThread = new Thread(() -> {
-            String toastMessage = "Connection Established: " + (arduinoRobot.isConnectionEstablished() ? "true" : "false");
-            Toast.makeText(MainActivity.this, toastMessage, Toast.LENGTH_SHORT).show();
-        });
+        switch (requestCode) {
+            case (REQUEST_CODE_CONFIGURE_CONNECTION): {
+                if (resultCode == Activity.RESULT_OK) {
+                    String ipAddress = data.getStringExtra(ConfigureConnectionActivity.IP_ADDRESS_CODE);
+                    String portNumber = data.getStringExtra(ConfigureConnectionActivity.PORT_NUMBER_CODE);
 
-        while (activityRunning) {
-            runOnUiThread(uiThread);
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                    arduinoRobotConnection.setConnectionData(ipAddress, portNumber);
+                }
+                break;
             }
-            activityRunning = getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED);
         }
     }
 }

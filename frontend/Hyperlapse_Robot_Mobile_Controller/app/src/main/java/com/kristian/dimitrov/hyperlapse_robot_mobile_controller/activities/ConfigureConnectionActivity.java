@@ -1,6 +1,7 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -23,11 +24,14 @@ import android.widget.TextView;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobotConnection;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.utills.ConnectionHTTP;
 
 public class ConfigureConnectionActivity extends AppCompatActivity {
 
     private final int REQUEST_CODE_INTERNET = 1234;
+    public static final String IP_ADDRESS_CODE = "ipAddress";
+    public static final String PORT_NUMBER_CODE = "portNumber";
 
     private ArduinoRobot arduinoRobot;
 
@@ -112,8 +116,12 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
         String portNumber = editText_portNumber.getText().toString();
         boolean connected = connectionEstablished(ipAddress, portNumber);
         if (connected) {
-            arduinoRobot.setConnectionData(ipAddress, portNumber);
+            Intent output = getIntent();
+            output.putExtra(IP_ADDRESS_CODE, ipAddress);
+            output.putExtra(PORT_NUMBER_CODE, portNumber);
+            setResult(RESULT_OK, output);
             finish();
+
         } else {
             new AlertDialog.Builder(ConfigureConnectionActivity.this)
                     .setTitle("Connection Error")

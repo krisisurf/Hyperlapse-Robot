@@ -27,4 +27,6 @@
     <string name="default_distance">0</string>
     <string name="default_execution_time">0</string>
     <string name="default_degree">0</string>
+    <string name="not_connected_status">Not connected</string>
+    <string name="connected_status">Connected</string>
 </resources>
