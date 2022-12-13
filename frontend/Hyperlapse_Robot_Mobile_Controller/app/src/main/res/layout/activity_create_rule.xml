@@ -157,6 +157,7 @@
                     android:id="@+id/labelPanExecutionTime"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:ems="6"
                     android:padding="5dp"
                     android:text="@string/label_execution_time"
                     android:textColor="@color/white"
@@ -170,6 +171,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
+                    android:ems="4"
+                    android:inputType="number|numberDecimal"
+                    android:maxLength="5"
                     app:layout_constraintLeft_toRightOf="@id/labelPanExecutionTime"
                     app:layout_constraintRight_toLeftOf="@id/dividerCamera"
                     app:layout_constraintTop_toBottomOf="@id/labelPanDegree" />

@@ -18,10 +18,12 @@
     <string name="label_camera">Camera:</string>
     <string name="direction_type">Direction type</string>
     <string name="label_degree">Degree:</string>
-    <string name="label_execution_time">Execution time:</string>
+    <string name="label_execution_time">Execution time (sec):</string>
 
     <string name="label_pan">Pan</string>
     <string name="label_tilt">Tilt</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="distance">Distance:</string>
+    <string name="preview">Preview:</string>
+    <string name="default_distance">0</string>
+    <string name="default_execution_time">0</string>
 </resources>
