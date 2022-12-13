@@ -8,12 +8,22 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <Button
             android:id="@+id/btn_add_rule"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add rule"
             android:layout_centerInParent="true"
-            android:layout_marginHorizontal="20dp"/>
+            android:layout_marginHorizontal="20dp"
+            android:text="Add rule" />
+
+        <Button
+            android:id="@+id/temporary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_add_rule"
+            android:layout_marginHorizontal="30dp"
+            android:text="Get Rules Count" />
+
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

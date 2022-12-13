@@ -105,6 +105,7 @@ public class CreateRuleActivity extends AppCompatActivity {
                 float executionTime = forwardBackwardFragment.getExecutionTime();
                 try {
                     ruleEntityBuilder.setLeftMotor(distance, executionTime);
+                    ruleEntityBuilder.setRightMotor(distance, executionTime);
                 } catch (IncompatibleStepMotorArguments incompatibleStepMotorArguments) {
                     errorBuilder.append(++errorsCount).append(". ").append(incompatibleStepMotorArguments.getMessage()).append("\n");
                 }

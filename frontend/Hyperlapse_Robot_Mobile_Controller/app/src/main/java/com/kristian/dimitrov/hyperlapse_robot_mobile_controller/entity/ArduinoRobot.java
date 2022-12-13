@@ -1,14 +1,18 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.StepMotorEntity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.utills.ConnectionHTTP;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 
-public class ArduinoRobot implements Serializable {
+public class ArduinoRobot implements Serializable, Runnable {
 
     /**
      * Connection
      */
+    private final Thread connectionThread;
+    private final int testConnDelay;
     private boolean isConnectionEstablished;
     private String ipAddress;
     private String portNumber;
@@ -25,7 +29,10 @@ public class ArduinoRobot implements Serializable {
 
     private final RulesManagerEntity rulesManagerEntity;
 
-    public ArduinoRobot() {
+    public ArduinoRobot(int testConnectionDelayMillis) {
+        connectionThread = new Thread(this);
+        this.testConnDelay = testConnectionDelayMillis;
+        connectionThread.start();
         rulesManagerEntity = new RulesManagerEntity();
     }
 
@@ -110,5 +117,28 @@ public class ArduinoRobot implements Serializable {
      */
     public static int convertDegreesToSteps(double degrees, final int stepsPerRevolution) {
         return (int) (stepsPerRevolution * degrees / 360);
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            if (ipAddress == null || portNumber == null) {
+                isConnectionEstablished = false;
+            }
+
+            String testUrl = MessageFormat.format("http://{0}:{1}/api/testConnection", ipAddress, portNumber);
+            try {
+                ConnectionHTTP.HTTP_GET(testUrl);
+                isConnectionEstablished = true;
+            } catch (Exception e) {
+                isConnectionEstablished = false;
+            }
+
+            try {
+                Thread.sleep(testConnDelay);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
