@@ -1,10 +1,8 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.StepMotorEntity;
-import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.utills.ConnectionHTTP;
 
 import java.io.Serializable;
-import java.text.MessageFormat;
 
 public class ArduinoRobot implements Serializable {
 
@@ -34,6 +32,10 @@ public class ArduinoRobot implements Serializable {
 
     public RulesManagerEntity getRulesManagerEntity() {
         return rulesManagerEntity;
+    }
+
+    public void addRule(RuleEntity ruleEntity) {
+        rulesManagerEntity.addRule(ruleEntity);
     }
 
     public double getWheelRadius() {

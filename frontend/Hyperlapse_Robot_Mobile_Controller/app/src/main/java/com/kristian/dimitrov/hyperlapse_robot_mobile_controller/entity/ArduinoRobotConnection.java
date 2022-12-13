@@ -90,6 +90,7 @@ public class ArduinoRobotConnection implements Runnable {
     }
 
     public boolean isConnectionEstablished() {
+        testConnectionNow();
         return isConnectionEstablished;
     }
 

@@ -5,8 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,10 +15,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
-import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RulesManagerEntity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RuleEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.builders.RuleEntityBuilder;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.exception.IncompatibleStepMotorArguments;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.fragments.ForwardBackwardFragment;
@@ -26,6 +28,8 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.fragments.Turnin
 public class CreateRuleActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateRuleActivity";
+
+    public static final String RULE_ENTITY_CODE = "ruleEntity";
 
     private ArduinoRobot arduinoRobot;
     private RuleEntityBuilder ruleEntityBuilder;
@@ -81,8 +85,9 @@ public class CreateRuleActivity extends AppCompatActivity {
     private void applyButton(View view) {
         String errorMessage = validateInputs();
         if (errorMessage.isEmpty()) {
-            RulesManagerEntity rulesManagerEntity = arduinoRobot.getRulesManagerEntity();
-            rulesManagerEntity.addRule(ruleEntityBuilder.build());
+            RuleEntity ruleEntity = ruleEntityBuilder.build();
+            Intent intent = getIntent();
+            setResult(Activity.RESULT_OK, intent);
             finish();
             return;
         }

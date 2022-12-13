@@ -3,7 +3,9 @@ package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.CameraStepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.MovementStepMotorEntity;
 
-public class RuleEntity {
+import java.io.Serializable;
+
+public class RuleEntity implements Serializable{
 
     private MovementStepMotorEntity leftMotor;
     private MovementStepMotorEntity rightMotor;

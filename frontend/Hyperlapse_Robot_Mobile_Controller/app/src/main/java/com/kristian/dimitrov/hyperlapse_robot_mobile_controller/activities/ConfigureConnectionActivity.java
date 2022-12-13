@@ -24,12 +24,12 @@ import android.widget.TextView;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
-import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobotConnection;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.utills.ConnectionHTTP;
 
 public class ConfigureConnectionActivity extends AppCompatActivity {
 
-    private final int REQUEST_CODE_INTERNET = 1234;
+    private final int REQUEST_CODE_INTERNET = 101;
+
     public static final String IP_ADDRESS_CODE = "ipAddress";
     public static final String PORT_NUMBER_CODE = "portNumber";
 
