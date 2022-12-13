@@ -58,16 +58,18 @@
                 app:layout_constraintTop_toBottomOf="@id/movementLabel">
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInput_directionType"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:hint="@string/direction_type"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:boxStrokeColor="@color/blue_500"
                     app:counterTextColor="@color/white"
-                    app:hintTextColor="@color/white"
                     app:helperTextTextColor="@color/white"
+                    app:hintTextColor="@color/white"
+                    app:layout_constraintBottom_toTopOf="@+id/directionTypeFragment"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:placeholderTextColor="@color/white">
 
                     <AutoCompleteTextView
@@ -77,6 +79,13 @@
                         android:inputType="none"
                         tools:ignore="LabelFor" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <FrameLayout
+                    android:id="@+id/directionTypeFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textInput_directionType" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -148,6 +157,7 @@
                     android:id="@+id/labelPanExecutionTime"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:ems="6"
                     android:padding="5dp"
                     android:text="@string/label_execution_time"
                     android:textColor="@color/white"
@@ -161,6 +171,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
+                    android:ems="4"
+                    android:inputType="number|numberDecimal"
+                    android:maxLength="5"
                     app:layout_constraintLeft_toRightOf="@id/labelPanExecutionTime"
                     app:layout_constraintRight_toLeftOf="@id/dividerCamera"
                     app:layout_constraintTop_toBottomOf="@id/labelPanDegree" />
@@ -182,12 +195,12 @@
                     android:id="@+id/labelTiltDegree"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
                     android:padding="5dp"
                     android:text="@string/label_degree"
                     android:textColor="@color/white"
                     android:textSize="15sp"
-                    android:layout_marginStart="10dp"
                     app:layout_constraintLeft_toRightOf="@id/dividerCamera"
                     app:layout_constraintRight_toLeftOf="@id/editTextTiltDegree"
                     app:layout_constraintTop_toBottomOf="@id/labelTilt" />
@@ -204,11 +217,11 @@
                     android:id="@+id/labelTiltExecutionTime"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
                     android:padding="5dp"
                     android:text="@string/label_execution_time"
                     android:textColor="@color/white"
                     android:textSize="15sp"
-                    android:layout_marginStart="10dp"
                     app:layout_constraintLeft_toRightOf="@id/dividerCamera"
                     app:layout_constraintRight_toLeftOf="@id/editTextTiltExecutionTime"
                     app:layout_constraintTop_toBottomOf="@id/labelTiltDegree" />
