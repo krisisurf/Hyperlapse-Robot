@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, CreateRuleActivity.class);
         intent.putExtra("arduinoRobot", arduinoRobot);
         startActivity(intent);
-
     }
 
     private void openConfigureConnectionActivity(View view) {

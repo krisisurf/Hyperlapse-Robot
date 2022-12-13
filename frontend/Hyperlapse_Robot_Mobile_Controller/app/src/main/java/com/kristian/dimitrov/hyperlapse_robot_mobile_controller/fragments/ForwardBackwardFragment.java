@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 
@@ -25,6 +26,9 @@ public class ForwardBackwardFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private boolean isForForward;
+
+    private EditText editTextDistance;
+    private EditText editTextExecutionTime;
 
     public ForwardBackwardFragment() {
         // Required empty public constructor
@@ -63,6 +67,20 @@ public class ForwardBackwardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        editTextDistance = getView().findViewById(R.id.etDistance);
+        editTextExecutionTime = getView().findViewById(R.id.etExecutionTime);
+    }
+
+    public float getDistance() {
+        float distance = Float.parseFloat(editTextDistance.getText().toString());
+        if (!isForForward)
+            distance = -distance;
+
+        return distance;
+    }
+
+    public float getExecutionTime() {
+        return Float.parseFloat(editTextExecutionTime.getText().toString());
     }
 
     public void setDirection(boolean isForForwardDirection) {
