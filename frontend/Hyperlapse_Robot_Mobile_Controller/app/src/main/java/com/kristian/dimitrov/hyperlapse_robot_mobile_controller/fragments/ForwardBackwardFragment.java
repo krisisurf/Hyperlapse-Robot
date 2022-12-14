@@ -20,11 +20,8 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
  */
 public class ForwardBackwardFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String IS_FORWARD_PARAM = "isForForwardDirection";
 
-    // TODO: Rename and change types of parameters
     private boolean isForForward;
 
     private EditText editTextDistance;
@@ -40,7 +37,6 @@ public class ForwardBackwardFragment extends Fragment {
      *
      * @return A new instance of fragment ForwardBackwardFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static ForwardBackwardFragment newInstance(boolean isForForwardDirection) {
         ForwardBackwardFragment fragment = new ForwardBackwardFragment();
         Bundle args = new Bundle();

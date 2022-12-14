@@ -35,8 +35,8 @@ public class CreateRuleActivity extends AppCompatActivity {
     private final String[] directionStringOptions = {"Forward", "Turning"};
     private int selectedDirectionIndex = -1;
 
-    private Fragment forwardBackwardFragment;
-    private Fragment turningFragment;
+    private ForwardBackwardFragment forwardBackwardFragment;
+    private TurningFragment turningFragment;
 
     private EditText editTextPanDegree;
     private EditText editTextPanExecutionTime;
@@ -104,9 +104,8 @@ public class CreateRuleActivity extends AppCompatActivity {
             errorBuilder.append(++errorsCount).append(". Not selected ").append(getString(R.string.direction_type)).append(".\n");
         } else {
             if (selectedDirectionIndex == 0) {
-                ForwardBackwardFragment fragment = ((ForwardBackwardFragment) forwardBackwardFragment);
-                float distance = fragment.getDistance();
-                float executionTime = fragment.getExecutionTime();
+                float distance = forwardBackwardFragment.getDistance();
+                float executionTime = forwardBackwardFragment.getExecutionTime();
                 try {
                     ruleEntityBuilder.setLeftMotor(distance, executionTime);
                     ruleEntityBuilder.setRightMotor(distance, executionTime);
@@ -138,11 +137,9 @@ public class CreateRuleActivity extends AppCompatActivity {
     }
 
     private void directionOnItemClickListener(AdapterView<?> adapterView, View view, int index, long id) {
-        String item = adapterView.getItemAtPosition(index).toString();
-
         selectedDirectionIndex = index;
         if (index == 0) {
-            ((ForwardBackwardFragment)forwardBackwardFragment).setDirection(true);
+            forwardBackwardFragment.setDirection(true);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.directionTypeFragment, forwardBackwardFragment).commit();
         } else {
