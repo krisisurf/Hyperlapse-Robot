@@ -2,7 +2,6 @@ package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -83,7 +82,6 @@ public class CreateRuleActivity extends AppCompatActivity {
     private void applyButton(View view) {
         String errorMessage = validateInputs();
         if (errorMessage.isEmpty()) {
-            RuleEntity ruleEntity = ruleEntityBuilder.build();
             Intent intent = getIntent();
             setResult(Activity.RESULT_OK, intent);
             finish();

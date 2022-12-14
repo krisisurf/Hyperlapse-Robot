@@ -74,11 +74,6 @@ public class MainActivity extends AppCompatActivity {
 
         Button buttonAddRule = findViewById(R.id.btn_add_rule);
         buttonAddRule.setOnClickListener(this::openCreateRuleActivity);
-
-        Button buttonTemp = findViewById(R.id.temporary);
-        buttonTemp.setOnClickListener((v) -> {
-            Toast.makeText(MainActivity.this, "Staged Rules count: " + arduinoRobot.getRulesManagerEntity().size(), Toast.LENGTH_SHORT).show();
-        });
     }
 
     private void openCreateRuleActivity(View view) {

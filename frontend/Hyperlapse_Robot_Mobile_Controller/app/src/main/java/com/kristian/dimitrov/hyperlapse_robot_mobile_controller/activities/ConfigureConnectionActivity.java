@@ -50,7 +50,7 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configure_connection);
-        setTitle("Configure Connection");
+        setTitle(getString(R.string.configure_connection));
         StrictMode.ThreadPolicy gfgPolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(gfgPolicy);
 
@@ -149,24 +149,25 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_INTERNET) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //Permission granted
-            } else {
-                //Permission NOT granted
-                if (!ActivityCompat.shouldShowRequestPermissionRationale(ConfigureConnectionActivity.this, Manifest.permission.INTERNET)) {
-                    new AlertDialog.Builder(ConfigureConnectionActivity.this)
-                            .setMessage("You have permanently denied this permission.")
-                            .setPositiveButton("OK", (dialogInterface, i) -> {
-
-                            }).create().show();
-                    // Permanently denied permission
-                    Intent intent = new Intent();
-                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                } else {
-                    new AlertDialog.Builder(ConfigureConnectionActivity.this)
-                            .setMessage("We don't have permissions for INTERNET.")
-                            .setPositiveButton("OK", (dialogInterface, i) -> {
-                            }).create().show();
-                }
+                return;
             }
+            //Permission NOT granted
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(ConfigureConnectionActivity.this, Manifest.permission.INTERNET)) {
+                new AlertDialog.Builder(ConfigureConnectionActivity.this)
+                        .setMessage("You have permanently denied this permission.")
+                        .setPositiveButton("OK", (dialogInterface, i) -> {
+
+                        }).create().show();
+                // Permanently denied permission
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            } else {
+                new AlertDialog.Builder(ConfigureConnectionActivity.this)
+                        .setMessage("We don't have permissions for INTERNET.")
+                        .setPositiveButton("OK", (dialogInterface, i) -> {
+                        }).create().show();
+            }
+
         }
     }
 }
