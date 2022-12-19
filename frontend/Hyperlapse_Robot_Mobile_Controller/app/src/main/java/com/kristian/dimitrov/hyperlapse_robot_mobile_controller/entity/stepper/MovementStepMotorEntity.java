@@ -42,14 +42,18 @@ public class MovementStepMotorEntity extends StepMotorEntity implements Serializ
      * @throws IncompatibleStepMotorArguments When it is impossible to travel the given distance for the execution time, because of hardware limitations.
      */
     public void setData(float distance, float executionTime) throws IncompatibleStepMotorArguments {
-        int stepsRequired = ArduinoRobot.convertCentimetersToSteps(distance, wheelRadius, stepsPerRevolution);
-        double minimalTimeRequired = ArduinoRobot.convertStepsToSeconds(stepsRequired, maxSpeed);
+        double minimalTimeRequired = getMinimalTimeRequired(distance);
 
         if (minimalTimeRequired > executionTime)
             throw new IncompatibleStepMotorArguments("The given 'executionTime=" + executionTime + "' is too short for reaching the target 'distance=" + distance + "'. Minimal time for this distance is: " + minimalTimeRequired + " seconds");
 
         this.distance = distance;
         this.executionTime = executionTime;
+    }
+
+    public double getMinimalTimeRequired(float distance) {
+        int stepsRequired = ArduinoRobot.convertCentimetersToSteps(distance, wheelRadius, stepsPerRevolution);
+        return ArduinoRobot.convertStepsToSeconds(stepsRequired, maxSpeed);
     }
 
     public float getDistance() {

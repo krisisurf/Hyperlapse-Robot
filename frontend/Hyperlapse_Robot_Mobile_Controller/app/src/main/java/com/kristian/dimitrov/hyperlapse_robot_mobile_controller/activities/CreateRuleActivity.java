@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +20,8 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RuleEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.builders.RuleEntityBuilder;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.CameraStepMotorEntity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.MovementStepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.exception.IncompatibleStepMotorArguments;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.fragments.ForwardBackwardFragment;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.fragments.TurningFragment;
@@ -62,14 +66,16 @@ public class CreateRuleActivity extends AppCompatActivity {
         directionAutoComplete.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, directionStringOptions));
         directionAutoComplete.setOnItemClickListener(this::directionOnItemClickListener);
 
-        forwardBackwardFragment = new ForwardBackwardFragment();
+        forwardBackwardFragment = ForwardBackwardFragment.newInstance(true, arduinoRobot);
         turningFragment = new TurningFragment();
 
-        editTextPanDegree = findViewById(R.id.editTextPanDegree);
         editTextPanExecutionTime = findViewById(R.id.editTextPanExecutionTime);
+        editTextPanDegree = findViewById(R.id.editTextPanDegree);
+        editTextPanDegree.addTextChangedListener(cameraTextWatcher(editTextPanExecutionTime));
 
-        editTextTiltDegree = findViewById(R.id.editTextTiltDegree);
         editTextTiltExecutionTime = findViewById(R.id.editTextTiltExecutionTime);
+        editTextTiltDegree = findViewById(R.id.editTextTiltDegree);
+        editTextTiltDegree.addTextChangedListener(cameraTextWatcher(editTextTiltExecutionTime));
 
         TextView textView_ruleNumber = findViewById(R.id.textView_ruleNumber);
         textView_ruleNumber.setText(getString(R.string.label_rule_number, String.valueOf(arduinoRobot.getRulesManagerEntity().size() + 1)));
@@ -138,11 +144,43 @@ public class CreateRuleActivity extends AppCompatActivity {
         selectedDirectionIndex = index;
         if (index == 0) {
             forwardBackwardFragment.setDirection(true);
+            forwardBackwardFragment.setArduinoRobot(arduinoRobot);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.directionTypeFragment, forwardBackwardFragment).commit();
         } else {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.directionTypeFragment, turningFragment).commit();
         }
+    }
+    private TextWatcher cameraTextWatcher(EditText editTextExecutionTime){
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String stringValue = String.valueOf(s);
+                if (stringValue.isEmpty()) {
+                    editTextExecutionTime.setText("0");
+                    return;
+                }
+
+                try {
+                    float degree = Float.parseFloat(stringValue);
+                    CameraStepMotorEntity movementStepMotorEntity = new CameraStepMotorEntity();
+                    double minimalTime = movementStepMotorEntity.getMinimalTimeRequired(degree);
+                    editTextExecutionTime.setText(String.valueOf(minimalTime));
+                } catch (NumberFormatException e) {
+                    editTextExecutionTime.setText("0");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        };
     }
 }

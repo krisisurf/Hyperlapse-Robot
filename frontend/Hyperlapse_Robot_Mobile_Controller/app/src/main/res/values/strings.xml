@@ -22,7 +22,7 @@
 
     <string name="label_pan">Pan</string>
     <string name="label_tilt">Tilt</string>
-    <string name="distance">Distance:</string>
+    <string name="distance">Distance (cm):</string>
     <string name="preview">Preview:</string>
     <string name="default_distance">0</string>
     <string name="default_execution_time">0</string>
