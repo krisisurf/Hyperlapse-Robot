@@ -7,15 +7,23 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="10dp">
 
         <Button
             android:id="@+id/btn_add_rule"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginHorizontal="20dp"
-            android:text="Add rule" />
+            android:layout_alignParentTop="true"
+            android:text="@string/btn_add_rules" />
+
+        <FrameLayout
+            android:id="@+id/rules_list_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/btn_add_rule" />
+
 
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
