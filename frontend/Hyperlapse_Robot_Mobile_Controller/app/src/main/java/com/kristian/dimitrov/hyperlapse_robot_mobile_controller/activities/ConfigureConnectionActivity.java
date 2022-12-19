@@ -1,6 +1,7 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -27,7 +28,10 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.utills.Connectio
 
 public class ConfigureConnectionActivity extends AppCompatActivity {
 
-    private final int REQUEST_CODE_INTERNET = 1234;
+    private final int REQUEST_CODE_INTERNET = 101;
+
+    public static final String IP_ADDRESS_CODE = "ipAddress";
+    public static final String PORT_NUMBER_CODE = "portNumber";
 
     private ArduinoRobot arduinoRobot;
 
@@ -46,7 +50,7 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configure_connection);
-        setTitle("Configure Connection");
+        setTitle(getString(R.string.configure_connection));
         StrictMode.ThreadPolicy gfgPolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(gfgPolicy);
 
@@ -112,8 +116,12 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
         String portNumber = editText_portNumber.getText().toString();
         boolean connected = connectionEstablished(ipAddress, portNumber);
         if (connected) {
-            arduinoRobot.setConnectionData(ipAddress, portNumber);
+            Intent output = getIntent();
+            output.putExtra(IP_ADDRESS_CODE, ipAddress);
+            output.putExtra(PORT_NUMBER_CODE, portNumber);
+            setResult(RESULT_OK, output);
             finish();
+
         } else {
             new AlertDialog.Builder(ConfigureConnectionActivity.this)
                     .setTitle("Connection Error")
@@ -129,7 +137,7 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
             imageView_connectionStatusIcon.setForeground(drawable_connectionStatusIcon_established);
             imageView_connectionStatusIcon.setBackgroundColor(color_connectionSatusIcon_established);
         } else {
-            textView_connectionStatus.setText(R.string.conn_status_not_established);
+            textView_connectionStatus.setText(R.string.conn_status_unknown);
             imageView_connectionStatusIcon.setForeground(getDrawable_connectionStatusIcon_notEstablished);
             imageView_connectionStatusIcon.setBackgroundColor(0);
         }
@@ -141,24 +149,25 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_INTERNET) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //Permission granted
-            } else {
-                //Permission NOT granted
-                if (!ActivityCompat.shouldShowRequestPermissionRationale(ConfigureConnectionActivity.this, Manifest.permission.INTERNET)) {
-                    new AlertDialog.Builder(ConfigureConnectionActivity.this)
-                            .setMessage("You have permanently denied this permission.")
-                            .setPositiveButton("OK", (dialogInterface, i) -> {
-
-                            }).create().show();
-                    // Permanently denied permission
-                    Intent intent = new Intent();
-                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                } else {
-                    new AlertDialog.Builder(ConfigureConnectionActivity.this)
-                            .setMessage("We don't have permissions for INTERNET.")
-                            .setPositiveButton("OK", (dialogInterface, i) -> {
-                            }).create().show();
-                }
+                return;
             }
+            //Permission NOT granted
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(ConfigureConnectionActivity.this, Manifest.permission.INTERNET)) {
+                new AlertDialog.Builder(ConfigureConnectionActivity.this)
+                        .setMessage("You have permanently denied this permission.")
+                        .setPositiveButton("OK", (dialogInterface, i) -> {
+
+                        }).create().show();
+                // Permanently denied permission
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            } else {
+                new AlertDialog.Builder(ConfigureConnectionActivity.this)
+                        .setMessage("We don't have permissions for INTERNET.")
+                        .setPositiveButton("OK", (dialogInterface, i) -> {
+                        }).create().show();
+            }
+
         }
     }
 }

@@ -1,20 +1,34 @@
 <resources>
     <string name="app_name">Hyperlapse Robot Controller</string>
-    <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Hyperlapse Robot</string>
 
     <string name="ipAddress">192.168.0.108</string>
     <string name="portNumber">8080</string>
 
     <string name="conn_status_unknown">Unknown Connection Status</string>
     <string name="conn_status_established">Connection Established</string>
-    <string name="conn_status_not_established">Connection Not Established</string>
+
+    <string name="title_create_rule_activity">Create a new rule</string>
+
+    <string name="button_cancle">cancle</string>
+    <string name="button_apply">apply</string>
+
+    <string name="label_rule_number">Rule №%1$s</string>
+    <string name="label_movement">Movement:</string>
+    <string name="label_camera">Camera:</string>
+    <string name="direction_type">Direction type</string>
+    <string name="label_degree">Degree:</string>
+    <string name="label_execution_time">Execution time (sec):</string>
+
+    <string name="label_pan">Pan</string>
+    <string name="label_tilt">Tilt</string>
+    <string name="distance">Distance (cm):</string>
+    <string name="preview">Preview:</string>
+    <string name="default_distance">0</string>
+    <string name="default_execution_time">0</string>
+    <string name="default_degree">0</string>
+    <string name="not_connected_status">Not connected</string>
+    <string name="connected_status">Connected</string>
+    <string name="configure_connection">Configure Connection</string>
+    <string name="send_rules">Send Rules</string>
 </resources>
