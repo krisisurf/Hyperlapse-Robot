@@ -19,6 +19,11 @@ public class RuleEntity implements Serializable{
         this.tiltMotor = tiltMotor;
     }
 
+    public float getExecutionTime(){
+        //TODO: Return total execution time.
+        return 0f;
+    }
+
     @Override
     public String toString() {
         return "{" +

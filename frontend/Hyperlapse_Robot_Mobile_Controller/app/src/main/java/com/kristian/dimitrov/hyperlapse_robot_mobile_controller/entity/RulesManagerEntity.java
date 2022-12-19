@@ -9,7 +9,7 @@ public class RulesManagerEntity implements Serializable {
     private List<RuleEntity> rules;
 
     public RulesManagerEntity() {
-        this.rules = new ArrayList<RuleEntity>();
+        this.rules = new ArrayList<>();
     }
 
     public void addRule(RuleEntity ruleEntity) {
@@ -26,6 +26,10 @@ public class RulesManagerEntity implements Serializable {
 
     public void clearRules() {
         rules.clear();
+    }
+
+    public List<RuleEntity> getRules() {
+        return rules;
     }
 
     @Override

@@ -26,6 +26,7 @@
         android:background="@drawable/rounded_corners_blue_700" />
 
     <TextView
+        android:id="@+id/tvDescription"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:text="Direction type: forward\ndistance:50cm\nexecutionTime:50\n\npan: 50\ntilt:50"

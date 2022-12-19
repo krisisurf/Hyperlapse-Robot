@@ -9,6 +9,7 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobotConnection;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RuleEntity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.builders.RuleEntityBuilder;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.StepMotorEntity;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,9 +17,13 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         TextView tvConnectionStatus = findViewById(R.id.tvConnStatus);
         Thread uiThread = new Thread(() -> {
             if (arduinoRobotConnection.isConnectionEstablished()) {
@@ -44,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
                 tvConnectionStatus.setTextColor(getColor(R.color.red));
             }
         });
-
 
         final double wheelRadius = 5;
         final StepMotorEntity leftMotor = new StepMotorEntity(64, 16);
@@ -73,6 +78,11 @@ public class MainActivity extends AppCompatActivity {
 
         Button buttonAddRule = findViewById(R.id.btn_add_rule);
         buttonAddRule.setOnClickListener(this::openCreateRuleActivity);
+
+        arduinoRobot.addRule(new RuleEntityBuilder(arduinoRobot).build());
+        ArrayAdapter arrayAdapter = new RulesListAdapter(MainActivity.this, arduinoRobot.getRulesManagerEntity().getRules());
+        ListView listView = findViewById(R.id.listView);
+        listView.setAdapter(arrayAdapter);
     }
 
     private void openCreateRuleActivity(View view) {
