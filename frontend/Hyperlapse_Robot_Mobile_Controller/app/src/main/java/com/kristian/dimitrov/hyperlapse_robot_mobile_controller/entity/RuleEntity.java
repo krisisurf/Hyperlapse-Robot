@@ -5,7 +5,7 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.M
 
 import java.io.Serializable;
 
-public class RuleEntity implements Serializable{
+public class RuleEntity implements Serializable {
 
     private MovementStepMotorEntity leftMotor;
     private MovementStepMotorEntity rightMotor;
@@ -19,9 +19,16 @@ public class RuleEntity implements Serializable{
         this.tiltMotor = tiltMotor;
     }
 
-    public float getExecutionTime(){
-        //TODO: Return total execution time.
-        return 0f;
+    /**
+     * Finds how much time will the rule take.
+     *
+     * @return max execution time in seconds
+     */
+    public float getExecutionTime() {
+        float maxExecutionTimeMovement = Math.max(leftMotor.getExecutionTime(), rightMotor.getExecutionTime());
+        float maxExecutionTimeCamera = Math.max(panMotor.getExecutionTime(), tiltMotor.getExecutionTime());
+
+        return Math.max(maxExecutionTimeMovement, maxExecutionTimeCamera);
     }
 
     @Override

@@ -12,9 +12,10 @@
         android:layout_height="wrap_content"
         android:text="@string/btn_add_rules" />
 
-    <ListView
-        android:id="@+id/listView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rulesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 
 </LinearLayout>
