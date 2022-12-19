@@ -18,12 +18,7 @@
             android:layout_alignParentTop="true"
             android:text="@string/btn_add_rules" />
 
-        <FrameLayout
-            android:id="@+id/rules_list_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/btn_add_rule" />
-
+        <include layout="@layout/fragment_rules_list" />
 
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
