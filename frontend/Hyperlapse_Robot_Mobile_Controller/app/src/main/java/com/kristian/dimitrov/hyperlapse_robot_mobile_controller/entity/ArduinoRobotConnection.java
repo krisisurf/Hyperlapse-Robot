@@ -95,8 +95,7 @@ public class ArduinoRobotConnection implements Runnable {
         String url = MessageFormat.format("http://{0}:{1}/api/arduino/runRules", ipAddress, portNumber);
         try {
             String json = gson.toJson(rulesManagerEntity);
-            Log.i("myTest", "json: " + json);
-            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), json);
+            RequestBody requestBody = RequestBody.create(json, MediaType.parse("application/json"));
             Response response = ConnectionHTTP.HTTP_POST(url, requestBody);
 
             if (response.code() == 200)
