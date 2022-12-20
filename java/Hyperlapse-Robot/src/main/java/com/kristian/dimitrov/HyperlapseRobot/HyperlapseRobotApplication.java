@@ -36,7 +36,9 @@ public class HyperlapseRobotApplication {
         final StepMotorEntity cameraPanMotor = new StepMotorEntity(64, 16);
         final StepMotorEntity cameraTiltMotor = new StepMotorEntity(64, 16);
 
-        config.setArduinoRobot(new ArduinoRobot(wheelRadius, leftMotor, rightMotor, cameraPanMotor, cameraTiltMotor));
+        ArduinoRobot arduinoRobot = new ArduinoRobot();
+        arduinoRobot.setHardwareData(wheelRadius, leftMotor, rightMotor, cameraPanMotor, cameraTiltMotor);
+        config.setArduinoRobot(arduinoRobot);
     }
 
 }
