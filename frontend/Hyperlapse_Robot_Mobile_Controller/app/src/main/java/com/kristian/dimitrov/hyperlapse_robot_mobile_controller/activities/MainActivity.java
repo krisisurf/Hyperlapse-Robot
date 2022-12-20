@@ -6,19 +6,27 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.adapters.StagedRulesAdapter;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobotConnection;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RuleEntity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.builders.RuleEntityBuilder;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.StepMotorEntity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,10 +37,13 @@ public class MainActivity extends AppCompatActivity {
     private ArduinoRobot arduinoRobot;
     private ArduinoRobotConnection arduinoRobotConnection;
 
+    private StagedRulesAdapter stagedRulesAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         TextView tvConnectionStatus = findViewById(R.id.tvConnStatus);
         Thread uiThread = new Thread(() -> {
@@ -44,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
                 tvConnectionStatus.setTextColor(getColor(R.color.red));
             }
         });
-
 
         final double wheelRadius = 5;
         final StepMotorEntity leftMotor = new StepMotorEntity(64, 16);
@@ -73,6 +83,11 @@ public class MainActivity extends AppCompatActivity {
 
         Button buttonAddRule = findViewById(R.id.btn_add_rule);
         buttonAddRule.setOnClickListener(this::openCreateRuleActivity);
+
+        stagedRulesAdapter = new StagedRulesAdapter(MainActivity.this, arduinoRobot.getRulesManagerEntity().getRules());
+        RecyclerView recyclerView = findViewById(R.id.rulesRecyclerView);
+        recyclerView.setAdapter(stagedRulesAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
     }
 
     private void openCreateRuleActivity(View view) {
@@ -111,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG, "Create rule request code OK received.");
                     RuleEntity ruleEntity = (RuleEntity) data.getSerializableExtra(CreateRuleActivity.RULE_ENTITY_CODE);
                     arduinoRobot.addRule(ruleEntity);
+                    stagedRulesAdapter.notifyItemInserted(arduinoRobot.getRulesManagerEntity().size() - 1);
+
                     Toast.makeText(MainActivity.this, "Staged rules count: " + arduinoRobot.getRulesManagerEntity().size(), Toast.LENGTH_SHORT).show();
                 }
                 break;

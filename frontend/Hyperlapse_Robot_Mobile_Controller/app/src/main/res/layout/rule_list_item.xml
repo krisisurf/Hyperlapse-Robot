@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:background="@drawable/rounded_corner_blue_500_small_radius"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:layout_marginBottom="10dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvRuleNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="1"
+            android:textColor="@color/white"
+            android:textSize="40sp" />
+    </RelativeLayout>
+
+    <View
+        style="@style/DividerVertical"
+        android:layout_marginHorizontal="10dp"
+        android:background="@drawable/rounded_corners_blue_700" />
+
+    <TextView
+        android:id="@+id/tvDescription"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:text="Direction type: forward\ndistance:50cm\nexecutionTime:50\n\npan: 50\ntilt:50"
+        android:textColor="@color/white" />
+
+    <View
+        style="@style/DividerVertical"
+        android:layout_marginHorizontal="10dp"
+        android:background="@drawable/rounded_corners_blue_700" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/tvExecutionTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="3:30 min"
+            android:textColor="@color/white"
+            android:textSize="25sp" />
+    </RelativeLayout>
+
+</LinearLayout>

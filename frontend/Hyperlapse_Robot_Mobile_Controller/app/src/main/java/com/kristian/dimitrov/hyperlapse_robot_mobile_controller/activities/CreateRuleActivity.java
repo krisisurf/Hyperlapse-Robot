@@ -89,6 +89,7 @@ public class CreateRuleActivity extends AppCompatActivity {
         String errorMessage = validateInputs();
         if (errorMessage.isEmpty()) {
             Intent intent = getIntent();
+            intent.putExtra(CreateRuleActivity.RULE_ENTITY_CODE, ruleEntityBuilder.build());
             setResult(Activity.RESULT_OK, intent);
             finish();
             return;
@@ -152,7 +153,8 @@ public class CreateRuleActivity extends AppCompatActivity {
                     .replace(R.id.directionTypeFragment, turningFragment).commit();
         }
     }
-    private TextWatcher cameraTextWatcher(EditText editTextExecutionTime){
+
+    private TextWatcher cameraTextWatcher(EditText editTextExecutionTime) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
