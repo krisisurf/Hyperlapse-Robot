@@ -20,10 +20,7 @@ public class ConnectionHTTP {
         client = new OkHttpClient();
     }
 
-    public static String HTTP_GET(String url) throws IOException {
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
+    public static String HTTP_GET(Request request) throws IOException {
 
         try (Response response = client.newCall(request).execute()) {
             return response.body().string();

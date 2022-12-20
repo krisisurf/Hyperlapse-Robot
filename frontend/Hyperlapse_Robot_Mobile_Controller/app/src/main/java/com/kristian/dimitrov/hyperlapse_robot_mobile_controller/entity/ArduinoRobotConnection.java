@@ -13,6 +13,7 @@ import java.text.MessageFormat;
 
 import okhttp3.FormBody;
 import okhttp3.MediaType;
+import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okio.BufferedSink;
@@ -29,19 +30,26 @@ public class ArduinoRobotConnection implements Runnable {
     private boolean isConnectionEstablished;
     private String ipAddress;
     private String portNumber;
+    private Request testConnectionRequest;
 
-    private RequestBody requestBody;
     private Gson gson;
 
     public ArduinoRobotConnection(int testConnectionDelayMillis) {
         this.testConnDelay = testConnectionDelayMillis;
         connectionThread = new Thread(this);
         gson = new Gson();
+        testConnectionRequest = null;
     }
 
     public void setConnectionData(String ipAddress, String portNumber) {
         this.ipAddress = ipAddress;
         this.portNumber = portNumber;
+
+        String testUrl = MessageFormat.format("http://{0}:{1}/api/testConnection", ipAddress, portNumber);
+        testConnectionRequest = new Request.Builder()
+                .url(testUrl)
+                .build();
+
         testConnectionNow();
     }
 
@@ -73,9 +81,8 @@ public class ArduinoRobotConnection implements Runnable {
             isConnectionEstablished = false;
         }
 
-        String testUrl = MessageFormat.format("http://{0}:{1}/api/testConnection", ipAddress, portNumber);
         try {
-            ConnectionHTTP.HTTP_GET(testUrl);
+            ConnectionHTTP.HTTP_GET(testConnectionRequest);
             isConnectionEstablished = true;
         } catch (Exception e) {
             isConnectionEstablished = false;

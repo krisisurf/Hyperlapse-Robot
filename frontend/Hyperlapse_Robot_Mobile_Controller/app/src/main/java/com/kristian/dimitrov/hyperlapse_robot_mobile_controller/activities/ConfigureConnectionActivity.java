@@ -26,6 +26,8 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.utills.ConnectionHTTP;
 
+import okhttp3.Request;
+
 public class ConfigureConnectionActivity extends AppCompatActivity {
 
     private final int REQUEST_CODE_INTERNET = 101;
@@ -98,7 +100,8 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
         Log.i("configureConnection", "Trying to reach host: " + address);
         String result = "";
         try {
-            result = ConnectionHTTP.HTTP_GET(address);
+            Request request = new Request.Builder().url(address).build();
+            result = ConnectionHTTP.HTTP_GET(request);
             Log.i("configureConnection", "HTTP result: " + result);
         } catch (Exception e) {
             Log.i("configureConnection", "Error, while trying to reach host: " + address);
