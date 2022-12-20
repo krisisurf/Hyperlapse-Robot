@@ -18,8 +18,8 @@ public class RuleEntityBuilder {
     public RuleEntityBuilder(ArduinoRobot arduinoRobot) {
         this.arduinoRobot = arduinoRobot;
 
-        leftMotor = new MovementStepMotorEntity(arduinoRobot.wheelRadius);
-        rightMotor = new MovementStepMotorEntity(arduinoRobot.wheelRadius);
+        leftMotor = new MovementStepMotorEntity(arduinoRobot.getWheelRadius());
+        rightMotor = new MovementStepMotorEntity(arduinoRobot.getWheelRadius());
         panMotor = new CameraStepMotorEntity();
         tiltMotor = new CameraStepMotorEntity();
     }

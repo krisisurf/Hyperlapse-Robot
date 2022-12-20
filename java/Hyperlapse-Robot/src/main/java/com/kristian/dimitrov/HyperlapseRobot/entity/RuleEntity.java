@@ -3,7 +3,9 @@ package com.kristian.dimitrov.HyperlapseRobot.entity;
 import com.kristian.dimitrov.HyperlapseRobot.entity.stepper.CameraStepMotorEntity;
 import com.kristian.dimitrov.HyperlapseRobot.entity.stepper.MovementStepMotorEntity;
 
-public class RuleEntity {
+import java.io.Serializable;
+
+public class RuleEntity implements Serializable {
 
     private MovementStepMotorEntity leftMotor;
     private MovementStepMotorEntity rightMotor;
@@ -17,6 +19,18 @@ public class RuleEntity {
         this.tiltMotor = tiltMotor;
     }
 
+    /**
+     * Finds how much time will the rule take.
+     *
+     * @return max execution time in seconds
+     */
+    public float getExecutionTime() {
+        float maxExecutionTimeMovement = Math.max(leftMotor.getExecutionTime(), rightMotor.getExecutionTime());
+        float maxExecutionTimeCamera = Math.max(panMotor.getExecutionTime(), tiltMotor.getExecutionTime());
+
+        return Math.max(maxExecutionTimeMovement, maxExecutionTimeCamera);
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -27,3 +41,4 @@ public class RuleEntity {
                 '}';
     }
 }
+

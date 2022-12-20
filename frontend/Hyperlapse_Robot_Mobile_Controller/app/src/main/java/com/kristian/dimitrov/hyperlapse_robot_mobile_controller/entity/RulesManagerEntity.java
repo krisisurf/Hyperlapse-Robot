@@ -6,7 +6,7 @@ import java.util.List;
 
 public class RulesManagerEntity implements Serializable {
 
-    private List<RuleEntity> rules;
+    private final List<RuleEntity> rules;
 
     public RulesManagerEntity() {
         this.rules = new ArrayList<>();

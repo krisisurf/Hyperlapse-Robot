@@ -2,6 +2,7 @@ package com.kristian.dimitrov.HyperlapseRobot.entity;
 
 import org.apache.tomcat.util.buf.StringUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,12 +10,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RulesManagerEntity {
+public class RulesManagerEntity implements Serializable {
 
-    private List<RuleEntity> rules;
+    private final List<RuleEntity> rules;
 
     public RulesManagerEntity() {
-        this.rules = new ArrayList<RuleEntity>();
+        this.rules = new ArrayList<>();
     }
 
     public void addRule(RuleEntity ruleEntity) {
@@ -25,8 +26,16 @@ public class RulesManagerEntity {
         rules.remove(ruleEntity);
     }
 
+    public int size() {
+        return rules.size();
+    }
+
     public void clearRules() {
         rules.clear();
+    }
+
+    public List<RuleEntity> getRules() {
+        return rules;
     }
 
     @Override
