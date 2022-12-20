@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton buttonSendRules = findViewById(R.id.btn_send_rules);
+        buttonSendRules.setOnClickListener(this::sendStagedRules);
 
         FloatingActionButton buttonConfigureConnection = findViewById(R.id.btn_configure_connection);
         buttonConfigureConnection.setOnClickListener(this::openConfigureConnectionActivity);
@@ -88,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.rulesRecyclerView);
         recyclerView.setAdapter(stagedRulesAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+    }
+
+    private void sendStagedRules(View view) {
+        arduinoRobotConnection.tryToSendRules(arduinoRobot.getRulesManagerEntity());
     }
 
     private void openCreateRuleActivity(View view) {
