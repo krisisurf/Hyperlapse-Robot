@@ -10,6 +10,7 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.adapters.StagedR
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobotConnection;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RuleEntity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RulesManagerEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.builders.RuleEntityBuilder;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.StepMotorEntity;
 
@@ -92,12 +93,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendStagedRules(View view) {
-        arduinoRobotConnection.tryToSendRules(arduinoRobot.getRulesManagerEntity());
+        RulesManagerEntity rulesManagerEntity = arduinoRobot.getRulesManagerEntity();
+        if (rulesManagerEntity.size() == 0) {
+            Toast.makeText(MainActivity.this, "Error! Create rules first.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        boolean isSent = arduinoRobotConnection.tryToSendRules(arduinoRobot.getRulesManagerEntity());
+
+        if (isSent) {
+            Toast.makeText(MainActivity.this, "Rules has been sent successfully.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (!arduinoRobotConnection.isConnectionEstablished()) {
+            Toast.makeText(MainActivity.this, "Error! Connect with the robot.", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(MainActivity.this, "Internal application error. Couldn't send rules to the robot.", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void openCreateRuleActivity(View view) {
         if (!arduinoRobotConnection.isConnectionEstablished()) {
-            Toast.makeText(MainActivity.this, "Please, connect with the Robot, before adding a rule", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Please, connect with the Robot, before adding a rule.", Toast.LENGTH_SHORT).show();
             return;
         }
 
