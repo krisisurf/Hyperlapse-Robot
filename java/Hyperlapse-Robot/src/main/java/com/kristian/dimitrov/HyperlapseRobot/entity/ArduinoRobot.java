@@ -2,35 +2,44 @@ package com.kristian.dimitrov.HyperlapseRobot.entity;
 
 import com.kristian.dimitrov.HyperlapseRobot.entity.stepper.StepMotorEntity;
 
-/**
- * <h1>Predefined static class for a hardware properties of the robot.</h1>
- */
-public final class ArduinoRobot {
+import java.io.Serializable;
+
+public class ArduinoRobot implements Serializable {
 
     /**
      * Wheel radius in centimeters.
      */
-    public final double wheelRadius;
+    private double wheelRadius;
 
-    public final StepMotorEntity leftMotor;
-    public final StepMotorEntity rightMotor;
-    public final StepMotorEntity cameraPanMotor;
-    public final StepMotorEntity cameraTiltMotor;
+    private StepMotorEntity leftMotor;
+    private StepMotorEntity rightMotor;
+    private StepMotorEntity cameraPanMotor;
+    private StepMotorEntity cameraTiltMotor;
 
-//    static {
-//        wheelRadius = 5f;
-//        leftMotor = new StepMotorEntity(64, 16);
-//        rightMotor = new StepMotorEntity(64, 16);
-//        cameraPanMotor = new StepMotorEntity(64, 16);
-//        cameraTiltMotor = new StepMotorEntity(64, 16);
-//    }
+    private final RulesManagerEntity rulesManagerEntity;
 
-    public ArduinoRobot(double wheelRadius, StepMotorEntity leftMotor, StepMotorEntity rightMotor, StepMotorEntity cameraPanMotor, StepMotorEntity cameraTiltMotor) {
+    public ArduinoRobot() {
+        rulesManagerEntity = new RulesManagerEntity();
+    }
+
+    public void setHardwareData(double wheelRadius, StepMotorEntity leftMotor, StepMotorEntity rightMotor, StepMotorEntity cameraPanMotor, StepMotorEntity cameraTiltMotor) {
         this.wheelRadius = wheelRadius;
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
         this.cameraPanMotor = cameraPanMotor;
         this.cameraTiltMotor = cameraTiltMotor;
+    }
+
+    public RulesManagerEntity getRulesManagerEntity() {
+        return rulesManagerEntity;
+    }
+
+    public void addRule(RuleEntity ruleEntity) {
+        rulesManagerEntity.addRule(ruleEntity);
+    }
+
+    public double getWheelRadius() {
+        return wheelRadius;
     }
 
     /**
