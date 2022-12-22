@@ -1,5 +1,7 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity;
 
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.CameraStepMotorEntity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.MovementStepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.StepMotorEntity;
 
 import java.io.Serializable;
@@ -11,10 +13,10 @@ public class ArduinoRobot implements Serializable {
      */
     private double wheelRadius;
 
-    private StepMotorEntity leftMotor;
-    private StepMotorEntity rightMotor;
-    private StepMotorEntity cameraPanMotor;
-    private StepMotorEntity cameraTiltMotor;
+    private MovementStepMotorEntity leftMotor;
+    private MovementStepMotorEntity rightMotor;
+    private CameraStepMotorEntity cameraPanMotor;
+    private CameraStepMotorEntity cameraTiltMotor;
 
     private final RulesManagerEntity rulesManagerEntity;
 
@@ -22,7 +24,7 @@ public class ArduinoRobot implements Serializable {
         rulesManagerEntity = new RulesManagerEntity();
     }
 
-    public void setHardwareData(double wheelRadius, StepMotorEntity leftMotor, StepMotorEntity rightMotor, StepMotorEntity cameraPanMotor, StepMotorEntity cameraTiltMotor) {
+    public void setHardwareData(double wheelRadius, MovementStepMotorEntity leftMotor, MovementStepMotorEntity rightMotor, CameraStepMotorEntity cameraPanMotor, CameraStepMotorEntity cameraTiltMotor) {
         this.wheelRadius = wheelRadius;
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
@@ -40,6 +42,22 @@ public class ArduinoRobot implements Serializable {
 
     public double getWheelRadius() {
         return wheelRadius;
+    }
+
+    public MovementStepMotorEntity getLeftMotor() {
+        return leftMotor;
+    }
+
+    public MovementStepMotorEntity getRightMotor() {
+        return rightMotor;
+    }
+
+    public CameraStepMotorEntity getCameraPanMotor() {
+        return cameraPanMotor;
+    }
+
+    public CameraStepMotorEntity getCameraTiltMotor() {
+        return cameraTiltMotor;
     }
 
     /**

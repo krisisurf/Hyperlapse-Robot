@@ -90,10 +90,10 @@ public class ForwardBackwardFragment extends Fragment {
                 }
 
                 try {
-                    float distance = Float.parseFloat(stringValue);
-                    MovementStepMotorEntity movementStepMotorEntity = new MovementStepMotorEntity(arduinoRobot.getWheelRadius());
-                    double minimalTime = movementStepMotorEntity.getMinimalTimeRequired(distance);
-                    editTextExecutionTime.setText(String.valueOf(minimalTime));
+//                    float distance = Float.parseFloat(stringValue);
+//                    MovementStepMotorEntity movementStepMotorEntity = new MovementStepMotorEntity(arduinoRobot.getWheelRadius());
+//                    double minimalTime = movementStepMotorEntity.getMinimalTimeRequired(distance);
+//                    editTextExecutionTime.setText(String.valueOf(minimalTime));
                 } catch (NumberFormatException e) {
                     editTextExecutionTime.setText("0");
                 }

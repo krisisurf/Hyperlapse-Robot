@@ -25,8 +25,8 @@
     <string name="distance">Distance (cm):</string>
     <string name="preview">Preview:</string>
     <string name="default_distance">0</string>
-    <string name="default_execution_time">0</string>
-    <string name="default_degree">0</string>
+    <string name="default_execution_time">0 sec</string>
+    <string name="default_degree">0°</string>
     <string name="not_connected_status">Not connected</string>
     <string name="connected_status">Connected</string>
     <string name="configure_connection">Configure Connection</string>
@@ -35,4 +35,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="example_text">Example label text</string>
+
+    <string name="degree">%1$d°</string>
+    <string name="execution_time">%1$d sec</string>
 </resources>

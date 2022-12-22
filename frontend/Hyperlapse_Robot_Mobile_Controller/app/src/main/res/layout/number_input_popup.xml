@@ -36,14 +36,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="2dp"
-            android:outlineAmbientShadowColor="@color/blue_500" />
+            android:outlineAmbientShadowColor="@color/blue_500"
+            android:theme="@style/NumberPickerText" />
 
         <NumberPicker
             android:id="@+id/numberPicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="2dp"
-            android:outlineAmbientShadowColor="@color/blue_500" />
+            android:outlineAmbientShadowColor="@color/blue_500"
+            android:theme="@style/NumberPickerText" />
     </LinearLayout>
 
     <Button

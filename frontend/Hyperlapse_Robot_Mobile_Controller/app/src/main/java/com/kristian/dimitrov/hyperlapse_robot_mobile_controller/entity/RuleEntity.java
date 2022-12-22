@@ -7,10 +7,10 @@ import java.io.Serializable;
 
 public class RuleEntity implements Serializable {
 
-    private MovementStepMotorEntity leftMotor;
-    private MovementStepMotorEntity rightMotor;
-    private CameraStepMotorEntity panMotor;
-    private CameraStepMotorEntity tiltMotor;
+    private final MovementStepMotorEntity leftMotor;
+    private final MovementStepMotorEntity rightMotor;
+    private final CameraStepMotorEntity panMotor;
+    private final CameraStepMotorEntity tiltMotor;
 
     public RuleEntity(MovementStepMotorEntity leftMotor, MovementStepMotorEntity rightMotor, CameraStepMotorEntity panMotor, CameraStepMotorEntity tiltMotor) {
         this.leftMotor = leftMotor;
@@ -24,9 +24,9 @@ public class RuleEntity implements Serializable {
      *
      * @return max execution time in seconds
      */
-    public float getExecutionTime() {
-        float maxExecutionTimeMovement = Math.max(leftMotor.getExecutionTime(), rightMotor.getExecutionTime());
-        float maxExecutionTimeCamera = Math.max(panMotor.getExecutionTime(), tiltMotor.getExecutionTime());
+    public double getExecutionTime() {
+        double maxExecutionTimeMovement = Math.max(leftMotor.getExecutionTime(), rightMotor.getExecutionTime());
+        double maxExecutionTimeCamera = Math.max(panMotor.getExecutionTime(), tiltMotor.getExecutionTime());
 
         return Math.max(maxExecutionTimeMovement, maxExecutionTimeCamera);
     }

@@ -18,7 +18,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 
-public abstract class NumberInputPopupDialog {
+public class NumberInputPopupDialog {
 
     private static final ColorDrawable TRANSPARENCY;
 
@@ -31,6 +31,8 @@ public abstract class NumberInputPopupDialog {
 
     private final NumberPicker numberSignPicker;
     private final NumberPicker numberPicker;
+
+    private NumberSelectedListener numberSelectedListener;
 
     public NumberInputPopupDialog(@NonNull Context context, boolean hideAfterValueSelected) {
         alertDialog = new AlertDialog.Builder(context).create();
@@ -57,23 +59,26 @@ public abstract class NumberInputPopupDialog {
 
         Button btnApply = view.findViewById(R.id.btnApply);
         btnApply.setOnClickListener((view1 -> {
-            onValueSelected(getValue());
+            if (numberSelectedListener != null)
+                numberSelectedListener.onValueSelected(getValue());
             if (hideAfterValueSelected)
                 hide();
         }));
     }
 
-    public abstract void onValueSelected(int value);
-
     public void setTitle(int titleId) {
         tvLabelNumberPopup.setText(titleId);
+    }
+
+    public void setTitle(String string) {
+        tvLabelNumberPopup.setText(string);
     }
 
     public void setMinValue(int minValue) {
         numberPicker.setMinValue(minValue);
     }
 
-    private void setMaxValue(int maxValue) {
+    public void setMaxValue(int maxValue) {
         numberPicker.setMaxValue(maxValue);
     }
 
@@ -95,5 +100,17 @@ public abstract class NumberInputPopupDialog {
 
     public void hide() {
         alertDialog.hide();
+    }
+
+    public void addNumberSelectedListener(NumberSelectedListener numberSelectedListener) {
+        this.numberSelectedListener = numberSelectedListener;
+    }
+
+    public void setValue(int value) {
+        numberPicker.setValue(value);
+    }
+
+    public interface NumberSelectedListener {
+        void onValueSelected(int value);
     }
 }
