@@ -10,7 +10,7 @@
 
     <string name="title_create_rule_activity">Create a new rule</string>
 
-    <string name="button_cancle">cancle</string>
+    <string name="button_cancel">cancel</string>
     <string name="button_apply">apply</string>
 
     <string name="label_rule_number">Rule №%1$s</string>
@@ -34,4 +34,5 @@
     <string name="btn_add_rules">Add a rule</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="example_text">Example label text</string>
 </resources>

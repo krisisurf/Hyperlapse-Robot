@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_corner_gray"
+    android:paddingHorizontal="30dp"
+    android:paddingTop="30dp"
+    android:paddingBottom="5dp">
+
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/rounded_corner_blue_500_small_radius"
+        android:labelFor="@id/numberPicker"
+        android:padding="5dp"
+        android:text="@string/example_text"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="25sp" />
+
+    <NumberPicker
+        android:id="@+id/numberPicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/label"
+        android:layout_centerHorizontal="true"
+        android:outlineAmbientShadowColor="@color/blue_500" />
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/numberPicker"
+        android:layout_alignParentStart="true"
+        android:backgroundTint="@android:color/transparent"
+        android:text="@string/button_cancel" />
+
+    <Button
+        android:id="@+id/btnApply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/numberPicker"
+        android:layout_alignParentEnd="true"
+        android:text="@string/button_apply" />
+
+</RelativeLayout>
