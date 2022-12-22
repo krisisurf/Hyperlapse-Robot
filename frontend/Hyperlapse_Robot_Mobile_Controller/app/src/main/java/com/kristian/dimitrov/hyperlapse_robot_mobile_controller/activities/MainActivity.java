@@ -21,9 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -114,6 +112,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openCreateRuleActivity(View view) {
+        NumberInputPopupDialog numberInputPopupDialog = new NumberInputPopupDialog(MainActivity.this, true) {
+            @Override
+            public void onValueSelected(int value) {
+                Toast.makeText(MainActivity.this, "Selected value: " + value, Toast.LENGTH_SHORT).show();
+            }
+        };
+        numberInputPopupDialog.setTitle(R.string.distance);
+        numberInputPopupDialog.show();
+        return;
+
         if (!arduinoRobotConnection.isConnectionEstablished()) {
             Toast.makeText(MainActivity.this, "Please, connect with the Robot, before adding a rule.", Toast.LENGTH_SHORT).show();
             return;
