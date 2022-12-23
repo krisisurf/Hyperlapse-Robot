@@ -22,9 +22,10 @@ public class MovementStepMotorEntity extends StepMotorEntity implements Serializ
 
     /**
      * Clone constructor
+     *
      * @param movementStepMotorEntity
      */
-    public MovementStepMotorEntity(MovementStepMotorEntity movementStepMotorEntity){
+    public MovementStepMotorEntity(MovementStepMotorEntity movementStepMotorEntity) {
         this(movementStepMotorEntity.wheelRadius, movementStepMotorEntity.stepsPerRevolution, movementStepMotorEntity.maxSpeed);
     }
 
@@ -35,6 +36,7 @@ public class MovementStepMotorEntity extends StepMotorEntity implements Serializ
      * @param executionTime Time to complete in seconds
      * @throws IncompatibleStepMotorArguments When it is impossible to travel the given distance for the execution time, because of hardware limitations.
      */
+    @Override
     public void setData(double distance, double executionTime) throws IncompatibleStepMotorArguments {
         double minimalTimeRequired = getMinimalTimeRequired(distance);
 
@@ -51,10 +53,16 @@ public class MovementStepMotorEntity extends StepMotorEntity implements Serializ
         return ArduinoRobot.convertStepsToSeconds(stepsRequired, maxSpeed);
     }
 
-    public double getDistance() {
+    /**
+     *
+     * @return distance
+     */
+    @Override
+    public double getMeasurementValue() {
         return distance;
     }
 
+    @Override
     public double getExecutionTime() {
         return executionTime;
     }

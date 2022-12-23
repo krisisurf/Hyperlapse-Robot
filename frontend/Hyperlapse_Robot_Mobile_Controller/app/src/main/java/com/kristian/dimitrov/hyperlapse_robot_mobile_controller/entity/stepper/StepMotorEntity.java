@@ -1,5 +1,7 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper;
 
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.exception.IncompatibleStepMotorArguments;
+
 import java.io.Serializable;
 
 public abstract class StepMotorEntity implements Serializable {
@@ -40,5 +42,11 @@ public abstract class StepMotorEntity implements Serializable {
         this(DEFAULT_STEPS_PER_REVOLUTION, DEFAULT_MAX_SPEED);
     }
 
+    public abstract void setData(double val, double executionTime) throws IncompatibleStepMotorArguments;
+
     public abstract double getMinimalTimeRequired(double val);
+
+    public abstract double getMeasurementValue();
+
+    public abstract double getExecutionTime();
 }

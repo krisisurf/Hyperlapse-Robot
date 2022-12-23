@@ -64,7 +64,7 @@ public class CreateRuleActivity extends AppCompatActivity {
 
         numberInputPopupDialog = new NumberInputPopupDialog(CreateRuleActivity.this, true);
 
-        forwardBackwardFragment = ForwardBackwardFragment.newInstance(true, arduinoRobot);
+        forwardBackwardFragment = ForwardBackwardFragment.newInstance(numberInputPopupDialog, ruleEntityBuilder);
         turningFragment = new TurningFragment();
 
 
@@ -72,7 +72,7 @@ public class CreateRuleActivity extends AppCompatActivity {
         btnPanDegree.setOnClickListener(view -> {
             String popupTitle = getString(R.string.label_pan) + " " + getString(R.string.label_degree);
             CreateRuleActivity.NumberPopupDialogFiller_listenerCreator
-                    .clickListener_degree(numberInputPopupDialog, btnPanDegree, btnPanExecutionTime, popupTitle, ruleEntityBuilder.getPanMotor());
+                    .clickListener_measurementData(numberInputPopupDialog, btnPanDegree, btnPanExecutionTime, popupTitle, ruleEntityBuilder.getPanMotor());
         });
 
         btnPanExecutionTime = findViewById(R.id.btnPanExecutionTime);
@@ -86,7 +86,7 @@ public class CreateRuleActivity extends AppCompatActivity {
         btnTiltDegree.setOnClickListener(view -> {
             String popupTitle = getString(R.string.label_tilt) + " " + getString(R.string.label_degree);
             CreateRuleActivity.NumberPopupDialogFiller_listenerCreator
-                    .clickListener_degree(numberInputPopupDialog, btnTiltDegree, btnTiltExecutionTime, popupTitle, ruleEntityBuilder.getTiltMotor());
+                    .clickListener_measurementData(numberInputPopupDialog, btnTiltDegree, btnTiltExecutionTime, popupTitle, ruleEntityBuilder.getTiltMotor());
         });
 
         btnTiltExecutionTime = findViewById(R.id.btnTiltExecutionTime);
@@ -142,8 +142,8 @@ public class CreateRuleActivity extends AppCompatActivity {
         String warnings = "";
         int warningsCount = 0;
 
-        if (ruleEntityBuilder.getLeftMotor().getDistance() == 0 && ruleEntityBuilder.getRightMotor().getDistance() == 0
-                && ruleEntityBuilder.getPanMotor().getDegree() == 0 && ruleEntityBuilder.getTiltMotor().getDegree() == 0
+        if (ruleEntityBuilder.getLeftMotor().getMeasurementValue() == 0 && ruleEntityBuilder.getRightMotor().getMeasurementValue() == 0
+                && ruleEntityBuilder.getPanMotor().getMeasurementValue() == 0 && ruleEntityBuilder.getTiltMotor().getMeasurementValue() == 0
         ) {
             double totalExecutionTime = ruleEntityBuilder.getLeftMotor().getExecutionTime() + ruleEntityBuilder.getRightMotor().getExecutionTime()
                     + ruleEntityBuilder.getPanMotor().getExecutionTime() + ruleEntityBuilder.getTiltMotor().getExecutionTime();
@@ -159,8 +159,7 @@ public class CreateRuleActivity extends AppCompatActivity {
 
     private void directionOnItemClickListener(AdapterView<?> adapterView, View view, int index, long id) {
         if (index == 0) {
-            forwardBackwardFragment.setDirection(true);
-            forwardBackwardFragment.setArduinoRobot(arduinoRobot);
+            //forwardBackwardFragment.setDirection(true);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.directionTypeFragment, forwardBackwardFragment).commit();
         } else {
@@ -171,7 +170,16 @@ public class CreateRuleActivity extends AppCompatActivity {
 
     public static final class NumberPopupDialogFiller_listenerCreator {
 
-        public static void clickListener_degree(NumberInputPopupDialog numberInputPopupDialog, TextView currentTextView, TextView correspondingTvExecTime, String popupTitle, CameraStepMotorEntity cameraStepMotorEntity) {
+
+        /**
+         * 
+         * @param numberInputPopupDialog instance of NumberInputPopupDialog which will manage the measurement input.
+         * @param currentTextView text view on which the measurement input will be displayed
+         * @param correspondingTvExecTime text view which holds the execution time value
+         * @param popupTitle title of the input popup dialog
+         * @param stepMotorEntity motor on which the inputs will be applied
+         */
+        public static void clickListener_measurementData(NumberInputPopupDialog numberInputPopupDialog, TextView currentTextView, TextView correspondingTvExecTime, String popupTitle, StepMotorEntity stepMotorEntity) {
             numberInputPopupDialog.setTitle(popupTitle);
             numberInputPopupDialog.setMinValue(0);
             numberInputPopupDialog.setMaxValue(360);
@@ -179,8 +187,8 @@ public class CreateRuleActivity extends AppCompatActivity {
             numberInputPopupDialog.setNegativeNumbers(true);
             numberInputPopupDialog.addNumberSelectedListener(value -> {
                 try {
-                    int minExecTime = getMinimalExecutionTimeCelled(cameraStepMotorEntity, value);
-                    cameraStepMotorEntity.setData(value, minExecTime);
+                    int minExecTime = getMinimalExecutionTimeCelled(stepMotorEntity, value);
+                    stepMotorEntity.setData(value, minExecTime);
 
                     Context context = currentTextView.getContext();
                     currentTextView.setText(context.getString(R.string.degree, value));
@@ -193,8 +201,15 @@ public class CreateRuleActivity extends AppCompatActivity {
             numberInputPopupDialog.show();
         }
 
-        public static void clickListener_executionTime(NumberInputPopupDialog numberInputPopupDialog, TextView currentTextView, String popupTitle, CameraStepMotorEntity cameraStepMotorEntity) {
-            int minExecTimeCelled = getMinimalExecutionTimeCelled(cameraStepMotorEntity, (int) cameraStepMotorEntity.getDegree());
+        /**
+         * 
+         * @param numberInputPopupDialog instance of NumberInputPopupDialog which will manage the measurement input.
+         * @param currentTextView  text view on which the execution time inputted result will be displayed
+         * @param popupTitle title of the input popup dialog
+         * @param stepMotorEntity  motor on which the input will be applied
+         */
+        public static void clickListener_executionTime(NumberInputPopupDialog numberInputPopupDialog, TextView currentTextView, String popupTitle, StepMotorEntity stepMotorEntity) {
+            int minExecTimeCelled = getMinimalExecutionTimeCelled(stepMotorEntity, (int) stepMotorEntity.getMeasurementValue());
 
             numberInputPopupDialog.setTitle(popupTitle);
             numberInputPopupDialog.setMinValue(minExecTimeCelled);
@@ -203,7 +218,7 @@ public class CreateRuleActivity extends AppCompatActivity {
             numberInputPopupDialog.setNegativeNumbers(false);
             numberInputPopupDialog.addNumberSelectedListener(value -> {
                 try {
-                    cameraStepMotorEntity.setData(cameraStepMotorEntity.getDegree(), value);
+                    stepMotorEntity.setData(stepMotorEntity.getMeasurementValue(), value);
 
                     Context context = currentTextView.getContext();
                     currentTextView.setText(context.getString(R.string.execution_time, value));

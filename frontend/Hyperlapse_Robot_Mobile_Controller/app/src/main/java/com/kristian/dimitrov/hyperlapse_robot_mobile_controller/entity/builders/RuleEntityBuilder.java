@@ -6,7 +6,9 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.C
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.MovementStepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.exception.IncompatibleStepMotorArguments;
 
-public class RuleEntityBuilder {
+import java.io.Serializable;
+
+public class RuleEntityBuilder implements Serializable {
 
     private final ArduinoRobot arduinoRobot;
 
@@ -24,12 +26,12 @@ public class RuleEntityBuilder {
         tiltMotor = new CameraStepMotorEntity(arduinoRobot.getCameraTiltMotor());
     }
 
-    public RuleEntityBuilder setLeftMotor(float distance, float executionTime) throws IncompatibleStepMotorArguments {
+    public RuleEntityBuilder setLeftMotor(double distance, double executionTime) throws IncompatibleStepMotorArguments {
         leftMotor.setData(distance, executionTime);
         return this;
     }
 
-    public RuleEntityBuilder setRightMotor(double distance, float executionTime) throws IncompatibleStepMotorArguments {
+    public RuleEntityBuilder setRightMotor(double distance, double executionTime) throws IncompatibleStepMotorArguments {
         rightMotor.setData(distance, executionTime);
         return this;
     }
@@ -39,7 +41,7 @@ public class RuleEntityBuilder {
         return this;
     }
 
-    public RuleEntityBuilder setTiltMotor(double degree, float executionTime) throws IncompatibleStepMotorArguments {
+    public RuleEntityBuilder setTiltMotor(double degree, double executionTime) throws IncompatibleStepMotorArguments {
         tiltMotor.setData(degree, executionTime);
         return this;
     }

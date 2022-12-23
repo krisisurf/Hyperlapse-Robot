@@ -6,14 +6,22 @@ import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities.CreateRuleActivity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities.NumberInputPopupDialog;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.builders.RuleEntityBuilder;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.MovementStepMotorEntity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.exception.IncompatibleStepMotorArguments;
+
+import java.io.Serializable;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,14 +32,13 @@ public class ForwardBackwardFragment extends Fragment {
 
     private static final String TAG = "ForwardBackwardFragment";
 
-    private static final String IS_FORWARD_PARAM = "isForForwardDirection";
-    private static final String ARDUINO_ROBOT_PARAM = "arduinoRobot";
+    public static final String NUMBER_INPUT_POPUP_DIALOG_PARAM = "numberInputPopupDialog";
+    public static final String RULE_ENTITY_BUILDER_PARAM = "ruleEntityBuilder";
 
-    private ArduinoRobot arduinoRobot;
-    private boolean isForForward;
-
-    private EditText editTextDistance;
-    private EditText editTextExecutionTime;
+    private NumberInputPopupDialog numberInputPopupDialog;
+    private RuleEntityBuilder ruleEntityBuilder;
+    private Button btnDistance;
+    private Button btnExecutionTime;
 
     public ForwardBackwardFragment() {
         // Required empty public constructor
@@ -43,12 +50,12 @@ public class ForwardBackwardFragment extends Fragment {
      *
      * @return A new instance of fragment ForwardBackwardFragment.
      */
-    public static ForwardBackwardFragment newInstance(boolean isForForwardDirection, ArduinoRobot arduinoRobot) {
+    public static ForwardBackwardFragment newInstance(NumberInputPopupDialog numberInputPopupDialog, RuleEntityBuilder ruleEntityBuilder) {
         ForwardBackwardFragment fragment = new ForwardBackwardFragment();
 
         Bundle args = new Bundle();
-        args.putBoolean(IS_FORWARD_PARAM, isForForwardDirection);
-        args.putSerializable(ARDUINO_ROBOT_PARAM, arduinoRobot);
+        args.putSerializable(NUMBER_INPUT_POPUP_DIALOG_PARAM, numberInputPopupDialog);
+        args.putSerializable(RULE_ENTITY_BUILDER_PARAM, ruleEntityBuilder);
 
         fragment.setArguments(args);
         return fragment;
@@ -57,8 +64,10 @@ public class ForwardBackwardFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
-            isForForward = getArguments().getBoolean(IS_FORWARD_PARAM);
+            numberInputPopupDialog = (NumberInputPopupDialog) getArguments().getSerializable(NUMBER_INPUT_POPUP_DIALOG_PARAM);
+            ruleEntityBuilder = (RuleEntityBuilder) getArguments().getSerializable(RULE_ENTITY_BUILDER_PARAM);
         }
     }
 
@@ -74,57 +83,17 @@ public class ForwardBackwardFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        editTextDistance = getView().findViewById(R.id.etDistance);
-        editTextDistance.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String stringValue = String.valueOf(s);
-                if (stringValue.isEmpty()) {
-                    editTextExecutionTime.setText("0");
-                    return;
-                }
-
-                try {
-//                    float distance = Float.parseFloat(stringValue);
-//                    MovementStepMotorEntity movementStepMotorEntity = new MovementStepMotorEntity(arduinoRobot.getWheelRadius());
-//                    double minimalTime = movementStepMotorEntity.getMinimalTimeRequired(distance);
-//                    editTextExecutionTime.setText(String.valueOf(minimalTime));
-                } catch (NumberFormatException e) {
-                    editTextExecutionTime.setText("0");
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
+        btnDistance = getView().findViewById(R.id.btnDistance);
+        btnDistance.setOnClickListener(view1 -> {
+            String popupTitle = getString(R.string.label_movement) + " " + getString(R.string.distance);
+            CreateRuleActivity.NumberPopupDialogFiller_listenerCreator
+                    .clickListener_measurementData(numberInputPopupDialog, btnDistance, btnExecutionTime, popupTitle, ruleEntityBuilder.getLeftMotor());
         });
 
-        editTextExecutionTime = getView().findViewById(R.id.etExecutionTime);
-    }
-
-    public float getDistance() {
-        float distance = Float.parseFloat(editTextDistance.getText().toString());
-        if (!isForForward)
-            distance = -distance;
-
-        return distance;
+        btnExecutionTime = getView().findViewById(R.id.btnExecutionTime);
     }
 
     public float getExecutionTime() {
-        return Float.parseFloat(editTextExecutionTime.getText().toString());
-    }
-
-    public void setDirection(boolean isForForwardDirection) {
-        this.isForForward = isForForwardDirection;
-    }
-
-    public void setArduinoRobot(ArduinoRobot arduinoRobot) {
-        this.arduinoRobot = arduinoRobot;
+        return Float.parseFloat(btnExecutionTime.getText().toString());
     }
 }

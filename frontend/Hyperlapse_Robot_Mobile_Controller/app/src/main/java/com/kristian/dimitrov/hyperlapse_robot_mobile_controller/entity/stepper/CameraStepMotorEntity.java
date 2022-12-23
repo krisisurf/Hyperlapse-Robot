@@ -30,6 +30,7 @@ public class CameraStepMotorEntity extends StepMotorEntity implements Serializab
      * @param executionTime Time to complete the rotation in seconds.
      * @throws IncompatibleStepMotorArguments
      */
+    @Override
     public void setData(double degree, double executionTime) throws IncompatibleStepMotorArguments {
         double minimalTimeRequired = getMinimalTimeRequired(degree);
         if (minimalTimeRequired > executionTime)
@@ -49,7 +50,12 @@ public class CameraStepMotorEntity extends StepMotorEntity implements Serializab
         return executionTime;
     }
 
-    public double getDegree() {
+    /**
+     *
+     * @return degree
+     */
+    @Override
+    public double getMeasurementValue() {
         return degree;
     }
 

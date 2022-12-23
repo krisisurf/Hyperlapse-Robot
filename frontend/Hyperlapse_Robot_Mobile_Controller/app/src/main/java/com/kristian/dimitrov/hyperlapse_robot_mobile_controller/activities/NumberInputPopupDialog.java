@@ -14,7 +14,9 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 
-public class NumberInputPopupDialog {
+import java.io.Serializable;
+
+public class NumberInputPopupDialog implements Serializable {
 
     private static final ColorDrawable TRANSPARENCY;
 
