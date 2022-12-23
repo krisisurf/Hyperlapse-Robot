@@ -4,16 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
@@ -33,6 +29,10 @@ public class NumberInputPopupDialog {
     private final NumberPicker numberPicker;
 
     private NumberSelectedListener numberSelectedListener;
+
+    public interface NumberSelectedListener {
+        void onValueSelected(int value);
+    }
 
     public NumberInputPopupDialog(@NonNull Context context, boolean hideAfterValueSelected) {
         alertDialog = new AlertDialog.Builder(context).create();
@@ -108,9 +108,5 @@ public class NumberInputPopupDialog {
 
     public void setValue(int value) {
         numberPicker.setValue(value);
-    }
-
-    public interface NumberSelectedListener {
-        void onValueSelected(int value);
     }
 }

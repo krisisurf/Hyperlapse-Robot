@@ -4,16 +4,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
@@ -35,7 +33,6 @@ public class CreateRuleActivity extends AppCompatActivity {
     private RuleEntityBuilder ruleEntityBuilder;
 
     private final String[] directionStringOptions = {"Forward", "Turning"};
-    private int selectedDirectionIndex = -1;
 
     private ForwardBackwardFragment forwardBackwardFragment;
     private TurningFragment turningFragment;
@@ -74,25 +71,29 @@ public class CreateRuleActivity extends AppCompatActivity {
         btnPanDegree = findViewById(R.id.btnPanDegree);
         btnPanDegree.setOnClickListener(view -> {
             String popupTitle = getString(R.string.label_pan) + " " + getString(R.string.label_degree);
-            clickListener_degree(btnPanDegree, btnPanExecutionTime, popupTitle, ruleEntityBuilder.getPanMotor());
+            CreateRuleActivity.NumberPopupDialogFiller_listenerCreator
+                    .clickListener_degree(numberInputPopupDialog, btnPanDegree, btnPanExecutionTime, popupTitle, ruleEntityBuilder.getPanMotor());
         });
 
         btnPanExecutionTime = findViewById(R.id.btnPanExecutionTime);
         btnPanExecutionTime.setOnClickListener(view -> {
             String popupTitle = getString(R.string.label_pan) + " " + getString(R.string.label_execution_time);
-            clickListener_ExecutionTime(btnPanExecutionTime, popupTitle, ruleEntityBuilder.getPanMotor());
+            CreateRuleActivity.NumberPopupDialogFiller_listenerCreator
+                    .clickListener_executionTime(numberInputPopupDialog, btnPanExecutionTime, popupTitle, ruleEntityBuilder.getPanMotor());
         });
 
         btnTiltDegree = findViewById(R.id.btnTiltDegree);
         btnTiltDegree.setOnClickListener(view -> {
             String popupTitle = getString(R.string.label_tilt) + " " + getString(R.string.label_degree);
-            clickListener_degree(btnTiltDegree, btnTiltExecutionTime, popupTitle, ruleEntityBuilder.getTiltMotor());
+            CreateRuleActivity.NumberPopupDialogFiller_listenerCreator
+                    .clickListener_degree(numberInputPopupDialog, btnTiltDegree, btnTiltExecutionTime, popupTitle, ruleEntityBuilder.getTiltMotor());
         });
 
         btnTiltExecutionTime = findViewById(R.id.btnTiltExecutionTime);
         btnTiltExecutionTime.setOnClickListener((view -> {
             String popupTitle = getString(R.string.label_tilt) + " " + getString(R.string.label_execution_time);
-            clickListener_ExecutionTime(btnTiltExecutionTime, popupTitle, ruleEntityBuilder.getTiltMotor());
+            CreateRuleActivity.NumberPopupDialogFiller_listenerCreator
+                    .clickListener_executionTime(numberInputPopupDialog, btnTiltExecutionTime, popupTitle, ruleEntityBuilder.getTiltMotor());
         }));
 
         Button buttonCancle = findViewById(R.id.btn_cancle);
@@ -100,50 +101,6 @@ public class CreateRuleActivity extends AppCompatActivity {
 
         Button buttonApply = findViewById(R.id.btn_apply);
         buttonApply.setOnClickListener(this::applyButton);
-    }
-
-    private void clickListener_degree(Button currentButtonView, Button correspondingBtnExecTime, String popupTitle, CameraStepMotorEntity cameraStepMotorEntity) {
-        numberInputPopupDialog.setTitle(popupTitle);
-        numberInputPopupDialog.setMinValue(0);
-        numberInputPopupDialog.setMaxValue(360);
-        numberInputPopupDialog.setValue(0);
-        numberInputPopupDialog.setNegativeNumbers(true);
-        numberInputPopupDialog.addNumberSelectedListener(value -> {
-            try {
-                int minExecTime = getMinimalExecutionTimeCelled(cameraStepMotorEntity, value);
-                cameraStepMotorEntity.setData(value, minExecTime);
-
-                currentButtonView.setText(getString(R.string.degree, value));
-                correspondingBtnExecTime.setText(getString(R.string.execution_time, minExecTime));
-            } catch (IncompatibleStepMotorArguments e) {
-                e.printStackTrace();
-            }
-        });
-        numberInputPopupDialog.show();
-    }
-
-    private void clickListener_ExecutionTime(Button currentButtonView, String popupTitle, CameraStepMotorEntity cameraStepMotorEntity) {
-        int minExecTimeCelled = getMinimalExecutionTimeCelled(cameraStepMotorEntity, (int) cameraStepMotorEntity.getDegree());
-
-        numberInputPopupDialog.setTitle(popupTitle);
-        numberInputPopupDialog.setMinValue(minExecTimeCelled);
-        numberInputPopupDialog.setMaxValue(Short.MAX_VALUE);
-        numberInputPopupDialog.setValue(minExecTimeCelled);
-        numberInputPopupDialog.setNegativeNumbers(false);
-        numberInputPopupDialog.addNumberSelectedListener(value -> {
-            try {
-                cameraStepMotorEntity.setData(cameraStepMotorEntity.getDegree(), value);
-                currentButtonView.setText(getString(R.string.execution_time, value));
-            } catch (IncompatibleStepMotorArguments e) {
-                e.printStackTrace();
-            }
-        });
-        numberInputPopupDialog.show();
-    }
-
-    private int getMinimalExecutionTimeCelled(StepMotorEntity stepMotorEntity, int val) {
-        double minExecTime = stepMotorEntity.getMinimalTimeRequired(Math.abs(val));
-        return (int) Math.ceil(minExecTime);
     }
 
     private void cancleButton(View view) {
@@ -168,12 +125,8 @@ public class CreateRuleActivity extends AppCompatActivity {
                 .setMessage(warnings)
                 .setOnCancelListener(dialogInterface -> {
                 })
-                .setNegativeButton("No", (dialogInterface, i) -> {
-                    dialogInterface.cancel();
-                })
-                .setPositiveButton("Yes", (dialogInterface, i) -> {
-                    applyRule();
-                }).create();
+                .setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel())
+                .setPositiveButton("Yes", (dialogInterface, i) -> applyRule()).create();
         validationWarningDialog.show();
     }
 
@@ -205,7 +158,6 @@ public class CreateRuleActivity extends AppCompatActivity {
     }
 
     private void directionOnItemClickListener(AdapterView<?> adapterView, View view, int index, long id) {
-        selectedDirectionIndex = index;
         if (index == 0) {
             forwardBackwardFragment.setDirection(true);
             forwardBackwardFragment.setArduinoRobot(arduinoRobot);
@@ -215,5 +167,57 @@ public class CreateRuleActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.directionTypeFragment, turningFragment).commit();
         }
+    }
+
+    public static final class NumberPopupDialogFiller_listenerCreator {
+
+        public static void clickListener_degree(NumberInputPopupDialog numberInputPopupDialog, TextView currentTextView, TextView correspondingTvExecTime, String popupTitle, CameraStepMotorEntity cameraStepMotorEntity) {
+            numberInputPopupDialog.setTitle(popupTitle);
+            numberInputPopupDialog.setMinValue(0);
+            numberInputPopupDialog.setMaxValue(360);
+            numberInputPopupDialog.setValue(0);
+            numberInputPopupDialog.setNegativeNumbers(true);
+            numberInputPopupDialog.addNumberSelectedListener(value -> {
+                try {
+                    int minExecTime = getMinimalExecutionTimeCelled(cameraStepMotorEntity, value);
+                    cameraStepMotorEntity.setData(value, minExecTime);
+
+                    Context context = currentTextView.getContext();
+                    currentTextView.setText(context.getString(R.string.degree, value));
+                    correspondingTvExecTime.setText(context.getString(R.string.execution_time, minExecTime));
+
+                } catch (IncompatibleStepMotorArguments e) {
+                    e.printStackTrace();
+                }
+            });
+            numberInputPopupDialog.show();
+        }
+
+        public static void clickListener_executionTime(NumberInputPopupDialog numberInputPopupDialog, TextView currentTextView, String popupTitle, CameraStepMotorEntity cameraStepMotorEntity) {
+            int minExecTimeCelled = getMinimalExecutionTimeCelled(cameraStepMotorEntity, (int) cameraStepMotorEntity.getDegree());
+
+            numberInputPopupDialog.setTitle(popupTitle);
+            numberInputPopupDialog.setMinValue(minExecTimeCelled);
+            numberInputPopupDialog.setMaxValue(Short.MAX_VALUE);
+            numberInputPopupDialog.setValue(minExecTimeCelled);
+            numberInputPopupDialog.setNegativeNumbers(false);
+            numberInputPopupDialog.addNumberSelectedListener(value -> {
+                try {
+                    cameraStepMotorEntity.setData(cameraStepMotorEntity.getDegree(), value);
+
+                    Context context = currentTextView.getContext();
+                    currentTextView.setText(context.getString(R.string.execution_time, value));
+                } catch (IncompatibleStepMotorArguments e) {
+                    e.printStackTrace();
+                }
+            });
+            numberInputPopupDialog.show();
+        }
+
+        private static int getMinimalExecutionTimeCelled(StepMotorEntity stepMotorEntity, int val) {
+            double minExecTime = stepMotorEntity.getMinimalTimeRequired(Math.abs(val));
+            return (int) Math.ceil(minExecTime);
+        }
+
     }
 }
