@@ -15,7 +15,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
@@ -46,6 +45,8 @@ public class CreateRuleActivity extends AppCompatActivity {
     private Button btnPanExecutionTime;
     private Button btnTiltDegree;
     private Button btnTiltExecutionTime;
+
+    private AlertDialog validationWarningDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,59 +151,57 @@ public class CreateRuleActivity extends AppCompatActivity {
     }
 
     private void applyButton(View view) {
-        String errorMessage = validateInputs();
-        if (errorMessage.isEmpty()) {
-            Intent intent = getIntent();
-            intent.putExtra(CreateRuleActivity.RULE_ENTITY_CODE, ruleEntityBuilder.build());
-            setResult(Activity.RESULT_OK, intent);
-            finish();
+        String warnings = validateInputs();
+        if (warnings.isEmpty()) {
+            applyRule();
             return;
         }
 
-        new AlertDialog.Builder(CreateRuleActivity.this)
-                .setTitle("Input errors appeared! Please fix:")
-                .setMessage(errorMessage)
-                .setPositiveButton("Ok", (dialogInterface, i) -> {
-                }).create().show();
+        if (validationWarningDialog != null) {
+            validationWarningDialog.setMessage(warnings);
+            validationWarningDialog.show();
+            return;
+        }
+
+        validationWarningDialog = new AlertDialog.Builder(CreateRuleActivity.this)
+                .setTitle("Warning:")
+                .setMessage(warnings)
+                .setOnCancelListener(dialogInterface -> {
+                })
+                .setNegativeButton("No", (dialogInterface, i) -> {
+                    dialogInterface.cancel();
+                })
+                .setPositiveButton("Yes", (dialogInterface, i) -> {
+                    applyRule();
+                }).create();
+        validationWarningDialog.show();
+    }
+
+    public void applyRule() {
+        Intent intent = getIntent();
+        intent.putExtra(CreateRuleActivity.RULE_ENTITY_CODE, ruleEntityBuilder.build());
+        setResult(Activity.RESULT_OK, intent);
+
+        finish();
     }
 
     private String validateInputs() {
-        StringBuilder errorBuilder = new StringBuilder();
-        int errorsCount = 0;
-        if (selectedDirectionIndex == -1) {
-            errorBuilder.append(++errorsCount).append(". Not selected ").append(getString(R.string.direction_type)).append(".\n");
-        } else {
-            if (selectedDirectionIndex == 0) {
-                float distance = forwardBackwardFragment.getDistance();
-                float executionTime = forwardBackwardFragment.getExecutionTime();
-                try {
-                    ruleEntityBuilder.setLeftMotor(distance, executionTime);
-                    ruleEntityBuilder.setRightMotor(distance, executionTime);
-                } catch (IncompatibleStepMotorArguments incompatibleStepMotorArguments) {
-                    errorBuilder.append(++errorsCount).append(". ").append(incompatibleStepMotorArguments.getMessage()).append("\n");
-                }
+        String warnings = "";
+        int warningsCount = 0;
+
+        if (ruleEntityBuilder.getLeftMotor().getDistance() == 0 && ruleEntityBuilder.getRightMotor().getDistance() == 0
+                && ruleEntityBuilder.getPanMotor().getDegree() == 0 && ruleEntityBuilder.getTiltMotor().getDegree() == 0
+        ) {
+            double totalExecutionTime = ruleEntityBuilder.getLeftMotor().getExecutionTime() + ruleEntityBuilder.getRightMotor().getExecutionTime()
+                    + ruleEntityBuilder.getPanMotor().getExecutionTime() + ruleEntityBuilder.getTiltMotor().getExecutionTime();
+            if (totalExecutionTime == 0) {
+                warnings += ++warningsCount + ". This rule will not make anything.\n";
             } else {
-                // TODO: Finish the validation for turning direction type
+                warnings += ++warningsCount + ". This rule will be used only as delay, since the movement and rotations are not specified.\n";
             }
         }
 
-        float panDegree = Float.parseFloat(btnPanDegree.getText().toString());
-        float panExecutionTime = Float.parseFloat(btnPanExecutionTime.getText().toString());
-        float tiltDegree = Float.parseFloat(btnTiltDegree.getText().toString());
-        float tiltExecutionTime = Float.parseFloat(btnTiltExecutionTime.getText().toString());
-
-        try {
-            ruleEntityBuilder.setPanMotor(panDegree, panExecutionTime);
-        } catch (IncompatibleStepMotorArguments incompatibleStepMotorArguments) {
-            errorBuilder.append(++errorsCount).append(". ").append(incompatibleStepMotorArguments.getMessage()).append("\n");
-        }
-        try {
-            ruleEntityBuilder.setTiltMotor(tiltDegree, tiltExecutionTime);
-        } catch (IncompatibleStepMotorArguments incompatibleStepMotorArguments) {
-            errorBuilder.append(++errorsCount).append(". ").append(incompatibleStepMotorArguments.getMessage()).append("\n");
-        }
-
-        return errorBuilder.toString();
+        return warningsCount == 0 ? "" : warnings + "\nCreate the rule anyways?";
     }
 
     private void directionOnItemClickListener(AdapterView<?> adapterView, View view, int index, long id) {
@@ -216,37 +215,5 @@ public class CreateRuleActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.directionTypeFragment, turningFragment).commit();
         }
-    }
-
-    private TextWatcher cameraTextWatcher(EditText editTextExecutionTime) {
-        return new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String stringValue = String.valueOf(s);
-                if (stringValue.isEmpty()) {
-                    editTextExecutionTime.setText("0");
-                    return;
-                }
-
-                try {
-//                    float degree = Float.parseFloat(stringValue);
-//                    CameraStepMotorEntity movementStepMotorEntity = new CameraStepMotorEntity();
-//                    double minimalTime = movementStepMotorEntity.getMinimalTimeRequired(degree);
-//                    editTextExecutionTime.setText(String.valueOf(minimalTime));
-                } catch (NumberFormatException e) {
-                    editTextExecutionTime.setText("0");
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        };
     }
 }
