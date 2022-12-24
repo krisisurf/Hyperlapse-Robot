@@ -11,7 +11,8 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRo
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobotConnection;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RuleEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RulesManagerEntity;
-import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.builders.RuleEntityBuilder;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.CameraStepMotorEntity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.MovementStepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.StepMotorEntity;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,13 +22,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,10 +55,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         final double wheelRadius = 5;
-        final StepMotorEntity leftMotor = new StepMotorEntity(64, 16);
-        final StepMotorEntity rightMotor = new StepMotorEntity(64, 16);
-        final StepMotorEntity cameraPanMotor = new StepMotorEntity(64, 16);
-        final StepMotorEntity cameraTiltMotor = new StepMotorEntity(64, 16);
+        final MovementStepMotorEntity leftMotor = new MovementStepMotorEntity(5, 64, 16);
+        final MovementStepMotorEntity rightMotor = new MovementStepMotorEntity(5, 64, 16);
+        final CameraStepMotorEntity cameraPanMotor = new CameraStepMotorEntity(64, 16);
+        final CameraStepMotorEntity cameraTiltMotor = new CameraStepMotorEntity(64, 16);
 
         arduinoRobot = new ArduinoRobot();
         arduinoRobot.setHardwareData(wheelRadius, leftMotor, rightMotor, cameraPanMotor, cameraTiltMotor);
@@ -116,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     private void openCreateRuleActivity(View view) {
         if (!arduinoRobotConnection.isConnectionEstablished()) {
             Toast.makeText(MainActivity.this, "Please, connect with the Robot, before adding a rule.", Toast.LENGTH_SHORT).show();
-            return;
+            //return;
         }
 
         Intent intent = new Intent(MainActivity.this, CreateRuleActivity.class);

@@ -6,7 +6,9 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.C
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.MovementStepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.exception.IncompatibleStepMotorArguments;
 
-public class RuleEntityBuilder {
+import java.io.Serializable;
+
+public class RuleEntityBuilder implements Serializable {
 
     private final ArduinoRobot arduinoRobot;
 
@@ -18,33 +20,49 @@ public class RuleEntityBuilder {
     public RuleEntityBuilder(ArduinoRobot arduinoRobot) {
         this.arduinoRobot = arduinoRobot;
 
-        leftMotor = new MovementStepMotorEntity(arduinoRobot.getWheelRadius());
-        rightMotor = new MovementStepMotorEntity(arduinoRobot.getWheelRadius());
-        panMotor = new CameraStepMotorEntity();
-        tiltMotor = new CameraStepMotorEntity();
+        leftMotor = new MovementStepMotorEntity(arduinoRobot.getLeftMotor());
+        rightMotor = new MovementStepMotorEntity(arduinoRobot.getRightMotor());
+        panMotor = new CameraStepMotorEntity(arduinoRobot.getCameraPanMotor());
+        tiltMotor = new CameraStepMotorEntity(arduinoRobot.getCameraTiltMotor());
     }
 
-    public RuleEntityBuilder setLeftMotor(float distance, float executionTime) throws IncompatibleStepMotorArguments {
+    public RuleEntityBuilder setLeftMotor(double distance, double executionTime) throws IncompatibleStepMotorArguments {
         leftMotor.setData(distance, executionTime);
         return this;
     }
 
-    public RuleEntityBuilder setRightMotor(float distance, float executionTime) throws IncompatibleStepMotorArguments {
+    public RuleEntityBuilder setRightMotor(double distance, double executionTime) throws IncompatibleStepMotorArguments {
         rightMotor.setData(distance, executionTime);
         return this;
     }
 
-    public RuleEntityBuilder setPanMotor(float degree, float executionTime) throws IncompatibleStepMotorArguments {
+    public RuleEntityBuilder setPanMotor(double degree, double executionTime) throws IncompatibleStepMotorArguments {
         panMotor.setData(degree, executionTime);
         return this;
     }
 
-    public RuleEntityBuilder setTiltMotor(float degree, float executionTime) throws IncompatibleStepMotorArguments {
+    public RuleEntityBuilder setTiltMotor(double degree, double executionTime) throws IncompatibleStepMotorArguments {
         tiltMotor.setData(degree, executionTime);
         return this;
     }
 
     public RuleEntity build() {
         return new RuleEntity(leftMotor, rightMotor, panMotor, tiltMotor);
+    }
+
+    public MovementStepMotorEntity getLeftMotor() {
+        return leftMotor;
+    }
+
+    public MovementStepMotorEntity getRightMotor() {
+        return rightMotor;
+    }
+
+    public CameraStepMotorEntity getPanMotor() {
+        return panMotor;
+    }
+
+    public CameraStepMotorEntity getTiltMotor() {
+        return tiltMotor;
     }
 }

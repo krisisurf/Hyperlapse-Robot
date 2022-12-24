@@ -10,7 +10,7 @@
 
     <string name="title_create_rule_activity">Create a new rule</string>
 
-    <string name="button_cancle">cancle</string>
+    <string name="button_cancel">cancel</string>
     <string name="button_apply">apply</string>
 
     <string name="label_rule_number">Rule №%1$s</string>
@@ -25,8 +25,8 @@
     <string name="distance">Distance (cm):</string>
     <string name="preview">Preview:</string>
     <string name="default_distance">0</string>
-    <string name="default_execution_time">0</string>
-    <string name="default_degree">0</string>
+    <string name="default_execution_time">0 sec</string>
+    <string name="default_degree">0°</string>
     <string name="not_connected_status">Not connected</string>
     <string name="connected_status">Connected</string>
     <string name="configure_connection">Configure Connection</string>
@@ -34,4 +34,8 @@
     <string name="btn_add_rules">Add a rule</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="example_text">Example label text</string>
+
+    <string name="degree">%1$d°</string>
+    <string name="execution_time">%1$d sec</string>
 </resources>

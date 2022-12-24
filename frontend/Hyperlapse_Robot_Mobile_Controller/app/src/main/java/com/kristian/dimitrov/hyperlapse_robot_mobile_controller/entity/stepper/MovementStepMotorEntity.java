@@ -7,31 +7,26 @@ import java.io.Serializable;
 
 public class MovementStepMotorEntity extends StepMotorEntity implements Serializable {
 
-    private float distance;
-    private float executionTime;
+    private double distance;
+    private double executionTime;
 
     private final double wheelRadius;
 
     /**
      * <p>Default initialization of step motor entity with rule for distance and execution time.</p>
-     * <b>NOTE:</b> THE HARDWARE STEP MOTOR STEPS COUNT ARE FIXED WITH DEFAULT VALUES
      */
-    public MovementStepMotorEntity(double wheelRadius) {
+    public MovementStepMotorEntity(double wheelRadius, int stepsPerRevolution, double maxSpeed) {
+        super(stepsPerRevolution, maxSpeed);
         this.wheelRadius = wheelRadius;
     }
 
     /**
-     * Initialization of step motor entity with rule for distance and execution time.
+     * Clone constructor
      *
-     * @param stepsPerRevolution Hardware limit of the motor steps count for one revolution (360 degrees)
-     * @param maxSpeed           Step motor max speed in steps per second
-     * @param distance           Distance which will be moved
-     * @param executionTime      Time for which the given distance will be traveled
+     * @param movementStepMotorEntity
      */
-    public MovementStepMotorEntity(double wheelRadius, int stepsPerRevolution, float maxSpeed, float distance, float executionTime) throws IncompatibleStepMotorArguments {
-        super(stepsPerRevolution, maxSpeed);
-        this.wheelRadius = wheelRadius;
-        setData(distance, executionTime);
+    public MovementStepMotorEntity(MovementStepMotorEntity movementStepMotorEntity) {
+        this(movementStepMotorEntity.wheelRadius, movementStepMotorEntity.stepsPerRevolution, movementStepMotorEntity.maxSpeed);
     }
 
     /**
@@ -41,7 +36,8 @@ public class MovementStepMotorEntity extends StepMotorEntity implements Serializ
      * @param executionTime Time to complete in seconds
      * @throws IncompatibleStepMotorArguments When it is impossible to travel the given distance for the execution time, because of hardware limitations.
      */
-    public void setData(float distance, float executionTime) throws IncompatibleStepMotorArguments {
+    @Override
+    public void setData(double distance, double executionTime) throws IncompatibleStepMotorArguments {
         double minimalTimeRequired = getMinimalTimeRequired(distance);
 
         if (minimalTimeRequired > executionTime)
@@ -51,16 +47,23 @@ public class MovementStepMotorEntity extends StepMotorEntity implements Serializ
         this.executionTime = executionTime;
     }
 
-    public double getMinimalTimeRequired(float distance) {
+    @Override
+    public double getMinimalTimeRequired(double distance) {
         int stepsRequired = ArduinoRobot.convertCentimetersToSteps(distance, wheelRadius, stepsPerRevolution);
         return ArduinoRobot.convertStepsToSeconds(stepsRequired, maxSpeed);
     }
 
-    public float getDistance() {
+    /**
+     *
+     * @return distance
+     */
+    @Override
+    public double getMeasurementValue() {
         return distance;
     }
 
-    public float getExecutionTime() {
+    @Override
+    public double getExecutionTime() {
         return executionTime;
     }
 

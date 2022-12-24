@@ -144,13 +144,11 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/labelPan" />
 
-                <EditText
-                    android:id="@+id/editTextPanDegree"
+                <Button
+                    android:id="@+id/btnPanDegree"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
-                    android:ems="4"
-                    android:inputType="number|numberDecimal"
                     android:text="@string/default_degree"
                     app:layout_constraintLeft_toRightOf="@id/labelPanDegree"
                     app:layout_constraintRight_toLeftOf="@id/dividerCamera"
@@ -166,17 +164,14 @@
                     android:textColor="@color/white"
                     android:textSize="15sp"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/editTextPanExecutionTime"
+                    app:layout_constraintRight_toLeftOf="@id/btnPanExecutionTime"
                     app:layout_constraintTop_toBottomOf="@id/labelPanDegree" />
 
-                <EditText
-                    android:id="@+id/editTextPanExecutionTime"
+                <Button
+                    android:id="@+id/btnPanExecutionTime"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
-                    android:ems="4"
-                    android:inputType="number|numberDecimal"
-                    android:maxLength="6"
                     android:text="@string/default_execution_time"
                     app:layout_constraintLeft_toRightOf="@id/labelPanExecutionTime"
                     app:layout_constraintRight_toLeftOf="@id/dividerCamera"
@@ -206,15 +201,13 @@
                     android:textColor="@color/white"
                     android:textSize="15sp"
                     app:layout_constraintLeft_toRightOf="@id/dividerCamera"
-                    app:layout_constraintRight_toLeftOf="@id/editTextTiltDegree"
+                    app:layout_constraintRight_toLeftOf="@id/btnTiltDegree"
                     app:layout_constraintTop_toBottomOf="@id/labelTilt" />
 
-                <EditText
-                    android:id="@+id/editTextTiltDegree"
+                <Button
+                    android:id="@+id/btnTiltDegree"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:ems="4"
-                    android:inputType="number|numberDecimal"
                     android:text="@string/default_degree"
                     app:layout_constraintLeft_toRightOf="@id/labelTiltDegree"
                     app:layout_constraintRight_toRightOf="parent"
@@ -230,17 +223,14 @@
                     android:textColor="@color/white"
                     android:textSize="15sp"
                     app:layout_constraintLeft_toRightOf="@id/dividerCamera"
-                    app:layout_constraintRight_toLeftOf="@id/editTextTiltExecutionTime"
+                    app:layout_constraintRight_toLeftOf="@id/btnTiltExecutionTime"
                     app:layout_constraintTop_toBottomOf="@id/labelTiltDegree" />
 
 
-                <EditText
-                    android:id="@+id/editTextTiltExecutionTime"
+                <Button
+                    android:id="@+id/btnTiltExecutionTime"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:ems="4"
-                    android:inputType="number|numberDecimal"
-                    android:maxLength="6"
                     android:text="@string/default_execution_time"
                     app:layout_constraintLeft_toRightOf="@id/labelTiltExecutionTime"
                     app:layout_constraintRight_toRightOf="parent"
@@ -262,7 +252,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:layout_weight="1"
-                android:text="@string/button_cancle"
+                android:text="@string/button_cancel"
                 tools:ignore="ButtonStyle" />
 
             <Button
