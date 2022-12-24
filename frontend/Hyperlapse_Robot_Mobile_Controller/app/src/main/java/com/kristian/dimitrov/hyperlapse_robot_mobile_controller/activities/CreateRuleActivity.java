@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.builders.RuleEntityBuilder;
-import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.CameraStepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.StepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.exception.IncompatibleStepMotorArguments;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.fragments.ForwardBackwardFragment;
@@ -29,7 +28,6 @@ public class CreateRuleActivity extends AppCompatActivity {
 
     public static final String RULE_ENTITY_CODE = "ruleEntity";
 
-    private ArduinoRobot arduinoRobot;
     private RuleEntityBuilder ruleEntityBuilder;
 
     private final String[] directionStringOptions = {"Forward", "Turning"};
@@ -51,7 +49,7 @@ public class CreateRuleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_rule);
         setTitle(R.string.title_create_rule_activity);
 
-        arduinoRobot = (ArduinoRobot) getIntent().getSerializableExtra("arduinoRobot");
+        ArduinoRobot arduinoRobot = (ArduinoRobot) getIntent().getSerializableExtra("arduinoRobot");
         assert arduinoRobot != null : "arduinoRobot extra is null";
 
         TextView textView_ruleNumber = findViewById(R.id.textView_ruleNumber);
@@ -71,29 +69,25 @@ public class CreateRuleActivity extends AppCompatActivity {
         btnPanDegree = findViewById(R.id.btnPanDegree);
         btnPanDegree.setOnClickListener(view -> {
             String popupTitle = getString(R.string.label_pan) + " " + getString(R.string.label_degree);
-            CreateRuleActivity.NumberPopupDialogFiller_listenerCreator
-                    .clickListener_measurementData(numberInputPopupDialog, btnPanDegree, btnPanExecutionTime, popupTitle, ruleEntityBuilder.getPanMotor());
+            clickListener_measurementData(numberInputPopupDialog, btnPanDegree, btnPanExecutionTime, popupTitle, ruleEntityBuilder.getPanMotor());
         });
 
         btnPanExecutionTime = findViewById(R.id.btnPanExecutionTime);
         btnPanExecutionTime.setOnClickListener(view -> {
             String popupTitle = getString(R.string.label_pan) + " " + getString(R.string.label_execution_time);
-            CreateRuleActivity.NumberPopupDialogFiller_listenerCreator
-                    .clickListener_executionTime(numberInputPopupDialog, btnPanExecutionTime, popupTitle, ruleEntityBuilder.getPanMotor());
+            clickListener_executionTime(numberInputPopupDialog, btnPanExecutionTime, popupTitle, ruleEntityBuilder.getPanMotor());
         });
 
         btnTiltDegree = findViewById(R.id.btnTiltDegree);
         btnTiltDegree.setOnClickListener(view -> {
             String popupTitle = getString(R.string.label_tilt) + " " + getString(R.string.label_degree);
-            CreateRuleActivity.NumberPopupDialogFiller_listenerCreator
-                    .clickListener_measurementData(numberInputPopupDialog, btnTiltDegree, btnTiltExecutionTime, popupTitle, ruleEntityBuilder.getTiltMotor());
+            clickListener_measurementData(numberInputPopupDialog, btnTiltDegree, btnTiltExecutionTime, popupTitle, ruleEntityBuilder.getTiltMotor());
         });
 
         btnTiltExecutionTime = findViewById(R.id.btnTiltExecutionTime);
         btnTiltExecutionTime.setOnClickListener((view -> {
             String popupTitle = getString(R.string.label_tilt) + " " + getString(R.string.label_execution_time);
-            CreateRuleActivity.NumberPopupDialogFiller_listenerCreator
-                    .clickListener_executionTime(numberInputPopupDialog, btnTiltExecutionTime, popupTitle, ruleEntityBuilder.getTiltMotor());
+            clickListener_executionTime(numberInputPopupDialog, btnTiltExecutionTime, popupTitle, ruleEntityBuilder.getTiltMotor());
         }));
 
         Button buttonCancle = findViewById(R.id.btn_cancle);
@@ -168,71 +162,66 @@ public class CreateRuleActivity extends AppCompatActivity {
         }
     }
 
-    public static final class NumberPopupDialogFiller_listenerCreator {
+    /**
+     *
+     * @param numberInputPopupDialog instance of NumberInputPopupDialog which will manage the measurement input.
+     * @param currentTextView text view on which the measurement input will be displayed
+     * @param correspondingTvExecTime text view which holds the execution time value
+     * @param popupTitle title of the input popup dialog
+     * @param stepMotorEntity motor on which the inputs will be applied
+     */
+    private void clickListener_measurementData(NumberInputPopupDialog numberInputPopupDialog, TextView currentTextView, TextView correspondingTvExecTime, String popupTitle, StepMotorEntity stepMotorEntity) {
+        numberInputPopupDialog.setTitle(popupTitle);
+        numberInputPopupDialog.setMinValue(0);
+        numberInputPopupDialog.setMaxValue(360);
+        numberInputPopupDialog.setValue(0);
+        numberInputPopupDialog.setNegativeNumbers(true);
+        numberInputPopupDialog.addNumberSelectedListener(value -> {
+            try {
+                int minExecTime = getMinimalExecutionTimeCelled(stepMotorEntity, value);
+                stepMotorEntity.setData(value, minExecTime);
 
+                Context context = currentTextView.getContext();
+                currentTextView.setText(context.getString(R.string.degree, value));
+                correspondingTvExecTime.setText(context.getString(R.string.execution_time, minExecTime));
 
-        /**
-         * 
-         * @param numberInputPopupDialog instance of NumberInputPopupDialog which will manage the measurement input.
-         * @param currentTextView text view on which the measurement input will be displayed
-         * @param correspondingTvExecTime text view which holds the execution time value
-         * @param popupTitle title of the input popup dialog
-         * @param stepMotorEntity motor on which the inputs will be applied
-         */
-        public static void clickListener_measurementData(NumberInputPopupDialog numberInputPopupDialog, TextView currentTextView, TextView correspondingTvExecTime, String popupTitle, StepMotorEntity stepMotorEntity) {
-            numberInputPopupDialog.setTitle(popupTitle);
-            numberInputPopupDialog.setMinValue(0);
-            numberInputPopupDialog.setMaxValue(360);
-            numberInputPopupDialog.setValue(0);
-            numberInputPopupDialog.setNegativeNumbers(true);
-            numberInputPopupDialog.addNumberSelectedListener(value -> {
-                try {
-                    int minExecTime = getMinimalExecutionTimeCelled(stepMotorEntity, value);
-                    stepMotorEntity.setData(value, minExecTime);
+            } catch (IncompatibleStepMotorArguments e) {
+                e.printStackTrace();
+            }
+        });
+        numberInputPopupDialog.show();
+    }
 
-                    Context context = currentTextView.getContext();
-                    currentTextView.setText(context.getString(R.string.degree, value));
-                    correspondingTvExecTime.setText(context.getString(R.string.execution_time, minExecTime));
+    /**
+     *
+     * @param numberInputPopupDialog instance of NumberInputPopupDialog which will manage the measurement input.
+     * @param currentTextView  text view on which the execution time inputted result will be displayed
+     * @param popupTitle title of the input popup dialog
+     * @param stepMotorEntity  motor on which the input will be applied
+     */
+    private void clickListener_executionTime(NumberInputPopupDialog numberInputPopupDialog, TextView currentTextView, String popupTitle, StepMotorEntity stepMotorEntity) {
+        int minExecTimeCelled = getMinimalExecutionTimeCelled(stepMotorEntity, (int) stepMotorEntity.getMeasurementValue());
 
-                } catch (IncompatibleStepMotorArguments e) {
-                    e.printStackTrace();
-                }
-            });
-            numberInputPopupDialog.show();
-        }
+        numberInputPopupDialog.setTitle(popupTitle);
+        numberInputPopupDialog.setMinValue(minExecTimeCelled);
+        numberInputPopupDialog.setMaxValue(Short.MAX_VALUE);
+        numberInputPopupDialog.setValue(minExecTimeCelled);
+        numberInputPopupDialog.setNegativeNumbers(false);
+        numberInputPopupDialog.addNumberSelectedListener(value -> {
+            try {
+                stepMotorEntity.setData(stepMotorEntity.getMeasurementValue(), value);
 
-        /**
-         * 
-         * @param numberInputPopupDialog instance of NumberInputPopupDialog which will manage the measurement input.
-         * @param currentTextView  text view on which the execution time inputted result will be displayed
-         * @param popupTitle title of the input popup dialog
-         * @param stepMotorEntity  motor on which the input will be applied
-         */
-        public static void clickListener_executionTime(NumberInputPopupDialog numberInputPopupDialog, TextView currentTextView, String popupTitle, StepMotorEntity stepMotorEntity) {
-            int minExecTimeCelled = getMinimalExecutionTimeCelled(stepMotorEntity, (int) stepMotorEntity.getMeasurementValue());
+                Context context = currentTextView.getContext();
+                currentTextView.setText(context.getString(R.string.execution_time, value));
+            } catch (IncompatibleStepMotorArguments e) {
+                e.printStackTrace();
+            }
+        });
+        numberInputPopupDialog.show();
+    }
 
-            numberInputPopupDialog.setTitle(popupTitle);
-            numberInputPopupDialog.setMinValue(minExecTimeCelled);
-            numberInputPopupDialog.setMaxValue(Short.MAX_VALUE);
-            numberInputPopupDialog.setValue(minExecTimeCelled);
-            numberInputPopupDialog.setNegativeNumbers(false);
-            numberInputPopupDialog.addNumberSelectedListener(value -> {
-                try {
-                    stepMotorEntity.setData(stepMotorEntity.getMeasurementValue(), value);
-
-                    Context context = currentTextView.getContext();
-                    currentTextView.setText(context.getString(R.string.execution_time, value));
-                } catch (IncompatibleStepMotorArguments e) {
-                    e.printStackTrace();
-                }
-            });
-            numberInputPopupDialog.show();
-        }
-
-        private static int getMinimalExecutionTimeCelled(StepMotorEntity stepMotorEntity, int val) {
-            double minExecTime = stepMotorEntity.getMinimalTimeRequired(Math.abs(val));
-            return (int) Math.ceil(minExecTime);
-        }
-
+    private int getMinimalExecutionTimeCelled(StepMotorEntity stepMotorEntity, int val) {
+        double minExecTime = stepMotorEntity.getMinimalTimeRequired(Math.abs(val));
+        return (int) Math.ceil(minExecTime);
     }
 }

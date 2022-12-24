@@ -1,5 +1,6 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities.CreateRuleActivity;
@@ -19,9 +21,11 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities.Numbe
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.builders.RuleEntityBuilder;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.MovementStepMotorEntity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.StepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.exception.IncompatibleStepMotorArguments;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,17 +87,89 @@ public class ForwardBackwardFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        btnDistance = getView().findViewById(R.id.btnDistance);
+        btnDistance = requireView().findViewById(R.id.btnDistance);
         btnDistance.setOnClickListener(view1 -> {
-            String popupTitle = getString(R.string.label_movement) + " " + getString(R.string.distance);
-            CreateRuleActivity.NumberPopupDialogFiller_listenerCreator
-                    .clickListener_measurementData(numberInputPopupDialog, btnDistance, btnExecutionTime, popupTitle, ruleEntityBuilder.getLeftMotor());
+            String popupTitle = getString(R.string.distance);
+            clickListener_measurementData(numberInputPopupDialog, btnDistance, btnExecutionTime, popupTitle, ruleEntityBuilder.getLeftMotor(), ruleEntityBuilder.getRightMotor());
         });
 
-        btnExecutionTime = getView().findViewById(R.id.btnExecutionTime);
+        btnExecutionTime = requireView().findViewById(R.id.btnExecutionTime);
+        btnExecutionTime.setOnClickListener(view1 -> {
+            String popupTitle = "Movement" + getString(R.string.execution_time);
+            clickListener_executionTime(numberInputPopupDialog, btnExecutionTime, popupTitle, ruleEntityBuilder.getLeftMotor(), ruleEntityBuilder.getRightMotor());
+        });
     }
 
     public float getExecutionTime() {
         return Float.parseFloat(btnExecutionTime.getText().toString());
+    }
+
+    /**
+     * @param numberInputPopupDialog  instance of NumberInputPopupDialog which will manage the measurement input.
+     * @param currentTextView         text view on which the measurement input will be displayed
+     * @param correspondingTvExecTime text view which holds the execution time value
+     * @param popupTitle              title of the input popup dialog
+     * @param leftSideMotor           motor on which the inputs will be applied
+     * @param rightSideMotor          motor on which the inputs will be applied
+     */
+    private void clickListener_measurementData(NumberInputPopupDialog numberInputPopupDialog,
+                                               TextView currentTextView, TextView correspondingTvExecTime, String popupTitle,
+                                               StepMotorEntity leftSideMotor, StepMotorEntity rightSideMotor) {
+        numberInputPopupDialog.setTitle(popupTitle);
+        numberInputPopupDialog.setMinValue(0);
+        numberInputPopupDialog.setMaxValue(Short.MAX_VALUE);
+        numberInputPopupDialog.setValue(0);
+        numberInputPopupDialog.setNegativeNumbers(true);
+        numberInputPopupDialog.addNumberSelectedListener(value -> {
+            try {
+                int minExecTime = getMinimalExecutionTimeCelled(leftSideMotor, value);
+                leftSideMotor.setData(value, minExecTime);
+                rightSideMotor.setData(value, minExecTime);
+
+                Context context = currentTextView.getContext();
+                currentTextView.setText(context.getString(R.string.degree, value));
+                correspondingTvExecTime.setText(context.getString(R.string.execution_time, minExecTime));
+
+            } catch (IncompatibleStepMotorArguments e) {
+                e.printStackTrace();
+            }
+        });
+        numberInputPopupDialog.show();
+    }
+
+    /**
+     * @param numberInputPopupDialog instance of NumberInputPopupDialog which will manage the measurement input.
+     * @param currentTextView        text view on which the execution time inputted result will be displayed
+     * @param popupTitle             title of the input popup dialog
+     * @param leftSideMotor          motor on which the inputs will be applied
+     * @param rightSideMotor         motor on which the inputs will be applied
+     */
+    private void clickListener_executionTime(NumberInputPopupDialog numberInputPopupDialog,
+                                             TextView currentTextView, String popupTitle,
+                                             StepMotorEntity leftSideMotor, StepMotorEntity rightSideMotor) {
+        int minExecTimeCelled = getMinimalExecutionTimeCelled(leftSideMotor, (int) leftSideMotor.getMeasurementValue());
+
+        numberInputPopupDialog.setTitle(popupTitle);
+        numberInputPopupDialog.setMinValue(minExecTimeCelled);
+        numberInputPopupDialog.setMaxValue(Short.MAX_VALUE);
+        numberInputPopupDialog.setValue(minExecTimeCelled);
+        numberInputPopupDialog.setNegativeNumbers(false);
+        numberInputPopupDialog.addNumberSelectedListener(value -> {
+            try {
+                leftSideMotor.setData(leftSideMotor.getMeasurementValue(), value);
+                rightSideMotor.setData(rightSideMotor.getMeasurementValue(), value);
+
+                Context context = currentTextView.getContext();
+                currentTextView.setText(context.getString(R.string.execution_time, value));
+            } catch (IncompatibleStepMotorArguments e) {
+                e.printStackTrace();
+            }
+        });
+        numberInputPopupDialog.show();
+    }
+
+    private int getMinimalExecutionTimeCelled(StepMotorEntity stepMotorEntity, int val) {
+        double minExecTime = stepMotorEntity.getMinimalTimeRequired(Math.abs(val));
+        return (int) Math.ceil(minExecTime);
     }
 }
