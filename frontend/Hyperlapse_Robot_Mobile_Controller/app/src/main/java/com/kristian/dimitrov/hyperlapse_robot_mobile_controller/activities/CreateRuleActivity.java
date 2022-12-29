@@ -57,7 +57,7 @@ public class CreateRuleActivity extends AppCompatActivity {
         ruleEntityBuilder = new RuleEntityBuilder(arduinoRobot);
 
         AutoCompleteTextView directionAutoComplete = findViewById(R.id.auto_complete_txt);
-        directionAutoComplete.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, directionStringOptions));
+        directionAutoComplete.setAdapter(new ArrayAdapter<>(this, R.layout.text_option_item, directionStringOptions));
         directionAutoComplete.setOnItemClickListener(this::directionOnItemClickListener);
 
         numberInputPopupDialog = new NumberInputPopupDialog(CreateRuleActivity.this, true);

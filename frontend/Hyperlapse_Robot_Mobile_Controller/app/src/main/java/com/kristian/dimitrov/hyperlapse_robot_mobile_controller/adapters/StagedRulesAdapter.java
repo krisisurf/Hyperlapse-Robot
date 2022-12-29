@@ -1,5 +1,6 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
