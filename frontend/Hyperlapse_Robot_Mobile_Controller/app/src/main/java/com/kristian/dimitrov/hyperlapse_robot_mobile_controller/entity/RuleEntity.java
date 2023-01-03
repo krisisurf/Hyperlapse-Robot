@@ -2,6 +2,7 @@ package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.CameraStepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.MovementStepMotorEntity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.StepMotorEntity;
 
 import java.io.Serializable;
 
@@ -39,5 +40,25 @@ public class RuleEntity implements Serializable {
                 ", panMotor: " + panMotor +
                 ", tiltMotor: " + tiltMotor +
                 '}';
+    }
+
+    public String superToString(){
+        return super.toString();
+    }
+
+    public MovementStepMotorEntity getLeftMotor() {
+        return leftMotor;
+    }
+
+    public MovementStepMotorEntity getRightMotor() {
+        return rightMotor;
+    }
+
+    public CameraStepMotorEntity getPanMotor() {
+        return panMotor;
+    }
+
+    public CameraStepMotorEntity getTiltMotor() {
+        return tiltMotor;
     }
 }

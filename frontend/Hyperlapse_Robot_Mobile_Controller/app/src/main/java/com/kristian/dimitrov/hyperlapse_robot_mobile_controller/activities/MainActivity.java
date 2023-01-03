@@ -15,6 +15,7 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.C
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.MovementStepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.StepMotorEntity;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -81,9 +82,10 @@ public class MainActivity extends AppCompatActivity {
         buttonConfigureConnection.setOnClickListener(this::openConfigureConnectionActivity);
 
         Button buttonAddRule = findViewById(R.id.btn_add_rule);
-        buttonAddRule.setOnClickListener(this::openCreateRuleActivity);
+        buttonAddRule.setOnClickListener((v) -> openCreateRuleActivity(null));
 
         stagedRulesAdapter = new StagedRulesAdapter(MainActivity.this, arduinoRobot.getRulesManagerEntity().getRules());
+        stagedRulesAdapter.setOnEditClickListener(this::openCreateRuleActivity);
         RecyclerView recyclerView = findViewById(R.id.rulesRecyclerView);
         recyclerView.setAdapter(stagedRulesAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
@@ -110,14 +112,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void openCreateRuleActivity(View view) {
+    private void openCreateRuleActivity(@Nullable RuleEntity ruleEntity) {
         if (!arduinoRobotConnection.isConnectionEstablished()) {
             Toast.makeText(MainActivity.this, "Please, connect with the Robot, before adding a rule.", Toast.LENGTH_SHORT).show();
             //return;
         }
 
         Intent intent = new Intent(MainActivity.this, CreateRuleActivity.class);
-        intent.putExtra("arduinoRobot", arduinoRobot);
+        intent.putExtra(CreateRuleActivity.ARDUINO_ROBOT_CODE, arduinoRobot);
+        intent.putExtra(CreateRuleActivity.RULE_ENTITY_CODE, ruleEntity);
         startActivityForResult(intent, REQUEST_CODE_CREATE_RULE);
     }
 
@@ -145,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == Activity.RESULT_OK) {
                     Log.i(TAG, "Create rule request code OK received.");
                     RuleEntity ruleEntity = (RuleEntity) data.getSerializableExtra(CreateRuleActivity.RULE_ENTITY_CODE);
+                    important Log.i("myTest", "Created: " + ruleEntity.superToString());
                     arduinoRobot.addRule(ruleEntity);
                     stagedRulesAdapter.notifyItemInserted(arduinoRobot.getRulesManagerEntity().size() - 1);
 
