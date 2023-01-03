@@ -22,6 +22,12 @@ public class StagedRulesAdapter extends RecyclerView.Adapter<StagedRulesAdapter.
 
     private OnEditClickListener onEditClickListener;
 
+    private static StringBuilder descriptionBuilder;
+
+    static {
+        descriptionBuilder = new StringBuilder();
+    }
+
     public interface OnEditClickListener {
         void onButtonEditClick(RuleEntity ruleEntity);
     }
@@ -45,7 +51,7 @@ public class StagedRulesAdapter extends RecyclerView.Adapter<StagedRulesAdapter.
         RuleEntity ruleEntity = ruleEntities.get(position);
 
         String ruleNumber = String.valueOf(position + 1);
-        String description = ruleEntity.toString();
+        String description = createDescription(ruleEntity);
         String executionTime = ruleEntity.getExecutionTime() + " sec";
 
         holder.tvRuleNumber.setText(ruleNumber);
@@ -63,6 +69,37 @@ public class StagedRulesAdapter extends RecyclerView.Adapter<StagedRulesAdapter.
             // TODO: It will always be more efficient to use more specific change events if you can. Rely on notifyDataSetChanged as a last resort.
             notifyDataSetChanged();
         }));
+    }
+
+    private String createDescription(RuleEntity ruleEntity) {
+        // TODO: Center vertically the description
+        if (ruleEntity.getLeftMotor().equalsByMeasurementValueAndExecutionTime(ruleEntity.getRightMotor())) {
+            int distance = (int) ruleEntity.getLeftMotor().getMeasurementValue();
+            if (distance != 0) {
+                String direction = ruleEntity.getLeftMotor().getMeasurementValue() > 0 ? "Forward: " : "Backward: ";
+                descriptionBuilder.append(direction).append(distance).append("cm")
+                        .append(" / ").append((int) ruleEntity.getLeftMotor().getExecutionTime()).append("sec\n");
+            }
+        }
+
+        if (ruleEntity.getPanMotor().getMeasurementValue() != 0) {
+            descriptionBuilder
+                    .append("Camera Pan: ").append(context.getString(R.string.degree, (int) ruleEntity.getPanMotor().getMeasurementValue()))
+                    .append(" / ").append((int) ruleEntity.getPanMotor().getExecutionTime()).append("sec\n");
+        }
+
+        if (ruleEntity.getTiltMotor().getMeasurementValue() != 0) {
+            descriptionBuilder
+                    .append("Camera Tilt: ").append(context.getString(R.string.degree, (int) ruleEntity.getTiltMotor().getMeasurementValue()))
+                    .append(" / ").append((int) ruleEntity.getTiltMotor().getExecutionTime()).append("sec");
+        }
+
+        if (descriptionBuilder.length() == 0)
+            descriptionBuilder.append("That rule will be used as delay.");
+
+        String result = descriptionBuilder.toString();
+        descriptionBuilder.setLength(0);
+        return result;
     }
 
     public void setOnEditClickListener(OnEditClickListener onEditClickListener) {

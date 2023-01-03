@@ -1,5 +1,8 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.exception.IncompatibleStepMotorArguments;
 
 import java.io.Serializable;
@@ -49,4 +52,8 @@ public abstract class StepMotorEntity implements Serializable {
     public abstract double getMeasurementValue();
 
     public abstract double getExecutionTime();
+
+    public boolean equalsByMeasurementValueAndExecutionTime(@NonNull StepMotorEntity stepMotorEntity) {
+        return getMeasurementValue() == stepMotorEntity.getMeasurementValue() && getExecutionTime() == stepMotorEntity.getExecutionTime();
+    }
 }
