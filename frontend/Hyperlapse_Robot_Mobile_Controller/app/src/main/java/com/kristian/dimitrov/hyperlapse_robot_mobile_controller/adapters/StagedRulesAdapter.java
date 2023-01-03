@@ -22,6 +22,12 @@ public class StagedRulesAdapter extends RecyclerView.Adapter<StagedRulesAdapter.
 
     private OnEditClickListener onEditClickListener;
 
+    private static StringBuilder descriptionBuilder;
+
+    static {
+        descriptionBuilder = new StringBuilder();
+    }
+
     public interface OnEditClickListener {
         void onButtonEditClick(RuleEntity ruleEntity);
     }
@@ -45,7 +51,24 @@ public class StagedRulesAdapter extends RecyclerView.Adapter<StagedRulesAdapter.
         RuleEntity ruleEntity = ruleEntities.get(position);
 
         String ruleNumber = String.valueOf(position + 1);
-        String description = ruleEntity.toString();
+
+
+        String description = descriptionBuilder
+                .append("Left motor: ").append(ruleEntity.getLeftMotor().getMeasurementValue()).append("cm")
+                .append(" / ").append((int) ruleEntity.getLeftMotor().getExecutionTime()).append("sec")
+
+                .append("\nRight motor: ").append(ruleEntity.getRightMotor().getMeasurementValue()).append("cm")
+                .append(" / ").append((int) ruleEntity.getRightMotor().getExecutionTime()).append("sec")
+
+                .append("\n\nPan motor: ").append(context.getString(R.string.degree, (int) ruleEntity.getPanMotor().getMeasurementValue()))
+                .append(" / ").append((int) ruleEntity.getPanMotor().getExecutionTime()).append("sec")
+
+                .append("\nTilt motor: ").append(context.getString(R.string.degree, (int) ruleEntity.getTiltMotor().getMeasurementValue()))
+                .append(" / ").append((int) ruleEntity.getTiltMotor().getExecutionTime()).append("sec")
+
+                .toString();
+        descriptionBuilder.setLength(0);
+
         String executionTime = ruleEntity.getExecutionTime() + " sec";
 
         holder.tvRuleNumber.setText(ruleNumber);
