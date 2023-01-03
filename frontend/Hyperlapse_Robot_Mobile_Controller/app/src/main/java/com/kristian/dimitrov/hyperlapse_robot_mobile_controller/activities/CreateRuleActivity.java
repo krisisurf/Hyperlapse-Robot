@@ -3,11 +3,9 @@ package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,7 +26,13 @@ public class CreateRuleActivity extends AppCompatActivity {
 
     public static final String ARDUINO_ROBOT_CODE = "ar";
     public static final String RULE_ENTITY_CODE = "re";
+    public static final String RULE_ENTITY_INDEX_CODE = "reind";
 
+    public static final int RESULT_CREATED_OK = 2000;
+    public static final int RESULT_EDITED_OK = 2001;
+
+
+    private boolean isEditingExistingRule;
     private RuleEntity ruleEntity;
 
     private final String[] directionStringOptions = {"Forward", "Turning"};
@@ -53,23 +57,24 @@ public class CreateRuleActivity extends AppCompatActivity {
         ArduinoRobot arduinoRobot = (ArduinoRobot) getIntent().getSerializableExtra(ARDUINO_ROBOT_CODE);
         assert arduinoRobot != null : "arduinoRobot extra is null";
 
-        ruleEntity = (RuleEntity) getIntent().getSerializableExtra(RULE_ENTITY_CODE);
+        int indexOfRuleEntity = getIntent().getIntExtra(RULE_ENTITY_INDEX_CODE, -1);
+
+        // Getting rule number
         int ruleNumber;
-        if (ruleEntity == null) {
+        if (indexOfRuleEntity == -1) {
             ruleEntity = new RuleEntityBuilder(arduinoRobot).build();
             ruleNumber = arduinoRobot.getRulesManagerEntity().size() + 1;
+            isEditingExistingRule = false;
         } else {
-            important
-            arduinoRobot.getRulesManagerEntity().getRules().stream().forEach((ruleEntity1 -> {
-                Log.i("myTest", ruleEntity1.superToString());
-            }));
-            Log.i("myTest", "--------------------");
-            Log.i("myTest", ruleEntity.superToString());
-            int indexOfRuleEntity = arduinoRobot.getRulesManagerEntity().getRules().indexOf(ruleEntity);
-            if (indexOfRuleEntity == -1)
-                throw new RuntimeException("The given ruleEntityExtra does not exist in the stage rules. NonNull ruleEntity extra suppose to use this activity as a editing page.");
+            try {
+                ruleEntity = arduinoRobot.getRulesManagerEntity().get(indexOfRuleEntity);
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
             ruleNumber = indexOfRuleEntity + 1;
+            isEditingExistingRule = true;
         }
+        // end getting rule number
 
         TextView textView_ruleNumber = findViewById(R.id.textView_ruleNumber);
         textView_ruleNumber.setText(getString(R.string.label_rule_number, String.valueOf(ruleNumber)));
@@ -114,6 +119,18 @@ public class CreateRuleActivity extends AppCompatActivity {
 
         Button buttonApply = findViewById(R.id.btn_apply);
         buttonApply.setOnClickListener(this::applyButton);
+
+        setupDefaultValues();
+    }
+
+    private void setupDefaultValues() {
+        //TODO: setup default values for movement
+
+        btnPanDegree.setText(getString(R.string.degree, (int) ruleEntity.getPanMotor().getMeasurementValue()));
+        btnPanExecutionTime.setText(getString(R.string.execution_time, (int) ruleEntity.getPanMotor().getExecutionTime()));
+
+        btnTiltDegree.setText(getString(R.string.degree, (int) ruleEntity.getTiltMotor().getMeasurementValue()));
+        btnTiltExecutionTime.setText(getString(R.string.execution_time, (int) ruleEntity.getTiltMotor().getExecutionTime()));
     }
 
     private void cancleButton(View view) {
@@ -145,8 +162,15 @@ public class CreateRuleActivity extends AppCompatActivity {
 
     public void applyRule() {
         Intent intent = getIntent();
-        intent.putExtra(CreateRuleActivity.RULE_ENTITY_CODE, ruleEntity);
-        setResult(Activity.RESULT_OK, intent);
+        if (isEditingExistingRule) {
+            int indexOfRuleEntity = getIntent().getIntExtra(RULE_ENTITY_INDEX_CODE, -1);
+            intent.putExtra(RULE_ENTITY_INDEX_CODE, indexOfRuleEntity);
+            intent.putExtra(RULE_ENTITY_CODE, ruleEntity);
+            setResult(RESULT_EDITED_OK, intent);
+        } else {
+            intent.putExtra(CreateRuleActivity.RULE_ENTITY_CODE, ruleEntity);
+            setResult(RESULT_CREATED_OK, intent);
+        }
 
         finish();
     }
