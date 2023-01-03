@@ -37,6 +37,7 @@ public class CreateRuleActivity extends AppCompatActivity {
 
     private final String[] directionStringOptions = {"Straight", "Turning"};
 
+    private AutoCompleteTextView directionAutoComplete;
     private ForwardBackwardFragment forwardBackwardFragment;
     private TurningFragment turningFragment;
 
@@ -80,7 +81,7 @@ public class CreateRuleActivity extends AppCompatActivity {
         textView_ruleNumber.setText(getString(R.string.label_rule_number, String.valueOf(ruleNumber)));
 
 
-        AutoCompleteTextView directionAutoComplete = findViewById(R.id.auto_complete_txt);
+        directionAutoComplete = findViewById(R.id.auto_complete_txt);
         directionAutoComplete.setAdapter(new ArrayAdapter<>(this, R.layout.text_option_item, directionStringOptions));
         directionAutoComplete.setOnItemClickListener(this::directionOnItemClickListener);
 
@@ -124,7 +125,11 @@ public class CreateRuleActivity extends AppCompatActivity {
     }
 
     private void setupDefaultValues() {
-        //TODO 100: setup default values for movement
+        if (ruleEntity.getLeftMotor().equalsByMeasurementValueAndExecutionTime(ruleEntity.getRightMotor())) {
+            if (ruleEntity.getLeftMotor().getMeasurementValue() != 0 || ruleEntity.getLeftMotor().getExecutionTime() != 0) {
+                // TODO 100: setup default values for movement
+            }
+        }
 
         btnPanDegree.setText(getString(R.string.degree, (int) ruleEntity.getPanMotor().getMeasurementValue()));
         btnPanExecutionTime.setText(getString(R.string.execution_time, (int) ruleEntity.getPanMotor().getExecutionTime()));
