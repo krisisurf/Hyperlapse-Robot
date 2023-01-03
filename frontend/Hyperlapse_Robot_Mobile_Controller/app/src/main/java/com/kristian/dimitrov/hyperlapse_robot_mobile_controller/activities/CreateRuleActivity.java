@@ -124,7 +124,7 @@ public class CreateRuleActivity extends AppCompatActivity {
     }
 
     private void setupDefaultValues() {
-        //TODO: setup default values for movement
+        //TODO 100: setup default values for movement
 
         btnPanDegree.setText(getString(R.string.degree, (int) ruleEntity.getPanMotor().getMeasurementValue()));
         btnPanExecutionTime.setText(getString(R.string.execution_time, (int) ruleEntity.getPanMotor().getExecutionTime()));
