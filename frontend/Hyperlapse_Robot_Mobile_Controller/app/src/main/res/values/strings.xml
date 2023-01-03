@@ -32,8 +32,6 @@
     <string name="configure_connection">Configure Connection</string>
     <string name="send_rules">Send Rules</string>
     <string name="btn_add_rules">Add a rule</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="example_text">Example label text</string>
 
     <string name="degree">%1$d°</string>

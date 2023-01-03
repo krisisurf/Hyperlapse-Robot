@@ -40,4 +40,24 @@ public class RuleEntity implements Serializable {
                 ", tiltMotor: " + tiltMotor +
                 '}';
     }
+
+    public String superToString(){
+        return super.toString();
+    }
+
+    public MovementStepMotorEntity getLeftMotor() {
+        return leftMotor;
+    }
+
+    public MovementStepMotorEntity getRightMotor() {
+        return rightMotor;
+    }
+
+    public CameraStepMotorEntity getPanMotor() {
+        return panMotor;
+    }
+
+    public CameraStepMotorEntity getTiltMotor() {
+        return tiltMotor;
+    }
 }

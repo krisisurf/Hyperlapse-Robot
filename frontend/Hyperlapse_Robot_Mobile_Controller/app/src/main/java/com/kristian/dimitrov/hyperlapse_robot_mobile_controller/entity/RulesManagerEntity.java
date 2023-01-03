@@ -20,6 +20,10 @@ public class RulesManagerEntity implements Serializable {
         rules.remove(ruleEntity);
     }
 
+    public RuleEntity get(int index) throws IndexOutOfBoundsException{
+        return rules.get(index);
+    }
+
     public int size() {
         return rules.size();
     }

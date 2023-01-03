@@ -1,10 +1,10 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,6 +20,12 @@ public class StagedRulesAdapter extends RecyclerView.Adapter<StagedRulesAdapter.
     private final Context context;
     private final List<RuleEntity> ruleEntities;
 
+    private OnEditClickListener onEditClickListener;
+
+    public interface OnEditClickListener {
+        void onButtonEditClick(RuleEntity ruleEntity);
+    }
+
     public StagedRulesAdapter(Context context, List<RuleEntity> ruleEntities) {
         this.context = context;
         this.ruleEntities = ruleEntities;
@@ -31,7 +37,7 @@ public class StagedRulesAdapter extends RecyclerView.Adapter<StagedRulesAdapter.
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.rule_list_item, parent, false);
 
-        return new StagedRulesAdapter.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -45,6 +51,22 @@ public class StagedRulesAdapter extends RecyclerView.Adapter<StagedRulesAdapter.
         holder.tvRuleNumber.setText(ruleNumber);
         holder.tvDescription.setText(description);
         holder.tvExecutionTime.setText(executionTime);
+
+        holder.btnEdit.setOnClickListener(view -> {
+            assert onEditClickListener != null : "ERROR, onEditClickListener is null and can't be invoked!";
+            onEditClickListener.onButtonEditClick(ruleEntity);
+        });
+
+        holder.btnDelete.setOnClickListener((view -> {
+            ruleEntities.remove(position);
+
+            // TODO: It will always be more efficient to use more specific change events if you can. Rely on notifyDataSetChanged as a last resort.
+            notifyDataSetChanged();
+        }));
+    }
+
+    public void setOnEditClickListener(OnEditClickListener onEditClickListener) {
+        this.onEditClickListener = onEditClickListener;
     }
 
     @Override
@@ -52,11 +74,14 @@ public class StagedRulesAdapter extends RecyclerView.Adapter<StagedRulesAdapter.
         return ruleEntities.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvRuleNumber;
-        private TextView tvDescription;
-        private TextView tvExecutionTime;
+        private final TextView tvRuleNumber;
+        private final TextView tvDescription;
+        private final TextView tvExecutionTime;
+
+        private final Button btnEdit;
+        private final Button btnDelete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -64,6 +89,9 @@ public class StagedRulesAdapter extends RecyclerView.Adapter<StagedRulesAdapter.
             tvRuleNumber = itemView.findViewById(R.id.tvRuleNumber);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvExecutionTime = itemView.findViewById(R.id.tvExecutionTime);
+
+            btnEdit = itemView.findViewById(R.id.btnEdit);
+            btnDelete = itemView.findViewById(R.id.btnDelete);
         }
     }
 }

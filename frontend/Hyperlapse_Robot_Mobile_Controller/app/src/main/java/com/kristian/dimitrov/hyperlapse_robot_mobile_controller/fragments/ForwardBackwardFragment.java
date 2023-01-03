@@ -5,27 +5,17 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
-import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities.CreateRuleActivity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities.NumberInputPopupDialog;
-import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
-import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.builders.RuleEntityBuilder;
-import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.MovementStepMotorEntity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RuleEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.StepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.exception.IncompatibleStepMotorArguments;
-
-import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,11 +26,11 @@ public class ForwardBackwardFragment extends Fragment {
 
     private static final String TAG = "ForwardBackwardFragment";
 
-    public static final String NUMBER_INPUT_POPUP_DIALOG_PARAM = "numberInputPopupDialog";
-    public static final String RULE_ENTITY_BUILDER_PARAM = "ruleEntityBuilder";
+    public static final String NUMBER_INPUT_POPUP_DIALOG_PARAM = "nipd";
+    public static final String RULE_ENTITY_PARAM = "re";
 
     private NumberInputPopupDialog numberInputPopupDialog;
-    private RuleEntityBuilder ruleEntityBuilder;
+    private RuleEntity ruleEntity;
     private Button btnDistance;
     private Button btnExecutionTime;
 
@@ -54,12 +44,12 @@ public class ForwardBackwardFragment extends Fragment {
      *
      * @return A new instance of fragment ForwardBackwardFragment.
      */
-    public static ForwardBackwardFragment newInstance(NumberInputPopupDialog numberInputPopupDialog, RuleEntityBuilder ruleEntityBuilder) {
+    public static ForwardBackwardFragment newInstance(NumberInputPopupDialog numberInputPopupDialog, RuleEntity ruleEntity) {
         ForwardBackwardFragment fragment = new ForwardBackwardFragment();
 
         Bundle args = new Bundle();
         args.putSerializable(NUMBER_INPUT_POPUP_DIALOG_PARAM, numberInputPopupDialog);
-        args.putSerializable(RULE_ENTITY_BUILDER_PARAM, ruleEntityBuilder);
+        args.putSerializable(RULE_ENTITY_PARAM, ruleEntity);
 
         fragment.setArguments(args);
         return fragment;
@@ -71,7 +61,7 @@ public class ForwardBackwardFragment extends Fragment {
 
         if (getArguments() != null) {
             numberInputPopupDialog = (NumberInputPopupDialog) getArguments().getSerializable(NUMBER_INPUT_POPUP_DIALOG_PARAM);
-            ruleEntityBuilder = (RuleEntityBuilder) getArguments().getSerializable(RULE_ENTITY_BUILDER_PARAM);
+            ruleEntity = (RuleEntity) getArguments().getSerializable(RULE_ENTITY_PARAM);
         }
     }
 
@@ -90,18 +80,14 @@ public class ForwardBackwardFragment extends Fragment {
         btnDistance = requireView().findViewById(R.id.btnDistance);
         btnDistance.setOnClickListener(view1 -> {
             String popupTitle = getString(R.string.distance);
-            clickListener_measurementData(numberInputPopupDialog, btnDistance, btnExecutionTime, popupTitle, ruleEntityBuilder.getLeftMotor(), ruleEntityBuilder.getRightMotor());
+            clickListener_measurementData(numberInputPopupDialog, btnDistance, btnExecutionTime, popupTitle, ruleEntity.getLeftMotor(), ruleEntity.getRightMotor());
         });
 
         btnExecutionTime = requireView().findViewById(R.id.btnExecutionTime);
         btnExecutionTime.setOnClickListener(view1 -> {
             String popupTitle = "Movement" + getString(R.string.execution_time);
-            clickListener_executionTime(numberInputPopupDialog, btnExecutionTime, popupTitle, ruleEntityBuilder.getLeftMotor(), ruleEntityBuilder.getRightMotor());
+            clickListener_executionTime(numberInputPopupDialog, btnExecutionTime, popupTitle, ruleEntity.getLeftMotor(), ruleEntity.getRightMotor());
         });
-    }
-
-    public float getExecutionTime() {
-        return Float.parseFloat(btnExecutionTime.getText().toString());
     }
 
     /**

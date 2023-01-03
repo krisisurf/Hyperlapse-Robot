@@ -2,7 +2,6 @@ package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.CameraStepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.MovementStepMotorEntity;
-import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.StepMotorEntity;
 
 import java.io.Serializable;
 

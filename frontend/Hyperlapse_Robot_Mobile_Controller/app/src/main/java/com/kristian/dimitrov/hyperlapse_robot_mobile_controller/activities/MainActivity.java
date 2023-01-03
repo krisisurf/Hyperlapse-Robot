@@ -13,8 +13,6 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RuleEntit
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RulesManagerEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.CameraStepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.MovementStepMotorEntity;
-import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.StepMotorEntity;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         TextView tvConnectionStatus = findViewById(R.id.tvConnStatus);
         Thread uiThread = new Thread(() -> {
@@ -81,9 +78,13 @@ public class MainActivity extends AppCompatActivity {
         buttonConfigureConnection.setOnClickListener(this::openConfigureConnectionActivity);
 
         Button buttonAddRule = findViewById(R.id.btn_add_rule);
-        buttonAddRule.setOnClickListener(this::openCreateRuleActivity);
+        buttonAddRule.setOnClickListener((v) -> openCreateRuleActivity(-1));
 
         stagedRulesAdapter = new StagedRulesAdapter(MainActivity.this, arduinoRobot.getRulesManagerEntity().getRules());
+        stagedRulesAdapter.setOnEditClickListener((ruleEntity -> {
+            int indexOfRuleEntity = arduinoRobot.getRulesManagerEntity().getRules().indexOf(ruleEntity);
+            openCreateRuleActivity(indexOfRuleEntity);
+        }));
         RecyclerView recyclerView = findViewById(R.id.rulesRecyclerView);
         recyclerView.setAdapter(stagedRulesAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
@@ -110,14 +111,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void openCreateRuleActivity(View view) {
+    /**
+     * Opens CreateRuleActivity with an option for template ruleEntity
+     *
+     * @param indexOfRuleEntity template RuleEntity for editing its properties. Set to -1 if you want to create a new rule
+     */
+    private void openCreateRuleActivity(int indexOfRuleEntity) {
         if (!arduinoRobotConnection.isConnectionEstablished()) {
             Toast.makeText(MainActivity.this, "Please, connect with the Robot, before adding a rule.", Toast.LENGTH_SHORT).show();
             //return;
         }
 
         Intent intent = new Intent(MainActivity.this, CreateRuleActivity.class);
-        intent.putExtra("arduinoRobot", arduinoRobot);
+        intent.putExtra(CreateRuleActivity.ARDUINO_ROBOT_CODE, arduinoRobot);
+        intent.putExtra(CreateRuleActivity.RULE_ENTITY_INDEX_CODE, indexOfRuleEntity);
         startActivityForResult(intent, REQUEST_CODE_CREATE_RULE);
     }
 
@@ -142,13 +149,18 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
             case (REQUEST_CODE_CREATE_RULE): {
-                if (resultCode == Activity.RESULT_OK) {
+                if (resultCode == CreateRuleActivity.RESULT_CREATED_OK) {
                     Log.i(TAG, "Create rule request code OK received.");
                     RuleEntity ruleEntity = (RuleEntity) data.getSerializableExtra(CreateRuleActivity.RULE_ENTITY_CODE);
                     arduinoRobot.addRule(ruleEntity);
                     stagedRulesAdapter.notifyItemInserted(arduinoRobot.getRulesManagerEntity().size() - 1);
 
-                    Toast.makeText(MainActivity.this, "Staged rules count: " + arduinoRobot.getRulesManagerEntity().size(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Rule added.", Toast.LENGTH_SHORT).show();
+                } else if (resultCode == CreateRuleActivity.RESULT_EDITED_OK) {
+                    int indexOfRuleEntity = data.getIntExtra(CreateRuleActivity.RULE_ENTITY_INDEX_CODE, -1);
+                    RuleEntity ruleEntity = (RuleEntity) data.getSerializableExtra(CreateRuleActivity.RULE_ENTITY_CODE);
+                    arduinoRobot.getRulesManagerEntity().getRules().set(indexOfRuleEntity, ruleEntity);
+                    stagedRulesAdapter.notifyItemChanged(indexOfRuleEntity);
                 }
                 break;
             }
