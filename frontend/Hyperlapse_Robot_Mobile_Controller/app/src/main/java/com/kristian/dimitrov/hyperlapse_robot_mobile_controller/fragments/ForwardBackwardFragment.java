@@ -113,7 +113,7 @@ public class ForwardBackwardFragment extends Fragment {
                 rightSideMotor.setData(value, minExecTime);
 
                 Context context = currentTextView.getContext();
-                currentTextView.setText(context.getString(R.string.degree, value));
+                currentTextView.setText(context.getString(R.string.centimeters, value));
                 correspondingTvExecTime.setText(context.getString(R.string.execution_time, minExecTime));
 
             } catch (IncompatibleStepMotorArguments e) {
