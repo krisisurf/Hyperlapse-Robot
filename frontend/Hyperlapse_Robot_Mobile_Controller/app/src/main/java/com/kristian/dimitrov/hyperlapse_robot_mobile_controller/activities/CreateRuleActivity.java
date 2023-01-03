@@ -35,7 +35,7 @@ public class CreateRuleActivity extends AppCompatActivity {
     private boolean isEditingExistingRule;
     private RuleEntity ruleEntity;
 
-    private final String[] directionStringOptions = {"Forward", "Turning"};
+    private final String[] directionStringOptions = {"Straight", "Turning"};
 
     private ForwardBackwardFragment forwardBackwardFragment;
     private TurningFragment turningFragment;

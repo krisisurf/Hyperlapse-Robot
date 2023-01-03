@@ -85,7 +85,7 @@ public class ForwardBackwardFragment extends Fragment {
 
         btnExecutionTime = requireView().findViewById(R.id.btnExecutionTime);
         btnExecutionTime.setOnClickListener(view1 -> {
-            String popupTitle = "Movement" + getString(R.string.execution_time);
+            String popupTitle = "Movement" + getString(R.string.label_execution_time);
             clickListener_executionTime(numberInputPopupDialog, btnExecutionTime, popupTitle, ruleEntity.getLeftMotor(), ruleEntity.getRightMotor());
         });
     }
