@@ -4,14 +4,18 @@
 #include <ArduinoJson.h> // library by Benoit Blanchon
 #include <Wire.h>
 
+#define BUZZER_PIN 9 // buzzer to arduino pin 9
+const int BUZZER_TIME_MILLIS = 100; // How long will the buzzer make sound after every rule load
+
 // Define the AccelStepper interface type; 4 wire motor in half step mode:
 #define MotorInterfaceType 8
 
 // Initialize with pin sequence IN1-IN3-IN2-IN4 for using the AccelStepper library with 28BYJ-48 stepper motor:
-AccelStepper stepperLeft = AccelStepper(MotorInterfaceType, 25, 23, 24, 22);  // IMPORTANT!!! THE PINS FOR THE LEFT SIDE MOTOR ARE FLIPPED. This will lead the left side motor to rotate in the opposite direction to the right side motor
-AccelStepper stepperRight = AccelStepper(MotorInterfaceType, 26, 28, 27, 29);
-AccelStepper stepperPan = AccelStepper(MotorInterfaceType, 42, 46, 44, 48);
-AccelStepper stepperTilt = AccelStepper(MotorInterfaceType, 43, 47, 45, 49);
+AccelStepper stepperLeft = AccelStepper(MotorInterfaceType, 44, 40, 42, 38);  // IMPORTANT!!! THE PINS FOR THE LEFT SIDE MOTOR ARE FLIPPED. This will lead the left side motor to rotate in the opposite direction to the right side motor
+AccelStepper stepperRight = AccelStepper(MotorInterfaceType, 28, 32, 30, 34);
+AccelStepper stepperPan = AccelStepper(MotorInterfaceType, 35, 39, 37, 41);
+AccelStepper stepperTilt = AccelStepper(MotorInterfaceType, 47, 51, 49, 53);
+
 
 
 // Define a StepMotor structure to help organizing the motors
@@ -37,6 +41,8 @@ bool isFullyReceivedFromMaster = false;
 bool readRequest = false;
 
 void setup() {
+  pinMode(BUZZER_PIN, OUTPUT);
+  
   // Set the maximum steps per second:
   stepperLeft.setMaxSpeed(1024);
   stepperLeft.setMinPulseWidth(80000);
@@ -50,12 +56,13 @@ void setup() {
   stepperTilt.setMaxSpeed(1024);
   stepperTilt.setMinPulseWidth(80000);
   
-  setStepMotorsOutputs(false);  // Disable motors pinouts by default to save power.
+  // setStepMotorsOutputs(false);  // Disable motors pinouts by default to save power.
   
   Wire.begin(8);                // join I2C bus with address #8
   Wire.onReceive(receiveEvent); // register event
-  
-  Serial.begin(9600);
+
+  // Unmark this to get program logs. NOTE THAT THIS SLOWS THE PROGRAM and also the BUZZER will not work properly
+  // Serial.begin(9600);
 }
 
 void loop() {
@@ -63,6 +70,21 @@ void loop() {
   static int currentRuleIndex;
   static int rulesCount;
   static bool rulesFinished;
+
+  static int lastTimeLoopedBuzzer = millis(); // last time looped millisecond
+  static int buzzerTimeLeft; // How much time left to stop the buzzer from producing noise
+
+  int currentTime = millis();
+  // UPDATE BUZZER
+  if(buzzerTimeLeft > 0){
+    int timePassed = currentTime - lastTimeLoopedBuzzer;
+    buzzerTimeLeft -= timePassed;
+    tone(BUZZER_PIN, 300);
+  } else {
+    noTone(BUZZER_PIN);
+  }
+  lastTimeLoopedBuzzer = currentTime;
+  // End of UPDATE BUZZER
 
   if(readRequest){
     readAndAnswerRequestFromMaster();
@@ -82,7 +104,7 @@ void loop() {
     currentRuleIndex = 0;
     rulesFinished = false;
     
-    setStepMotorsOutputs(true);
+    // setStepMotorsOutputs(true);
   }
 
   // Does not move the motors, if there are no movement rules or they have been already finished
@@ -97,24 +119,27 @@ void loop() {
     return;
   
   if(currentRuleIndex < rulesCount){
+    buzzerTimeLeft = BUZZER_TIME_MILLIS; // Makes a buzzer noise
+    
     // Loads the next rule from the Json Document
     loadRule(rules, currentRuleIndex);
     currentRuleIndex++;
   }else{
     rulesFinished = true;
     // All rules have been finished, so we disable motor outputs to save power
-    setStepMotorsOutputs(false);
+    // setStepMotorsOutputs(false);
   }
 }
 
 /*
   Rotates every step motor, which has not yet reached its target position.
   Returns:
-    * true   -> if all the motors have reached their target position
-    * false  -> if one or more step motors have not yet reached their target position
+    * true   -> if all the motors have reached their target position and the total execution time of the rule has passed
+    * false  -> if one or more step motors have not yet reached their target position or the total execution time of the rule has not passed
 */
 bool runMotorsToPosition(){
   int steppersFinished = 0;
+  static int lastTime = millis();
   
   for(StepMotor stepMotor : steppers){
     AccelStepper &as = stepMotor.stepper;
@@ -125,7 +150,7 @@ bool runMotorsToPosition(){
     if(as.distanceToGo() == 0)
       steppersFinished++;
   }
-
+  
   return steppersFinished == 4;
 }
 
@@ -150,7 +175,7 @@ void deserializeJSON(DynamicJsonDocument& rules, String json){
   * rules             -> json document with structure for the rules
   * ruleIndexToLoad   -> index of the rule from the rules document, which will be loaded
 */
-bool loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
+double loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
     Serial.print("Initializing rule No.");Serial.println(ruleIndexToLoad);
     
     // Sets left and right side step motors
@@ -163,7 +188,7 @@ bool loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
       int speed = convertStepsAndCompletionTimeToSpeed(steps, executionTime);
 
       stepMotor.stepper.move(steps);
-      stepMotor.stepper.setSpeed(speed);   
+      stepMotor.stepper.setSpeed(speed);
 
       // Displays received and calculated data
       Serial.print("Motor: ");Serial.println(stepMotor.name);
@@ -180,13 +205,13 @@ bool loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
       StepMotor stepMotor = steppers[i + 2];
       double degrees = rules["r"][ruleIndexToLoad][stepMotor.name]["dg"];
       double executionTime = rules["r"][ruleIndexToLoad][stepMotor.name]["t"];
-
+        
       int steps = convertDegreesToSteps(degrees, LIB_STEPS_PER_REVOLUTION);
       int speed = convertStepsAndCompletionTimeToSpeed(steps, executionTime);
 
       stepMotor.stepper.move(steps);
       stepMotor.stepper.setSpeed(speed);
-      
+
       // Displays received and calculated data
       Serial.print("Motor: ");Serial.println(stepMotor.name);
       Serial.print("Degrees: ");Serial.println(degrees);
