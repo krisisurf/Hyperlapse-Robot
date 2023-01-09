@@ -125,6 +125,9 @@ public class NumberInputPopupDialog implements Serializable {
     }
 
     public int getValue() {
+        if(numberSignPicker.getVisibility() == View.GONE)
+            return numberPicker.getValue();
+
         return numberPicker.getValue() * (numberSignPicker.getValue() == 0 ? -1 : 1);
     }
 
