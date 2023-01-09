@@ -185,7 +185,7 @@ double loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
       double executionTime = rules["r"][ruleIndexToLoad][stepMotor.name]["t"];
       
       int steps = convertCentimetersToSteps(distance, 5.0, LIB_STEPS_PER_REVOLUTION);
-      int speed = convertStepsAndExecutionTimeToSpeed(steps, executionTime);
+      double speed = convertStepsAndExecutionTimeToSpeed(steps, executionTime);
 
       stepMotor.stepper.move(steps);
       stepMotor.stepper.setSpeed(speed);
