@@ -63,10 +63,18 @@ public class StagedRulesAdapter extends RecyclerView.Adapter<StagedRulesAdapter.
             onEditClickListener.onButtonEditClick(ruleEntity);
         });
 
+        holder.btnDuplicate.setOnClickListener(view -> {
+            RuleEntity cloned = ruleEntity.clone();
+            ruleEntities.add(cloned);
+
+            // TODO 1000: It will always be more efficient to use more specific change events if you can. Rely on notifyDataSetChanged as a last resort.
+            notifyDataSetChanged();
+        });
+
         holder.btnDelete.setOnClickListener((view -> {
             ruleEntities.remove(position);
 
-            // TODO: It will always be more efficient to use more specific change events if you can. Rely on notifyDataSetChanged as a last resort.
+            // TODO 1000: It will always be more efficient to use more specific change events if you can. Rely on notifyDataSetChanged as a last resort.
             notifyDataSetChanged();
         }));
     }
@@ -118,6 +126,7 @@ public class StagedRulesAdapter extends RecyclerView.Adapter<StagedRulesAdapter.
         private final TextView tvExecutionTime;
 
         private final Button btnEdit;
+        private final Button btnDuplicate;
         private final Button btnDelete;
 
         public ViewHolder(@NonNull View itemView) {
@@ -128,6 +137,7 @@ public class StagedRulesAdapter extends RecyclerView.Adapter<StagedRulesAdapter.
             tvExecutionTime = itemView.findViewById(R.id.tvExecutionTime);
 
             btnEdit = itemView.findViewById(R.id.btnEdit);
+            btnDuplicate = itemView.findViewById(R.id.btnDuplicate);
             btnDelete = itemView.findViewById(R.id.btnDelete);
         }
     }

@@ -29,7 +29,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="58">
+        android:layout_weight="55">
 
         <View
             style="@style/DividerVertical"
@@ -54,7 +54,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="30">
+        android:layout_weight="33">
 
         <View
             style="@style/DividerVertical"
@@ -66,33 +66,52 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp">
 
-                <Button
-                    android:id="@+id/btnEdit"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/small_button_background"
-                    android:foreground="@drawable/ic_round_edit_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/btnDelete"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true">
 
-                <Button
-                    android:id="@+id/btnDelete"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/small_button_background"
-                    android:foreground="@drawable/ic_round_delete_forever_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/btnEdit"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <Button
+                        android:id="@+id/btnEdit"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginHorizontal="2dp"
+                        android:background="@drawable/small_button_background"
+                        android:foreground="@drawable/ic_round_edit_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/btnDelete"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <Button
+                        android:id="@+id/btnDuplicate"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginHorizontal="2dp"
+                        android:background="@drawable/small_button_background"
+                        android:foreground="@drawable/ic_baseline_content_copy_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/btnDelete"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <Button
+                        android:id="@+id/btnDelete"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginHorizontal="2dp"
+                        android:background="@drawable/small_button_background"
+                        android:foreground="@drawable/ic_round_delete_forever_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/btnEdit"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </LinearLayout>
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/tvExecutionTime"
@@ -101,7 +120,7 @@
                 android:gravity="center"
                 android:text="10"
                 android:textColor="@color/white"
-                android:textSize="40sp" />
+                android:textSize="30sp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
