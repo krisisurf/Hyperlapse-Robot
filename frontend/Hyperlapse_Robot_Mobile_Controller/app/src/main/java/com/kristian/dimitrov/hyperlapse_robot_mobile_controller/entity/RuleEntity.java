@@ -5,7 +5,7 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.M
 
 import java.io.Serializable;
 
-public class RuleEntity implements Serializable {
+public class RuleEntity implements Serializable, Cloneable{
 
     private final MovementStepMotorEntity leftMotor;
     private final MovementStepMotorEntity rightMotor;
@@ -59,5 +59,16 @@ public class RuleEntity implements Serializable {
 
     public CameraStepMotorEntity getTiltMotor() {
         return tiltMotor;
+    }
+
+    @Override
+    public RuleEntity clone() {
+        try {
+            RuleEntity clone = (RuleEntity) super.clone();
+            // TODO: copy mutable state here, so the clone can't change the internals of the original
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }
