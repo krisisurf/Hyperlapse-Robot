@@ -221,17 +221,16 @@ public class CreateRuleActivity extends AppCompatActivity {
         numberInputPopupDialog.setTitle(popupTitle);
         numberInputPopupDialog.setMinValue(0);
         numberInputPopupDialog.setMaxValue(360);
-        numberInputPopupDialog.setValue(0);
+        numberInputPopupDialog.setValue(Math.abs((int) stepMotorEntity.getMeasurementValue()));
         numberInputPopupDialog.setNegativeNumbers(true);
         numberInputPopupDialog.addNumberSelectedListener(value -> {
             try {
-                int minExecTime = getMinimalExecutionTimeCelled(stepMotorEntity, value);
-                stepMotorEntity.setData(value, minExecTime);
+                int selectedExecutionTime = Math.max(getMinimalExecutionTimeCelled(stepMotorEntity, value), (int) stepMotorEntity.getExecutionTime());
+                stepMotorEntity.setData(value, selectedExecutionTime);
 
                 Context context = currentTextView.getContext();
+                correspondingTvExecTime.setText(context.getString(R.string.execution_time, selectedExecutionTime));
                 currentTextView.setText(context.getString(R.string.degree, value));
-                correspondingTvExecTime.setText(context.getString(R.string.execution_time, minExecTime));
-
             } catch (IncompatibleStepMotorArguments e) {
                 e.printStackTrace();
             }
@@ -251,7 +250,7 @@ public class CreateRuleActivity extends AppCompatActivity {
         numberInputPopupDialog.setTitle(popupTitle);
         numberInputPopupDialog.setMinValue(minExecTimeCelled);
         numberInputPopupDialog.setMaxValue(Short.MAX_VALUE);
-        numberInputPopupDialog.setValue(minExecTimeCelled);
+        numberInputPopupDialog.setValue(Math.max(minExecTimeCelled, (int) stepMotorEntity.getExecutionTime()));
         numberInputPopupDialog.setNegativeNumbers(false);
         numberInputPopupDialog.addNumberSelectedListener(value -> {
             try {

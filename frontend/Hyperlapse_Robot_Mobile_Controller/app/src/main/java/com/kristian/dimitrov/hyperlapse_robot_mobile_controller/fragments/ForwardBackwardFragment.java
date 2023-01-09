@@ -104,17 +104,17 @@ public class ForwardBackwardFragment extends Fragment {
         numberInputPopupDialog.setTitle(popupTitle);
         numberInputPopupDialog.setMinValue(0);
         numberInputPopupDialog.setMaxValue(Short.MAX_VALUE);
-        numberInputPopupDialog.setValue(0);
+        numberInputPopupDialog.setValue(Math.abs((int) leftSideMotor.getMeasurementValue()));
         numberInputPopupDialog.setNegativeNumbers(true);
         numberInputPopupDialog.addNumberSelectedListener(value -> {
             try {
-                int minExecTime = getMinimalExecutionTimeCelled(leftSideMotor, value);
-                leftSideMotor.setData(value, minExecTime);
-                rightSideMotor.setData(value, minExecTime);
+                int selectedExecutionTime = Math.max(getMinimalExecutionTimeCelled(leftSideMotor, value), (int) leftSideMotor.getExecutionTime());
+                leftSideMotor.setData(value, selectedExecutionTime);
+                rightSideMotor.setData(value, selectedExecutionTime);
 
                 Context context = currentTextView.getContext();
                 currentTextView.setText(context.getString(R.string.centimeters, value));
-                correspondingTvExecTime.setText(context.getString(R.string.execution_time, minExecTime));
+                correspondingTvExecTime.setText(context.getString(R.string.execution_time, selectedExecutionTime));
 
             } catch (IncompatibleStepMotorArguments e) {
                 e.printStackTrace();
@@ -138,7 +138,7 @@ public class ForwardBackwardFragment extends Fragment {
         numberInputPopupDialog.setTitle(popupTitle);
         numberInputPopupDialog.setMinValue(minExecTimeCelled);
         numberInputPopupDialog.setMaxValue(Short.MAX_VALUE);
-        numberInputPopupDialog.setValue(minExecTimeCelled);
+        numberInputPopupDialog.setValue(Math.max(minExecTimeCelled, Math.abs((int) leftSideMotor.getExecutionTime())));
         numberInputPopupDialog.setNegativeNumbers(false);
         numberInputPopupDialog.addNumberSelectedListener(value -> {
             try {

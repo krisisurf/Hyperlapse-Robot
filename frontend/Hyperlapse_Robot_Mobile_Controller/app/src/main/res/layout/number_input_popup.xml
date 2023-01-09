@@ -22,10 +22,9 @@
         android:textColor="@color/white"
         android:textSize="25sp" />
 
-
     <LinearLayout
         android:id="@+id/pickersHolderLayout"
-        android:layout_width="130dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvLabelNumberPopup"
         android:layout_centerHorizontal="true"
@@ -47,6 +46,52 @@
             android:outlineAmbientShadowColor="@color/blue_500"
             android:theme="@style/NumberPickerText" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/pickersHolderLayout"
+        android:layout_alignBottom="@id/pickersHolderLayout"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@id/pickersHolderLayout">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnSuperFastMinus"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:background="@drawable/ic_baseline_keyboard_double_arrow_up_24" />
+
+            <Button
+                android:id="@+id/btnFastMinus"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:background="@drawable/ic_baseline_keyboard_arrow_up_24" />
+
+            <Button
+                android:id="@+id/btnFastAdd"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:background="@drawable/ic_baseline_keyboard_arrow_up_24"
+                android:scaleY="-1" />
+
+            <Button
+                android:id="@+id/btnSuperFastAdd"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:background="@drawable/ic_baseline_keyboard_double_arrow_up_24"
+                android:scaleY="-1" />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
 
     <Button
         android:id="@+id/btnCancle"
