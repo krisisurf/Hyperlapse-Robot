@@ -185,7 +185,7 @@ double loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
       double executionTime = rules["r"][ruleIndexToLoad][stepMotor.name]["t"];
       
       int steps = convertCentimetersToSteps(distance, 5.0, LIB_STEPS_PER_REVOLUTION);
-      int speed = convertStepsAndCompletionTimeToSpeed(steps, executionTime);
+      int speed = convertStepsAndExecutionTimeToSpeed(steps, executionTime);
 
       stepMotor.stepper.move(steps);
       stepMotor.stepper.setSpeed(speed);
@@ -207,7 +207,7 @@ double loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
       double executionTime = rules["r"][ruleIndexToLoad][stepMotor.name]["t"];
         
       int steps = convertDegreesToSteps(degrees, LIB_STEPS_PER_REVOLUTION);
-      int speed = convertStepsAndCompletionTimeToSpeed(steps, executionTime);
+      double speed = convertStepsAndExecutionTimeToSpeed(steps, executionTime);
 
       stepMotor.stepper.move(steps);
       stepMotor.stepper.setSpeed(speed);
@@ -330,12 +330,12 @@ double convertStepsToSeconds(int steps, double speed){
     Calculates the speed at which a motor must move to a certain number of steps in a for a given time.
     Parameters:
     * steps          -> number of steps
-    * timeToComplete -> the time for creating the given number of steps
+    * executionTime  -> the time for rotating the given number of steps
     Returns:
     * speed in steps per second
 */
-double convertStepsAndCompletionTimeToSpeed(int steps, double timeToComplete){
-  double speed = 1.0 * steps / timeToComplete;
+double convertStepsAndExecutionTimeToSpeed(int steps, double executionTime){
+  double speed = 1.0 * steps / executionTime;
   return speed;  
 }
 
