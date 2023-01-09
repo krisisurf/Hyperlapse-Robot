@@ -30,6 +30,10 @@ public class NumberInputPopupDialog implements Serializable {
     private final NumberPicker numberSignPicker;
     private final NumberPicker numberPicker;
 
+    // Faster Number Scroll
+    private int fastAdd = 10;
+    private int superFastAdd = 100;
+
     private NumberSelectedListener numberSelectedListener;
 
     public interface NumberSelectedListener {
@@ -55,6 +59,34 @@ public class NumberInputPopupDialog implements Serializable {
         numberPicker = view.findViewById(R.id.numberPicker);
         numberPicker.setMinValue(0);
         numberPicker.setMaxValue(5);
+
+        Button btnFastAdd = view.findViewById(R.id.btnFastAdd);
+        btnFastAdd.setOnClickListener(view1 -> {
+            int oldValue = numberPicker.getValue();
+            int newValue = Math.min(oldValue + fastAdd, numberPicker.getMaxValue());
+            numberPicker.setValue(newValue);
+        });
+
+        Button btnSuperFastAdd = view.findViewById(R.id.btnSuperFastAdd);
+        btnSuperFastAdd.setOnClickListener(view1 -> {
+            int oldValue = numberPicker.getValue();
+            int newValue = Math.min(oldValue + superFastAdd, numberPicker.getMaxValue());
+            numberPicker.setValue(newValue);
+        });
+
+        Button btnFastMinus = view.findViewById(R.id.btnFastMinus);
+        btnFastMinus.setOnClickListener(view1 -> {
+            int oldValue = numberPicker.getValue();
+            int newValue = Math.max(oldValue - fastAdd, numberPicker.getMinValue());
+            numberPicker.setValue(newValue);
+        });
+
+        Button btnSuperFastMinus = view.findViewById(R.id.btnSuperFastMinus);
+        btnSuperFastMinus.setOnClickListener(view1 -> {
+            int oldValue = numberPicker.getValue();
+            int newValue = Math.max(oldValue - superFastAdd, numberPicker.getMinValue());
+            numberPicker.setValue(newValue);
+        });
 
         Button btnCancel = view.findViewById(R.id.btnCancle);
         btnCancel.setOnClickListener((v) -> alertDialog.cancel());
