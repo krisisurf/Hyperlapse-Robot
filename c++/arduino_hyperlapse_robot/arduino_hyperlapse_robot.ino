@@ -69,6 +69,7 @@ void loop() {
   static DynamicJsonDocument rules(500);    // Json object that will contain the movement rules
   static int currentRuleIndex;
   static int rulesCount;
+  static double wheelRadius = 5.0; // Default value of the wheel radius is 5 cm. It will be changed when a rule from the backend is received.
   static bool rulesFinished;
 
   static int lastTimeLoopedBuzzer = millis(); // last time looped millisecond
@@ -101,6 +102,7 @@ void loop() {
     
     resetMotors();
     rulesCount = rules["rc"];
+    wheelRadius = rules["wr"];
     currentRuleIndex = 0;
     rulesFinished = false;
     
@@ -122,7 +124,7 @@ void loop() {
     buzzerTimeLeft = BUZZER_TIME_MILLIS; // Makes a buzzer noise
     
     // Loads the next rule from the Json Document
-    loadRule(rules, currentRuleIndex);
+    loadRule(rules, currentRuleIndex, wheelRadius);
     currentRuleIndex++;
   }else{
     rulesFinished = true;
@@ -175,7 +177,7 @@ void deserializeJSON(DynamicJsonDocument& rules, String json){
   * rules             -> json document with structure for the rules
   * ruleIndexToLoad   -> index of the rule from the rules document, which will be loaded
 */
-double loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
+double loadRule(DynamicJsonDocument& rules, const int ruleIndexToLoad, const double wheelRadius){
     Serial.print("Initializing rule No.");Serial.println(ruleIndexToLoad);
     
     // Sets left and right side step motors
@@ -184,7 +186,7 @@ double loadRule(DynamicJsonDocument& rules, int ruleIndexToLoad){
       double distance = rules["r"][ruleIndexToLoad][stepMotor.name]["ds"];
       double executionTime = rules["r"][ruleIndexToLoad][stepMotor.name]["t"];
       
-      int steps = convertCentimetersToSteps(distance, 5.0, LIB_STEPS_PER_REVOLUTION);
+      int steps = convertCentimetersToSteps(distance, wheelRadius, LIB_STEPS_PER_REVOLUTION);
       double speed = convertStepsAndExecutionTimeToSpeed(steps, executionTime);
 
       stepMotor.stepper.move(steps);
