@@ -20,11 +20,11 @@ public class ArduinoRobot implements Serializable {
     private final RulesManagerEntity rulesManagerEntity;
 
     public ArduinoRobot() {
-        rulesManagerEntity = new RulesManagerEntity(this);
+        rulesManagerEntity = new RulesManagerEntity();
     }
 
     public void setHardwareData(double wheelRadius, MovementStepMotorEntity leftMotor, MovementStepMotorEntity rightMotor, CameraStepMotorEntity cameraPanMotor, CameraStepMotorEntity cameraTiltMotor) {
-        this.wheelRadius = wheelRadius;
+        setWheelRadius(wheelRadius);
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
         this.cameraPanMotor = cameraPanMotor;
@@ -45,6 +45,7 @@ public class ArduinoRobot implements Serializable {
 
     public void setWheelRadius(double wheelRadius) {
         this.wheelRadius = wheelRadius;
+        rulesManagerEntity.setWheelRadius(wheelRadius);
     }
 
     public MovementStepMotorEntity getLeftMotor() {

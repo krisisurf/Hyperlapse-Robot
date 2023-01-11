@@ -23,7 +23,7 @@ public class ArduinoController {
 
     @PostMapping("/runRules")
     public String runRules(@RequestBody RulesManagerEntity rulesManagerEntity) {
-        Logger.makeLog("Received rules via http: " + rulesManagerEntity.getShortenedJson(), new Throwable());
+        Logger.makeLog("Received rules via http: " + rulesManagerEntity.toString(), new Throwable());
         arduinoService.sendRules(rulesManagerEntity);
         return "Rules sent to Arduino: " + rulesManagerEntity;
     }
