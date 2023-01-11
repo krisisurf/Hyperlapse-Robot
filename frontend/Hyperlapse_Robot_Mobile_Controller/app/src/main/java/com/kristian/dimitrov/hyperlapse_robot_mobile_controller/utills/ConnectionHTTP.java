@@ -1,10 +1,6 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.utills;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;

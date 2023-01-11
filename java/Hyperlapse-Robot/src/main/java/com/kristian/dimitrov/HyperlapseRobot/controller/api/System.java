@@ -1,5 +1,7 @@
 package com.kristian.dimitrov.HyperlapseRobot.controller.api;
 
+import com.kristian.dimitrov.HyperlapseRobot.config.Config;
+import com.kristian.dimitrov.HyperlapseRobot.entity.ArduinoRobot;
 import com.kristian.dimitrov.HyperlapseRobot.entity.RulesManagerEntity;
 import com.kristian.dimitrov.HyperlapseRobot.service.ArduinoService;
 import com.kristian.dimitrov.HyperlapseRobot.utils.Logger;
@@ -11,20 +13,43 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class System {
 
-    private ArduinoService arduinoService;
+    private final Config config;
+    private final ArduinoService arduinoService;
     private static boolean hasTurnedOff = false;
 
-    public System(ArduinoService arduinoService) {
+    public System(Config config, ArduinoService arduinoService) {
+        this.config = config;
         this.arduinoService = arduinoService;
     }
 
     /**
      * HTTP Get which test the connection.
+     *
      * @return OK message
      */
     @GetMapping("/testConnection")
     public String testConnection() {
         return "OK";
+    }
+
+    /**
+     * HTTP Get which returns the created ArduinoRobot instance
+     *
+     * @return ArduinoRobot instance
+     */
+    @GetMapping("/getArduinoRobot")
+    public ArduinoRobot getArduinoRobot() {
+        return config.getArduinoRobot();
+    }
+
+    /**
+     * HTTP Get which returns the wheelRadius in centimeters
+     *
+     * @return wheelRadius in centimeters, (Config::ArduinoRobot::wheelRadius)
+     */
+    @GetMapping("/getWheelRadius")
+    public double getWheelRadius() {
+        return config.getArduinoRobot().getWheelRadius();
     }
 
     /**
@@ -34,7 +59,7 @@ public class System {
      */
     @GetMapping("/turnoff")
     public String turnoff() {
-        if(System.hasTurnedOff)
+        if (System.hasTurnedOff)
             return null;
 
         java.lang.System.out.println("\n\n\n");

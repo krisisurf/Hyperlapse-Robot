@@ -43,6 +43,10 @@ public class ArduinoRobot implements Serializable {
         return wheelRadius;
     }
 
+    public void setWheelRadius(double wheelRadius) {
+        this.wheelRadius = wheelRadius;
+    }
+
     public MovementStepMotorEntity getLeftMotor() {
         return leftMotor;
     }
