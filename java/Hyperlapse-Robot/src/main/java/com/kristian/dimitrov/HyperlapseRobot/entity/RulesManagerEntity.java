@@ -11,11 +11,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RulesManagerEntity implements Serializable {
-
     private final List<RuleEntity> rules;
+    private double wheelRadius;
 
     public RulesManagerEntity() {
         this.rules = new ArrayList<>();
+    }
+
+    public void setWheelRadius(double wheelRadius) {
+        this.wheelRadius = wheelRadius;
     }
 
     public void addRule(RuleEntity ruleEntity) {
@@ -42,6 +46,7 @@ public class RulesManagerEntity implements Serializable {
     public String toString() {
         return "{" +
                 "rulesCount: " + rules.size() +
+                ", wheelRadius:" + wheelRadius +
                 ", rules: " + rules +
                 '}';
     }
@@ -53,6 +58,7 @@ public class RulesManagerEntity implements Serializable {
      * | Original       | Shortened   |
      * +----------------+-------------+
      * | rulesCount     | rc          |
+     * | wheelRadius    | wr          |
      * | rules          | r           |
      * | leftMotor      | lm          |
      * | rightMotor     | rm          |
@@ -69,6 +75,7 @@ public class RulesManagerEntity implements Serializable {
     public String getShortenedJson() {
         Map<String, String> tokens = new HashMap<>();
         tokens.put("rulesCount", "rc");
+        tokens.put("wheelRadius", "wr");
         tokens.put("rules", "r");
         tokens.put("leftMotor", "lm");
         tokens.put("rightMotor", "rm");

@@ -5,11 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RulesManagerEntity implements Serializable {
-
     private final List<RuleEntity> rules;
+    private double wheelRadius;
 
     public RulesManagerEntity() {
         this.rules = new ArrayList<>();
+    }
+
+    public void setWheelRadius(double wheelRadius) {
+        this.wheelRadius = wheelRadius;
     }
 
     public void addRule(RuleEntity ruleEntity) {
@@ -18,10 +22,6 @@ public class RulesManagerEntity implements Serializable {
 
     public void removeRule(RuleEntity ruleEntity) {
         rules.remove(ruleEntity);
-    }
-
-    public RuleEntity get(int index) throws IndexOutOfBoundsException{
-        return rules.get(index);
     }
 
     public int size() {
@@ -40,6 +40,7 @@ public class RulesManagerEntity implements Serializable {
     public String toString() {
         return "{" +
                 "rulesCount: " + rules.size() +
+                ", wheelRadius: " + wheelRadius +
                 ", rules: " + rules +
                 '}';
     }

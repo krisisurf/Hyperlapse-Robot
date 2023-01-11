@@ -13,6 +13,7 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RuleEntit
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RulesManagerEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.CameraStepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.MovementStepMotorEntity;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -51,14 +52,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final double wheelRadius = 5;
+        final double defaultWheelRadius = 5; // Default wheelRadius, which may be updated when connection with the robot is established
         final MovementStepMotorEntity leftMotor = new MovementStepMotorEntity(5, 64, 16);
         final MovementStepMotorEntity rightMotor = new MovementStepMotorEntity(5, 64, 16);
         final CameraStepMotorEntity cameraPanMotor = new CameraStepMotorEntity(64, 16);
         final CameraStepMotorEntity cameraTiltMotor = new CameraStepMotorEntity(64, 16);
 
         arduinoRobot = new ArduinoRobot();
-        arduinoRobot.setHardwareData(wheelRadius, leftMotor, rightMotor, cameraPanMotor, cameraTiltMotor);
+        arduinoRobot.setHardwareData(defaultWheelRadius, leftMotor, rightMotor, cameraPanMotor, cameraTiltMotor);
         arduinoRobotConnection = new ArduinoRobotConnection(5000) {
             @Override
             public void onConnectionStatusListener(boolean isConnectionEstablished) {
@@ -145,6 +146,15 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG, "Connection configured: " + ipAddress + ":" + portNumber);
 
                     arduinoRobotConnection.setConnectionData(ipAddress, portNumber);
+
+                    // TODO: Handle exception when the newWheelRadius is -1
+                    double newWheelRadius = arduinoRobotConnection.getWheelRadius();
+                    if (newWheelRadius != -1) {
+                        if (arduinoRobot.getWheelRadius() != newWheelRadius) {
+                            arduinoRobot.setWheelRadius(newWheelRadius);
+                            Toast.makeText(MainActivity.this, "Wheel Radius has been set to " + newWheelRadius + " centimeters.", Toast.LENGTH_LONG).show();
+                        }
+                    }
                 }
                 break;
             }

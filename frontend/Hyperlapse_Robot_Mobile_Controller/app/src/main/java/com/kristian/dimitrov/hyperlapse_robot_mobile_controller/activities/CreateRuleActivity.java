@@ -68,7 +68,7 @@ public class CreateRuleActivity extends AppCompatActivity {
             isEditingExistingRule = false;
         } else {
             try {
-                ruleEntity = arduinoRobot.getRulesManagerEntity().get(indexOfRuleEntity);
+                ruleEntity = arduinoRobot.getRulesManagerEntity().getRules().get(indexOfRuleEntity);
             } catch (IndexOutOfBoundsException e) {
                 e.printStackTrace();
             }

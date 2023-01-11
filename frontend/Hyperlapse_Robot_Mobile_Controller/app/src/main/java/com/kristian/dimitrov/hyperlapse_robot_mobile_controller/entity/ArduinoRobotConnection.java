@@ -1,22 +1,15 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.utills.ConnectionHTTP;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 
-import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okio.BufferedSink;
 
 public class ArduinoRobotConnection implements Runnable {
 
@@ -39,6 +32,24 @@ public class ArduinoRobotConnection implements Runnable {
         connectionThread = new Thread(this);
         gson = new Gson();
         testConnectionRequest = null;
+    }
+
+    /**
+     * Gets the wheel radius based on its value in the backend.
+     *
+     * @return wheelRadius in centimeters
+     */
+    public double getWheelRadius() {
+        String url = MessageFormat.format("http://{0}:{1}/api/getWheelRadius", ipAddress, portNumber);
+        try {
+            Request request = new Request.Builder().url(url).build();
+            String response = ConnectionHTTP.HTTP_GET(request);
+
+            return Double.parseDouble(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public void setConnectionData(String ipAddress, String portNumber) {
