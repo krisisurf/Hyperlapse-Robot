@@ -11,10 +11,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RulesManagerEntity implements Serializable {
+    private final ArduinoRobot arduinoRobot;
 
     private final List<RuleEntity> rules;
 
-    public RulesManagerEntity() {
+    public RulesManagerEntity(ArduinoRobot arduinoRobot) {
+        this.arduinoRobot = arduinoRobot;
         this.rules = new ArrayList<>();
     }
 
@@ -42,6 +44,7 @@ public class RulesManagerEntity implements Serializable {
     public String toString() {
         return "{" +
                 "rulesCount: " + rules.size() +
+                ", wheelRadius:" + arduinoRobot.getWheelRadius() +
                 ", rules: " + rules +
                 '}';
     }
@@ -53,6 +56,7 @@ public class RulesManagerEntity implements Serializable {
      * | Original       | Shortened   |
      * +----------------+-------------+
      * | rulesCount     | rc          |
+     * | wheelRadius    | wr          |
      * | rules          | r           |
      * | leftMotor      | lm          |
      * | rightMotor     | rm          |
@@ -69,6 +73,7 @@ public class RulesManagerEntity implements Serializable {
     public String getShortenedJson() {
         Map<String, String> tokens = new HashMap<>();
         tokens.put("rulesCount", "rc");
+        tokens.put("wheelRadius", "wr");
         tokens.put("rules", "r");
         tokens.put("leftMotor", "lm");
         tokens.put("rightMotor", "rm");

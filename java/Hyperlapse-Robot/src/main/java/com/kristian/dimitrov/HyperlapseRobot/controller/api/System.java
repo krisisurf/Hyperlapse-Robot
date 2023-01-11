@@ -67,7 +67,9 @@ public class System {
 
         Thread t = new Thread(() -> {
             try {
-                arduinoService.sendRules(new RulesManagerEntity()); // Sends empty rules to the Arduino to stop it
+                RulesManagerEntity emptyRules = config.getArduinoRobot().getRulesManagerEntity();
+                emptyRules.clearRules();
+                arduinoService.sendRules(emptyRules); // Sends empty rules to the Arduino to stop it
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();

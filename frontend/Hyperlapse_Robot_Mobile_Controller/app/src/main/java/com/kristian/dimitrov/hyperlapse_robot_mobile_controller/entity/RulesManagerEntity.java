@@ -6,9 +6,11 @@ import java.util.List;
 
 public class RulesManagerEntity implements Serializable {
 
+    private final ArduinoRobot arduinoRobot;
     private final List<RuleEntity> rules;
 
-    public RulesManagerEntity() {
+    public RulesManagerEntity(ArduinoRobot arduinoRobot) {
+        this.arduinoRobot = arduinoRobot;
         this.rules = new ArrayList<>();
     }
 
@@ -20,7 +22,7 @@ public class RulesManagerEntity implements Serializable {
         rules.remove(ruleEntity);
     }
 
-    public RuleEntity get(int index) throws IndexOutOfBoundsException{
+    public RuleEntity get(int index) throws IndexOutOfBoundsException {
         return rules.get(index);
     }
 
@@ -40,6 +42,7 @@ public class RulesManagerEntity implements Serializable {
     public String toString() {
         return "{" +
                 "rulesCount: " + rules.size() +
+                ", wheelRadius:" + arduinoRobot.getWheelRadius() +
                 ", rules: " + rules +
                 '}';
     }

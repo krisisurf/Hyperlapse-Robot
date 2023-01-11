@@ -20,7 +20,7 @@ public class ArduinoRobot implements Serializable {
     private final RulesManagerEntity rulesManagerEntity;
 
     public ArduinoRobot() {
-        rulesManagerEntity = new RulesManagerEntity();
+        rulesManagerEntity = new RulesManagerEntity(this);
     }
 
     public void setHardwareData(double wheelRadius, MovementStepMotorEntity leftMotor, MovementStepMotorEntity rightMotor, CameraStepMotorEntity cameraPanMotor, CameraStepMotorEntity cameraTiltMotor) {
