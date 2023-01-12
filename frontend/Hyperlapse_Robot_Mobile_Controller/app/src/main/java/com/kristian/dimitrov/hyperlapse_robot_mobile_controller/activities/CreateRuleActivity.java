@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -37,7 +36,6 @@ public class CreateRuleActivity extends AppCompatActivity {
 
     private final String[] directionStringOptions = {"Straight", "Turning"};
 
-    private AutoCompleteTextView directionAutoComplete;
     private ForwardBackwardFragment forwardBackwardFragment;
     private TurningFragment turningFragment;
 
@@ -80,10 +78,14 @@ public class CreateRuleActivity extends AppCompatActivity {
         TextView textView_ruleNumber = findViewById(R.id.textView_ruleNumber);
         textView_ruleNumber.setText(getString(R.string.label_rule_number, String.valueOf(ruleNumber)));
 
-
-        directionAutoComplete = findViewById(R.id.auto_complete_txt);
+        AutoCompleteTextView directionAutoComplete = findViewById(R.id.auto_complete_txt);
         directionAutoComplete.setAdapter(new ArrayAdapter<>(this, R.layout.text_option_item, directionStringOptions));
-        directionAutoComplete.setOnItemClickListener(this::directionOnItemClickListener);
+        directionAutoComplete.setOnItemClickListener((adapterView, view, index, l) -> {
+            if (index == 0)
+                setDirectionTypeFragmentView(true);
+            else if (index == 1)
+                setDirectionTypeFragmentView(false);
+        });
 
         numberInputPopupDialog = new NumberInputPopupDialog(CreateRuleActivity.this, true);
 
@@ -126,8 +128,8 @@ public class CreateRuleActivity extends AppCompatActivity {
 
     private void setupDefaultValues() {
         if (ruleEntity.getLeftMotor().equalsByMeasurementValueAndExecutionTime(ruleEntity.getRightMotor())) {
-            if (ruleEntity.getLeftMotor().getMeasurementValue() != 0 || ruleEntity.getLeftMotor().getExecutionTime() != 0) {
-                // TODO 100: setup default values for movement
+            if (ruleEntity.getLeftMotor().getExecutionTime() > 0) {
+                setDirectionTypeFragmentView(true);
             }
         }
 
@@ -199,8 +201,14 @@ public class CreateRuleActivity extends AppCompatActivity {
         return warningsCount == 0 ? "" : warnings + "\nCreate the rule anyways?";
     }
 
-    private void directionOnItemClickListener(AdapterView<?> adapterView, View view, int index, long id) {
-        if (index == 0) {
+    /**
+     * Sets the direction fragment view.
+     *
+     * @param isForwardBackwardDirection 'true' if the selected direction is for forwardBackwardFragment,
+     *                                   otherwise 'false' if the selected direction is turningFragment.
+     */
+    private void setDirectionTypeFragmentView(boolean isForwardBackwardDirection) {
+        if (isForwardBackwardDirection) {
             //forwardBackwardFragment.setDirection(true);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.directionTypeFragment, forwardBackwardFragment).commit();

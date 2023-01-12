@@ -78,12 +78,14 @@ public class ForwardBackwardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         btnDistance = requireView().findViewById(R.id.btnDistance);
+        btnDistance.setText(getString(R.string.centimeters, (int) ruleEntity.getLeftMotor().getMeasurementValue()));
         btnDistance.setOnClickListener(view1 -> {
             String popupTitle = getString(R.string.distance);
             clickListener_measurementData(numberInputPopupDialog, btnDistance, btnExecutionTime, popupTitle, ruleEntity.getLeftMotor(), ruleEntity.getRightMotor());
         });
 
         btnExecutionTime = requireView().findViewById(R.id.btnExecutionTime);
+        btnExecutionTime.setText(getString(R.string.execution_time, (int) ruleEntity.getLeftMotor().getExecutionTime()));
         btnExecutionTime.setOnClickListener(view1 -> {
             String popupTitle = "Movement" + getString(R.string.label_execution_time);
             clickListener_executionTime(numberInputPopupDialog, btnExecutionTime, popupTitle, ruleEntity.getLeftMotor(), ruleEntity.getRightMotor());
