@@ -39,6 +39,10 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
     private EditText editText_ipAddress;
     private EditText editText_portNumber;
 
+    private interface ConnectionTested {
+        void doFinally(boolean isConnected);
+    }
+
     private ImageView imageView_connectionStatusIcon;
     private Drawable drawable_connectionStatusIcon_established;
     private int color_connectionSatusIcon_established;
@@ -72,7 +76,7 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
             String ipAddress = editText_ipAddress.getText().toString();
             String portNumber = editText_portNumber.getText().toString();
 
-            testConnectionWithLoading(ipAddress, portNumber);
+            testConnectionWithLoading(ipAddress, portNumber, this::setConnectionView);
         });
 
         Button buttonCancle = findViewById(R.id.btn_cancle);
@@ -93,14 +97,14 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
         }
     }
 
-    private void testConnectionWithLoading(String ipAddress, String portNumber) {
+    private void testConnectionWithLoading(String ipAddress, String portNumber, ConnectionTested onConnectionTested) {
         ProgressDialog mProgressDialog = ProgressDialog.show(this, "Please wait", "Trying to connect...", true);
         new Thread(() -> {
             boolean connected = connectionEstablished(ipAddress, portNumber);
 
             runOnUiThread(() -> {
                 mProgressDialog.dismiss();
-                setConnectionView(connected);
+                onConnectionTested.doFinally(connected);
             });
         }).start();
     }
@@ -128,21 +132,22 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
     private void applyButton(View view) {
         String ipAddress = editText_ipAddress.getText().toString();
         String portNumber = editText_portNumber.getText().toString();
-        boolean connected = connectionEstablished(ipAddress, portNumber);
-        if (connected) {
-            Intent output = getIntent();
-            output.putExtra(IP_ADDRESS_CODE, ipAddress);
-            output.putExtra(PORT_NUMBER_CODE, portNumber);
-            setResult(RESULT_OK, output);
-            finish();
+        testConnectionWithLoading(ipAddress, portNumber, (isConnected -> {
+            if (isConnected) {
+                Intent output = getIntent();
+                output.putExtra(IP_ADDRESS_CODE, ipAddress);
+                output.putExtra(PORT_NUMBER_CODE, portNumber);
+                setResult(RESULT_OK, output);
+                finish();
 
-        } else {
-            new AlertDialog.Builder(ConfigureConnectionActivity.this)
-                    .setTitle("Connection Error")
-                    .setMessage("Could not connect to: " + ipAddress + ":" + portNumber + "\nPlease try again.")
-                    .setPositiveButton("Try again", (dialogInterface, i) -> {
-                    }).create().show();
-        }
+            } else {
+                new AlertDialog.Builder(ConfigureConnectionActivity.this)
+                        .setTitle("Connection Error")
+                        .setMessage("Could not connect to: " + ipAddress + ":" + portNumber + "\nPlease try again.")
+                        .setPositiveButton("Try again", (dialogInterface, i) -> {
+                        }).create().show();
+            }
+        }));
     }
 
     private void setConnectionView(boolean isConnectionEstablished) {
