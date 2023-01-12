@@ -99,7 +99,7 @@ public class ArduinoRobot implements Serializable {
      * @param timeToComplete The time for creating the given number of steps
      * @return Speed in steps per second
      */
-    public static double convertStepsAndCompletionTimeToSpeed(int steps, double timeToComplete) {
+    public static double convertStepsAndExecutionTimeToSpeed(int steps, double timeToComplete) {
         return (double) steps / timeToComplete;
     }
 
