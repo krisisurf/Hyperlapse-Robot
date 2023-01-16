@@ -6,7 +6,10 @@
    - loading screen, while the connection is being tested
 3. Check if the connection is established with the back-end every 5 seconds (in the MainActivity), that method is called Heartbeat
 4. Send created rules to the back end via HTTP post
-5. Autorun java backend application on raspberry boot]
+5. Autorun java backend application on raspberry boot
+
+TODO:
+1. Update architectural diagram
 
 DOCUMENTATION:
 по-бързо селектиране на input
