@@ -11,6 +11,7 @@ public class ArduinoRobot implements Serializable {
      * Wheel radius in centimeters.
      */
     private double wheelRadius;
+    private double axleTrack;
 
     private MovementStepMotorEntity leftMotor;
     private MovementStepMotorEntity rightMotor;
@@ -46,6 +47,14 @@ public class ArduinoRobot implements Serializable {
     public void setWheelRadius(double wheelRadius) {
         this.wheelRadius = wheelRadius;
         rulesManagerEntity.setWheelRadius(wheelRadius);
+    }
+
+    public double getAxleTrack() {
+        return axleTrack;
+    }
+
+    public void setAxleTrack(double axleTrack) {
+        this.axleTrack = axleTrack;
     }
 
     public MovementStepMotorEntity getLeftMotor() {

@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.exception.IncompatibleStepMotorArguments;
 
 import java.io.Serializable;
 
@@ -37,7 +38,7 @@ public class NumberInputPopupDialog implements Serializable {
     private NumberSelectedListener numberSelectedListener;
 
     public interface NumberSelectedListener {
-        void onValueSelected(int value);
+        void onValueSelected(int value) throws IncompatibleStepMotorArguments;
     }
 
     public NumberInputPopupDialog(@NonNull Context context, boolean hideAfterValueSelected) {

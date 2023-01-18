@@ -110,7 +110,7 @@ public class ForwardBackwardFragment extends Fragment {
         numberInputPopupDialog.setNegativeNumbers(true);
         numberInputPopupDialog.addNumberSelectedListener(value -> {
             try {
-                int selectedExecutionTime = Math.max(getMinimalExecutionTimeCelled(leftSideMotor, value), (int) leftSideMotor.getExecutionTime());
+                int selectedExecutionTime = Math.max(StepMotorEntity.getMinimalExecutionTimeCelled(leftSideMotor, value), (int) leftSideMotor.getExecutionTime());
                 leftSideMotor.setData(value, selectedExecutionTime);
                 rightSideMotor.setData(value, selectedExecutionTime);
 
@@ -135,7 +135,7 @@ public class ForwardBackwardFragment extends Fragment {
     private void clickListener_executionTime(NumberInputPopupDialog numberInputPopupDialog,
                                              TextView currentTextView, String popupTitle,
                                              StepMotorEntity leftSideMotor, StepMotorEntity rightSideMotor) {
-        int minExecTimeCelled = getMinimalExecutionTimeCelled(leftSideMotor, (int) leftSideMotor.getMeasurementValue());
+        int minExecTimeCelled = StepMotorEntity.getMinimalExecutionTimeCelled(leftSideMotor, (int) leftSideMotor.getMeasurementValue());
 
         numberInputPopupDialog.setTitle(popupTitle);
         numberInputPopupDialog.setMinValue(minExecTimeCelled);
@@ -154,10 +154,5 @@ public class ForwardBackwardFragment extends Fragment {
             }
         });
         numberInputPopupDialog.show();
-    }
-
-    private int getMinimalExecutionTimeCelled(StepMotorEntity stepMotorEntity, int val) {
-        double minExecTime = stepMotorEntity.getMinimalTimeRequired(Math.abs(val));
-        return (int) Math.ceil(minExecTime);
     }
 }
