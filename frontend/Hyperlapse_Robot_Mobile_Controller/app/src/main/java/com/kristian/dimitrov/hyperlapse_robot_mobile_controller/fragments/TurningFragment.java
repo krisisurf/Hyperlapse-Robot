@@ -92,14 +92,50 @@ public class TurningFragment extends Fragment {
         btnTurnAngle = view.findViewById(R.id.btnTurnAngle);
         btnTurnAngle.setOnClickListener(this::buttonTurnAngleListener);
 
-        Button btnTurnRadius = view.findViewById(R.id.btnTurnRadius);
+        btnTurnRadius = view.findViewById(R.id.btnTurnRadius);
+        btnTurnRadius.setOnClickListener(this::buttonTurnRadiusListener);
 
         btnExecutionTime = requireView().findViewById(R.id.btnExecutionTime);
         btnExecutionTime.setText(getString(R.string.execution_time, (int) ruleEntity.getLeftMotor().getExecutionTime()));
-        btnExecutionTime.setOnClickListener(view1 -> {
-            String popupTitle = "Movement" + getString(R.string.label_execution_time);
-            //clickListener_executionTime(numberInputPopupDialog, btnExecutionTime, popupTitle, ruleEntity.getLeftMotor(), ruleEntity.getRightMotor());
+        btnExecutionTime.setOnClickListener(this::buttonExecutionTimeListener);
+    }
+
+    private void buttonTurnRadiusListener(View view) {
+        numberInputPopupDialog.setTitle(R.string.turn_radius);
+        numberInputPopupDialog.setMinValue(0);
+        numberInputPopupDialog.setMaxValue(Short.MAX_VALUE);
+        numberInputPopupDialog.setValue(0);
+        numberInputPopupDialog.setNegativeNumbers(true);
+        numberInputPopupDialog.addNumberSelectedListener(turnRadius -> {
+            this.turnRadius = turnRadius;
+            double leftMotorDistance = calculateWheelTravelDistance(turnAngle, turnRadius, arduinoRobot.getAxleTrack(), true);
+            double rightMotorDistance = calculateWheelTravelDistance(turnAngle, turnRadius, arduinoRobot.getAxleTrack(), false);
+
+            try {
+                int selectedExecutionTime;
+                if (Math.abs(leftMotorDistance) > Math.abs(rightMotorDistance)) {
+                    StepMotorEntity shorterPathMotor = ruleEntity.getRightMotor();
+                    StepMotorEntity longerPathMotor = ruleEntity.getLeftMotor();
+                    selectedExecutionTime = Math.max(StepMotorEntity.getMinimalExecutionTimeCelled(longerPathMotor, leftMotorDistance), (int) longerPathMotor.getExecutionTime());
+
+                    shorterPathMotor.setData(rightMotorDistance, selectedExecutionTime);
+                    longerPathMotor.setData(leftMotorDistance, selectedExecutionTime);
+                } else {
+                    StepMotorEntity shorterPathMotor = ruleEntity.getLeftMotor();
+                    StepMotorEntity longerPathMotor = ruleEntity.getRightMotor();
+                    selectedExecutionTime = Math.max(StepMotorEntity.getMinimalExecutionTimeCelled(longerPathMotor, leftMotorDistance), (int) longerPathMotor.getExecutionTime());
+
+                    shorterPathMotor.setData(leftMotorDistance, selectedExecutionTime);
+                    longerPathMotor.setData(rightMotorDistance, selectedExecutionTime);
+                }
+
+                btnTurnRadius.setText(view.getContext().getString(R.string.centimeters, turnRadius));
+                btnExecutionTime.setText(view.getContext().getString(R.string.execution_time, selectedExecutionTime));
+            } catch (IncompatibleStepMotorArguments e) {
+                e.printStackTrace();
+            }
         });
+        numberInputPopupDialog.show();
     }
 
     private void buttonTurnAngleListener(View view) {
@@ -110,8 +146,8 @@ public class TurningFragment extends Fragment {
         numberInputPopupDialog.setNegativeNumbers(true);
         numberInputPopupDialog.addNumberSelectedListener(turnAngle -> {
             this.turnAngle = turnAngle;
-            double leftMotorDistance = calculateMotorDistance(turnAngle, turnRadius, arduinoRobot.getAxleTrack(), true);
-            double rightMotorDistance = calculateMotorDistance(turnAngle, turnRadius, arduinoRobot.getAxleTrack(), false);
+            double leftMotorDistance = calculateWheelTravelDistance(turnAngle, turnRadius, arduinoRobot.getAxleTrack(), true);
+            double rightMotorDistance = calculateWheelTravelDistance(turnAngle, turnRadius, arduinoRobot.getAxleTrack(), false);
 
             try {
                 int selectedExecutionTime;
@@ -140,8 +176,31 @@ public class TurningFragment extends Fragment {
         numberInputPopupDialog.show();
     }
 
-    private double calculateMotorDistance(double turnAngle, double turnRadius, double axleTrack, boolean isLeftMotor) {
-        turnAngle = (isLeftMotor) ? turnAngle : -turnAngle;
+    private void buttonExecutionTimeListener(View view) {
+        StepMotorEntity longerPathMotor = (ruleEntity.getLeftMotor().getMeasurementValue() > ruleEntity.getRightMotor().getMeasurementValue()) ?
+                ruleEntity.getLeftMotor() : ruleEntity.getRightMotor();
+        int minExecTimeCelled = StepMotorEntity.getMinimalExecutionTimeCelled(longerPathMotor, (int) longerPathMotor.getMeasurementValue());
+
+        numberInputPopupDialog.setTitle("Turning " + getString(R.string.label_execution_time));
+        numberInputPopupDialog.setMinValue(minExecTimeCelled);
+        numberInputPopupDialog.setMaxValue(Short.MAX_VALUE);
+        numberInputPopupDialog.setValue(Math.max(minExecTimeCelled, Math.abs((int) longerPathMotor.getExecutionTime())));
+        numberInputPopupDialog.setNegativeNumbers(false);
+        numberInputPopupDialog.addNumberSelectedListener(value -> {
+            try {
+                ruleEntity.getLeftMotor().setData(ruleEntity.getLeftMotor().getMeasurementValue(), value);
+                ruleEntity.getRightMotor().setData(ruleEntity.getRightMotor().getMeasurementValue(), value);
+
+                btnExecutionTime.setText(getString(R.string.execution_time, value));
+            } catch (IncompatibleStepMotorArguments e) {
+                e.printStackTrace();
+            }
+        });
+        numberInputPopupDialog.show();
+    }
+
+    private double calculateWheelTravelDistance(double turnAngle, double turnRadius, double axleTrack, boolean isLeftSide) {
+        turnAngle = (isLeftSide) ? turnAngle : -turnAngle;
         double motorPathRadius = turnRadius + (Math.signum(turnAngle) * axleTrack / 2);
 
         return Math.toRadians(Math.abs(turnAngle)) * motorPathRadius;
