@@ -3,16 +3,24 @@ package com.kristian.dimitrov.HyperlapseRobot.entity.stepper;
 import com.kristian.dimitrov.HyperlapseRobot.entity.ArduinoRobot;
 import com.kristian.dimitrov.HyperlapseRobot.exception.IncompatibleStepMotorArguments;
 
-public class CameraStepMotorEntity extends StepMotorEntity {
+import java.io.Serializable;
 
-    private float degree;
-    private float executionTime;
+public class CameraStepMotorEntity extends StepMotorEntity implements Serializable {
 
-    public CameraStepMotorEntity() {
+    private double degree;
+    private double executionTime;
+
+    public CameraStepMotorEntity(int stepsPerRevolution, double maxSpeed) {
+        super(stepsPerRevolution, maxSpeed);
     }
 
-    public CameraStepMotorEntity(float degree, float executionTime) throws IncompatibleStepMotorArguments {
-        setData(degree, executionTime);
+    /**
+     * Clone constructor
+     *
+     * @param cameraStepMotorEntity
+     */
+    public CameraStepMotorEntity(CameraStepMotorEntity cameraStepMotorEntity) {
+        super(cameraStepMotorEntity.stepsPerRevolution, cameraStepMotorEntity.maxSpeed);
     }
 
     /**
@@ -20,12 +28,10 @@ public class CameraStepMotorEntity extends StepMotorEntity {
      *
      * @param degree        How many degrees to move (newDegrees = currentDegree + degree)
      * @param executionTime Time to complete the rotation in seconds.
-     * @throws IncompatibleStepMotorArguments
-     * @see com.kristian.dimitrov.HyperlapseRobot.entity.RuleEntity
      */
-    public void setData(float degree, float executionTime) throws IncompatibleStepMotorArguments {
-        int stepsRequired = ArduinoRobot.convertDegreesToSteps(degree, stepsPerRevolution);
-        double minimalTimeRequired = ArduinoRobot.convertStepsToSeconds(stepsRequired, maxSpeed);
+    @Override
+    public void setData(double degree, double executionTime) throws IncompatibleStepMotorArguments {
+        double minimalTimeRequired = getMinimalTimeRequired(degree);
         if (minimalTimeRequired > executionTime)
             throw new IncompatibleStepMotorArguments("The given 'executionTime=" + executionTime + "' is too short for reaching the target 'degree=" + degree + "'. Minimal time for this rotation is: " + minimalTimeRequired + " seconds");
 
@@ -33,20 +39,27 @@ public class CameraStepMotorEntity extends StepMotorEntity {
         this.executionTime = executionTime;
     }
 
-    public float getExecutionTime() {
+    @Override
+    public double getMinimalTimeRequired(double degree) {
+        int stepsRequired = ArduinoRobot.convertDegreesToSteps(degree, stepsPerRevolution);
+        return ArduinoRobot.convertStepsToSeconds(stepsRequired, maxSpeed);
+    }
+
+    @Override
+    public double getExecutionTime() {
         return executionTime;
     }
 
-    public float getDegree() {
+    /**
+     * @return degree
+     */
+    @Override
+    public double getMeasurementValue() {
         return degree;
     }
 
-
     @Override
     public String toString() {
-        return "{" +
-                "degree: " + degree +
-                ", executionTime: " + executionTime +
-                '}';
+        return "{" + "degree: " + degree + ", executionTime: " + executionTime + '}';
     }
 }

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -90,7 +91,7 @@ public class CreateRuleActivity extends AppCompatActivity {
         numberInputPopupDialog = new NumberInputPopupDialog(CreateRuleActivity.this, true);
 
         forwardBackwardFragment = ForwardBackwardFragment.newInstance(numberInputPopupDialog, ruleEntity);
-        turningFragment = new TurningFragment();
+        turningFragment = TurningFragment.newInstance(numberInputPopupDialog, ruleEntity, arduinoRobot);
 
 
         btnPanDegree = findViewById(R.id.btnPanDegree);

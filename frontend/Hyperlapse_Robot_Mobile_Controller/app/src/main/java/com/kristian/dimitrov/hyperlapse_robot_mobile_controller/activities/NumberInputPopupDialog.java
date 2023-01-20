@@ -38,7 +38,7 @@ public class NumberInputPopupDialog implements Serializable {
     private NumberSelectedListener numberSelectedListener;
 
     public interface NumberSelectedListener {
-        void onValueSelected(int value) throws IncompatibleStepMotorArguments;
+        void onValueSelected(int value);
     }
 
     public NumberInputPopupDialog(@NonNull Context context, boolean hideAfterValueSelected) {

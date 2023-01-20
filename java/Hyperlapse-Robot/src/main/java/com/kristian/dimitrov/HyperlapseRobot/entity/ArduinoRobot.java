@@ -1,6 +1,7 @@
 package com.kristian.dimitrov.HyperlapseRobot.entity;
 
-import com.kristian.dimitrov.HyperlapseRobot.entity.stepper.StepMotorEntity;
+import com.kristian.dimitrov.HyperlapseRobot.entity.stepper.CameraStepMotorEntity;
+import com.kristian.dimitrov.HyperlapseRobot.entity.stepper.MovementStepMotorEntity;
 
 import java.io.Serializable;
 
@@ -10,11 +11,12 @@ public class ArduinoRobot implements Serializable {
      * Wheel radius in centimeters.
      */
     private double wheelRadius;
+    private double axleTrack;
 
-    private StepMotorEntity leftMotor;
-    private StepMotorEntity rightMotor;
-    private StepMotorEntity cameraPanMotor;
-    private StepMotorEntity cameraTiltMotor;
+    private MovementStepMotorEntity leftMotor;
+    private MovementStepMotorEntity rightMotor;
+    private CameraStepMotorEntity cameraPanMotor;
+    private CameraStepMotorEntity cameraTiltMotor;
 
     private final RulesManagerEntity rulesManagerEntity;
 
@@ -22,10 +24,9 @@ public class ArduinoRobot implements Serializable {
         rulesManagerEntity = new RulesManagerEntity();
     }
 
-    public void setHardwareData(double wheelRadius, StepMotorEntity leftMotor, StepMotorEntity rightMotor, StepMotorEntity cameraPanMotor, StepMotorEntity cameraTiltMotor) {
-        this.wheelRadius = wheelRadius;
-        rulesManagerEntity.setWheelRadius(wheelRadius);
-
+    public void setHardwareData(double wheelRadius, double axleTrack, MovementStepMotorEntity leftMotor, MovementStepMotorEntity rightMotor, CameraStepMotorEntity cameraPanMotor, CameraStepMotorEntity cameraTiltMotor) {
+        setWheelRadius(wheelRadius);
+        setAxleTrack(axleTrack);
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
         this.cameraPanMotor = cameraPanMotor;
@@ -42,6 +43,35 @@ public class ArduinoRobot implements Serializable {
 
     public double getWheelRadius() {
         return wheelRadius;
+    }
+
+    public void setWheelRadius(double wheelRadius) {
+        this.wheelRadius = wheelRadius;
+        rulesManagerEntity.setWheelRadius(wheelRadius);
+    }
+
+    public double getAxleTrack() {
+        return axleTrack;
+    }
+
+    public void setAxleTrack(double axleTrack) {
+        this.axleTrack = axleTrack;
+    }
+
+    public MovementStepMotorEntity getLeftMotor() {
+        return leftMotor;
+    }
+
+    public MovementStepMotorEntity getRightMotor() {
+        return rightMotor;
+    }
+
+    public CameraStepMotorEntity getCameraPanMotor() {
+        return cameraPanMotor;
+    }
+
+    public CameraStepMotorEntity getCameraTiltMotor() {
+        return cameraTiltMotor;
     }
 
     /**
@@ -79,7 +109,7 @@ public class ArduinoRobot implements Serializable {
      * @param timeToComplete The time for creating the given number of steps
      * @return Speed in steps per second
      */
-    public static double convertStepsAndCompletionTimeToSpeed(int steps, double timeToComplete) {
+    public static double convertStepsAndExecutionTimeToSpeed(int steps, double timeToComplete) {
         return (double) steps / timeToComplete;
     }
 

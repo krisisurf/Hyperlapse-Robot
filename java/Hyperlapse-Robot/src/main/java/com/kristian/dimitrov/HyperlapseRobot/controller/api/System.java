@@ -46,10 +46,22 @@ public class System {
      * HTTP Get which returns the wheelRadius in centimeters
      *
      * @return wheelRadius in centimeters, (Config::ArduinoRobot::wheelRadius)
+     * @see ArduinoRobot
      */
     @GetMapping("/getWheelRadius")
     public double getWheelRadius() {
         return config.getArduinoRobot().getWheelRadius();
+    }
+
+    /**
+     * HTTP Get which returns the axleTrack in centimeters
+     *
+     * @return axleTrack in centimeters, (Config::ArduinoRobot::wheelRadius)
+     * @see ArduinoRobot
+     */
+    @GetMapping("/getAxleTrack")
+    public double getAxleTrack() {
+        return config.getArduinoRobot().getAxleTrack();
     }
 
     /**

@@ -24,8 +24,9 @@ public class ArduinoRobot implements Serializable {
         rulesManagerEntity = new RulesManagerEntity();
     }
 
-    public void setHardwareData(double wheelRadius, MovementStepMotorEntity leftMotor, MovementStepMotorEntity rightMotor, CameraStepMotorEntity cameraPanMotor, CameraStepMotorEntity cameraTiltMotor) {
+    public void setHardwareData(double wheelRadius, double axleTrack, MovementStepMotorEntity leftMotor, MovementStepMotorEntity rightMotor, CameraStepMotorEntity cameraPanMotor, CameraStepMotorEntity cameraTiltMotor) {
         setWheelRadius(wheelRadius);
+        setAxleTrack(axleTrack);
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
         this.cameraPanMotor = cameraPanMotor;

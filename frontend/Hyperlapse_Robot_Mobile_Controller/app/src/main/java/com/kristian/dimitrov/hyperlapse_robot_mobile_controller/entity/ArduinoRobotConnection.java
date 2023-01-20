@@ -41,6 +41,20 @@ public class ArduinoRobotConnection implements Runnable {
      */
     public double getWheelRadius() {
         String url = MessageFormat.format("http://{0}:{1}/api/getWheelRadius", ipAddress, portNumber);
+        return getDouble(url);
+    }
+
+    /**
+     * Gets the axle track (distance between the two movement axles) from the backend
+     *
+     * @return axleTrack in centimeters
+     */
+    public double getAxleTrack() {
+        String url = MessageFormat.format("http://{0}:{1}/api/getAxleTrack", ipAddress, portNumber);
+        return getDouble(url);
+    }
+
+    private double getDouble(String url) {
         try {
             Request request = new Request.Builder().url(url).build();
             String response = ConnectionHTTP.HTTP_GET(request);

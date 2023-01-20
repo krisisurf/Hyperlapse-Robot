@@ -2,6 +2,7 @@ package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,8 +89,9 @@ public class TurningFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Button btnTurnAngle = view.findViewById(R.id.btnTurnAngle);
+        btnTurnAngle = view.findViewById(R.id.btnTurnAngle);
         btnTurnAngle.setOnClickListener(this::buttonTurnAngleListener);
+
         Button btnTurnRadius = view.findViewById(R.id.btnTurnRadius);
 
         btnExecutionTime = requireView().findViewById(R.id.btnExecutionTime);
@@ -111,25 +113,29 @@ public class TurningFragment extends Fragment {
             double leftMotorDistance = calculateMotorDistance(turnAngle, turnRadius, arduinoRobot.getAxleTrack(), true);
             double rightMotorDistance = calculateMotorDistance(turnAngle, turnRadius, arduinoRobot.getAxleTrack(), false);
 
-            double selectedExecutionTime;
-            if (Math.abs(leftMotorDistance) > Math.abs(rightMotorDistance)) {
-                StepMotorEntity shorterPathMotor = ruleEntity.getRightMotor();
-                StepMotorEntity longerPathMotor = ruleEntity.getLeftMotor();
-                selectedExecutionTime = Math.max(StepMotorEntity.getMinimalExecutionTimeCelled(longerPathMotor, leftMotorDistance), (int) longerPathMotor.getExecutionTime());
+            try {
+                int selectedExecutionTime;
+                if (Math.abs(leftMotorDistance) > Math.abs(rightMotorDistance)) {
+                    StepMotorEntity shorterPathMotor = ruleEntity.getRightMotor();
+                    StepMotorEntity longerPathMotor = ruleEntity.getLeftMotor();
+                    selectedExecutionTime = Math.max(StepMotorEntity.getMinimalExecutionTimeCelled(longerPathMotor, leftMotorDistance), (int) longerPathMotor.getExecutionTime());
 
-                shorterPathMotor.setData(rightMotorDistance, selectedExecutionTime);
-                longerPathMotor.setData(leftMotorDistance, selectedExecutionTime);
-            } else {
-                StepMotorEntity shorterPathMotor = ruleEntity.getLeftMotor();
-                StepMotorEntity longerPathMotor = ruleEntity.getRightMotor();
-                selectedExecutionTime = Math.max(StepMotorEntity.getMinimalExecutionTimeCelled(longerPathMotor, leftMotorDistance), (int) longerPathMotor.getExecutionTime());
+                    shorterPathMotor.setData(rightMotorDistance, selectedExecutionTime);
+                    longerPathMotor.setData(leftMotorDistance, selectedExecutionTime);
+                } else {
+                    StepMotorEntity shorterPathMotor = ruleEntity.getLeftMotor();
+                    StepMotorEntity longerPathMotor = ruleEntity.getRightMotor();
+                    selectedExecutionTime = Math.max(StepMotorEntity.getMinimalExecutionTimeCelled(longerPathMotor, leftMotorDistance), (int) longerPathMotor.getExecutionTime());
 
-                shorterPathMotor.setData(leftMotorDistance, selectedExecutionTime);
-                longerPathMotor.setData(rightMotorDistance, selectedExecutionTime);
+                    shorterPathMotor.setData(leftMotorDistance, selectedExecutionTime);
+                    longerPathMotor.setData(rightMotorDistance, selectedExecutionTime);
+                }
+
+                btnTurnAngle.setText(view.getContext().getString(R.string.degree, turnAngle));
+                btnExecutionTime.setText(view.getContext().getString(R.string.execution_time, selectedExecutionTime));
+            } catch (IncompatibleStepMotorArguments e) {
+                e.printStackTrace();
             }
-
-            btnTurnAngle.setText(view.getContext().getString(R.string.degree, turnAngle));
-            btnExecutionTime.setText(view.getContext().getString(R.string.execution_time, selectedExecutionTime));
         });
         numberInputPopupDialog.show();
     }
