@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendStagedRules(View view) {
         RulesManagerEntity rulesManagerEntity = arduinoRobot.getRulesManagerEntity();
-        Log.i("myTest", arduinoRobot.getRulesManagerEntity().toString());
 
         if (rulesManagerEntity.size() == 0) {
             Toast.makeText(MainActivity.this, "Error! Create rules first.", Toast.LENGTH_LONG).show();

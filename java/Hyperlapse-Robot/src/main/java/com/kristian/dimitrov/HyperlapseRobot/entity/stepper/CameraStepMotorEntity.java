@@ -51,11 +51,21 @@ public class CameraStepMotorEntity extends StepMotorEntity implements Serializab
     }
 
     /**
-     * @return degree
+     * @return the target degree of this motor
      */
     @Override
     public double getMeasurementValue() {
         return degree;
+    }
+
+    /**
+     * Does the same as getMeasurementValue().
+     * The reason why this method exist is that the name of the method must follow the name convention of java spring.
+     * Otherwise, there is a problem with receiving entity via http and parsing the values.
+     * @return the target degree of this motor
+     */
+    public double getDegree(){
+        return getMeasurementValue();
     }
 
     @Override

@@ -55,11 +55,21 @@ public class MovementStepMotorEntity extends StepMotorEntity implements Serializ
 
     /**
      *
-     * @return distance
+     * @return distance in cm
      */
     @Override
     public double getMeasurementValue() {
         return distance;
+    }
+
+    /**
+     * Does the same as getMeasurementValue().
+     * The reason why this method exist is that the name of the method must follow the name convention of java spring.
+     * Otherwise, there is a problem with receiving entity via http and parsing the values.
+     * @return distance in cm
+     */
+    public double getDistance(){
+        return getMeasurementValue();
     }
 
     @Override
