@@ -67,14 +67,14 @@
       </tr>
     </table>
 
-2. DEMO, изработка по време на POC:
+2. DEMO, изработка по време на POC 2:
     <table>
           <th>
             <td>
-                <img alt="Android App Concept" src="https://user-images.githubusercontent.com/61236255/205867218-a4a9945c-3b5f-4544-ac0c-73f1c9a0384a.jpg">
+                <img alt="photo of the robot" src="https://user-images.githubusercontent.com/61236255/214062435-a7b5c700-b1d1-4f08-a52a-a3f4095b711a.jpg">
             </td>
             <td>
-                <img alt="Component Diagram" src="https://user-images.githubusercontent.com/61236255/205867284-47fdb931-df37-4cae-8039-24e42011bc98.jpg">
+                <img alt="components inside the robot" src="https://user-images.githubusercontent.com/61236255/205867284-47fdb931-df37-4cae-8039-24e42011bc98.jpg">
             </td>
           </th>
     </table>
@@ -105,9 +105,8 @@
           </tr>
       </table>
 
-
 4. Изработка на 3D-модел на робота (3D принтер):
-   ![image](https://user-images.githubusercontent.com/61236255/205667209-8b177f33-c008-4231-b9d3-cafc775e5091.png)
+   ![Hyperlapse-Robot](https://user-images.githubusercontent.com/61236255/214060449-4cda8069-f7af-4cdc-a593-bddf4842a221.jpg)
    
 ## Използвани технологии
 - IntelliJ IDEA Community Edition
