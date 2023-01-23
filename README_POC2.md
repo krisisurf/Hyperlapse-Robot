@@ -79,16 +79,30 @@
           </th>
     </table>
 
-3. Концепция за изгледът на мобилното приложение:
+3. Изглед на мобилното приложение
       <table>
-          <th>
+          <tr>
             <td>
-                <img alt="image" src="https://user-images.githubusercontent.com/61236255/205665030-26153516-7c7a-4e35-860b-e8bee4cdbec9.png">
+                <img alt="main window" src="https://user-images.githubusercontent.com/61236255/214032898-a0754529-66d9-4643-876c-6e3a7478e142.jpg">
             </td>
             <td>
-                <img alt="image" src="https://user-images.githubusercontent.com/61236255/205666403-f396560f-9822-4ea2-a923-83595a230cb3.png">
+                <img alt="connection window" src="https://user-images.githubusercontent.com/61236255/214032952-8b94aab9-e678-4145-b6e7-caa7d1e85064.jpg">
             </td>
-          </th>
+            <td>
+                <img alt="create rule window" src="https://user-images.githubusercontent.com/61236255/214032955-65326957-9101-432f-9422-05560bbb16c1.jpg">
+            </td>
+          </tr>
+          <tr>
+            <td>
+                <img alt="create rule window" src="https://user-images.githubusercontent.com/61236255/214032956-7ed0fe67-89b1-4d99-8cf2-6ec9afb0c969.jpg">
+            </td>
+            <td>
+                <img alt="create rule window" src="https://user-images.githubusercontent.com/61236255/214032958-971bf802-83bd-47a6-8ee0-cf19ace4ccf1.jpg">
+            </td>
+            <td>
+                <img alt="main window" src="https://user-images.githubusercontent.com/61236255/214032949-ac855bd1-8f17-471e-8fbc-767e511cc21a.jpg">
+            </td>
+          </tr>
       </table>
 
 
