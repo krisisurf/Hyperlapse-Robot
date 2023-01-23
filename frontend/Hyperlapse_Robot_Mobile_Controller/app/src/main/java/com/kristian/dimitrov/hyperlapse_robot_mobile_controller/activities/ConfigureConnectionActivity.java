@@ -39,8 +39,6 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
     private EditText editText_ipAddress;
     private EditText editText_portNumber;
 
-    private Thread loadingScreenThread;
-
     private interface ConnectionTested {
         void doFinally(boolean isConnected);
     }
@@ -102,16 +100,15 @@ public class ConfigureConnectionActivity extends AppCompatActivity {
     private void testConnectionWithLoading(String ipAddress, String portNumber, ConnectionTested onConnectionTested) {
         // TODO: deprecated feature might be replaced with newer solution
         ProgressDialog mProgressDialog = ProgressDialog.show(this, "Please wait", "Trying to connect...", true);
-        if (loadingScreenThread == null) {
-            loadingScreenThread = new Thread(() -> {
-                boolean connected = connectionEstablished(ipAddress, portNumber);
+        // TODO: This thread can be memory optimized
+        Thread loadingScreenThread = new Thread(() -> {
+            boolean connected = connectionEstablished(ipAddress, portNumber);
 
-                runOnUiThread(() -> {
-                    mProgressDialog.dismiss();
-                    onConnectionTested.doFinally(connected);
-                });
+            runOnUiThread(() -> {
+                mProgressDialog.dismiss();
+                onConnectionTested.doFinally(connected);
             });
-        }
+        });
         loadingScreenThread.start();
     }
 
