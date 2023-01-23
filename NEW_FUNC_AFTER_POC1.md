@@ -6,7 +6,8 @@
    - loading screen, while the connection is being tested
 3. Check if the connection is established with the back-end every 5 seconds (in the MainActivity), that method is called Heartbeat
 4. Send created rules to the back end via HTTP post
-5. Autorun java backend application on raspberry boot
+5. Autorun java backend application on raspberry boot with predefined values for 'wheel radius' and 'axle track'
+6. Wheel radius and axle track values are received by the front end, when a connection is established wit hte backend
 
 TODO:
 1. Update architectural diagram
