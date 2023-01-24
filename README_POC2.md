@@ -84,7 +84,11 @@
       </table>
 
 4. Изработка на 3D-модел на робота (3D принтер):
+   - Вариант 1
    ![Hyperlapse-Robot](https://user-images.githubusercontent.com/61236255/214060449-4cda8069-f7af-4cdc-a593-bddf4842a221.jpg)
+   - Подобрена версия на вариант 1
+   ![Hyperlapse-robot-render-v2-jpeg](https://user-images.githubusercontent.com/61236255/214297289-07ae3a4a-8328-485e-b00d-08072f7038a1.jpg)
+
    
 ## Използвани технологии
 - IntelliJ IDEA Community Edition
