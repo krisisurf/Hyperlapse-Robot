@@ -62,11 +62,11 @@ void setup() {
   Wire.onReceive(receiveEvent); // register event
 
   // Unmark this to get program logs. NOTE THAT THIS SLOWS THE PROGRAM and also the BUZZER will not work properly
-  Serial.begin(9600);
+  // Serial.begin(9600);
 }
 
 void loop() {
-  static DynamicJsonDocument rules(1000);    // Json object that will contain the movement rules
+  static DynamicJsonDocument rules(2000);    // Json object that will contain the movement rules
   static int currentRuleIndex;
   static int rulesCount;
   static double wheelRadius = 5.0; // Default value of the wheel radius is 5 cm. It will be changed when a rule from the backend is received.
