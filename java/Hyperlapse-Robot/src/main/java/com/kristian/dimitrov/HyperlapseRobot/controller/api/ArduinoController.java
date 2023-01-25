@@ -3,8 +3,6 @@ package com.kristian.dimitrov.HyperlapseRobot.controller.api;
 import com.kristian.dimitrov.HyperlapseRobot.config.Config;
 import com.kristian.dimitrov.HyperlapseRobot.entity.ArduinoRobot;
 import com.kristian.dimitrov.HyperlapseRobot.entity.RulesManagerEntity;
-import com.kristian.dimitrov.HyperlapseRobot.entity.builders.RuleEntityBuilder;
-import com.kristian.dimitrov.HyperlapseRobot.exception.IncompatibleStepMotorArguments;
 import com.kristian.dimitrov.HyperlapseRobot.service.ArduinoService;
 import com.kristian.dimitrov.HyperlapseRobot.utils.Logger;
 import org.springframework.web.bind.annotation.*;
