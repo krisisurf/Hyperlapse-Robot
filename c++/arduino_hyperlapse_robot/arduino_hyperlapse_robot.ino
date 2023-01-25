@@ -177,7 +177,7 @@ void deserializeJSON(DynamicJsonDocument& rules, String json){
   * rules             -> json document with structure for the rules
   * ruleIndexToLoad   -> index of the rule from the rules document, which will be loaded
 */
-double loadRule(DynamicJsonDocument& rules, const int ruleIndexToLoad, const double wheelRadius){
+void loadRule(DynamicJsonDocument& rules, const int ruleIndexToLoad, const double wheelRadius){
     Serial.print("Initializing rule No.");Serial.println(ruleIndexToLoad);
     
     // Sets left and right side step motors
