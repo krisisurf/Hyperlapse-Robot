@@ -1,0 +1,9 @@
+middleWall = 12g x2
+sideWall = 35g x2
+motorHolder = 5g x2
+gearHolder = 5g x2
+lightWheel = 21g (100% infill density) x6
+smallGear = 1g (100% infill density) x2
+bigGear = 4g (100% infill density) x2
+
+total: 250g
