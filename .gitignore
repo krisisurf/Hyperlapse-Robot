@@ -9,6 +9,9 @@
 # BlueJ files
 *.ctxt
 
+# Blender backup file
+*.blend1
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
