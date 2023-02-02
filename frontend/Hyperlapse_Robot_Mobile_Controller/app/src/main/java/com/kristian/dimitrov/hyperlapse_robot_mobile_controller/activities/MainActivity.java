@@ -53,13 +53,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         final double defaultWheelRadius = 5; // Default wheelRadius, which may be updated when connection with the robot is established
+        final double defaultAxleTrack = 10; // Default axleTrack, which may be updated when connection with the robot is established
         final MovementStepMotorEntity leftMotor = new MovementStepMotorEntity(5, 64, 16);
         final MovementStepMotorEntity rightMotor = new MovementStepMotorEntity(5, 64, 16);
         final CameraStepMotorEntity cameraPanMotor = new CameraStepMotorEntity(64, 16);
         final CameraStepMotorEntity cameraTiltMotor = new CameraStepMotorEntity(64, 16);
 
         arduinoRobot = new ArduinoRobot();
-        arduinoRobot.setHardwareData(defaultWheelRadius, leftMotor, rightMotor, cameraPanMotor, cameraTiltMotor);
+        arduinoRobot.setHardwareData(defaultWheelRadius, defaultAxleTrack, leftMotor, rightMotor, cameraPanMotor, cameraTiltMotor);
         arduinoRobotConnection = new ArduinoRobotConnection(5000) {
             @Override
             public void onConnectionStatusListener(boolean isConnectionEstablished) {
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendStagedRules(View view) {
         RulesManagerEntity rulesManagerEntity = arduinoRobot.getRulesManagerEntity();
+
         if (rulesManagerEntity.size() == 0) {
             Toast.makeText(MainActivity.this, "Error! Create rules first.", Toast.LENGTH_LONG).show();
             return;
@@ -155,6 +157,13 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "Wheel Radius has been set to " + newWheelRadius + " centimeters.", Toast.LENGTH_LONG).show();
                         }
                     }
+                    double newAxleTrack = arduinoRobotConnection.getAxleTrack();
+                    if (newAxleTrack != -1) {
+                        if (arduinoRobot.getAxleTrack() != newAxleTrack) {
+                            arduinoRobot.setAxleTrack(newAxleTrack);
+                            Toast.makeText(MainActivity.this, "Axle Track has been set to " + newAxleTrack + " centimeters.", Toast.LENGTH_LONG).show();
+                        }
+                    }
                 }
                 break;
             }
@@ -162,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == CreateRuleActivity.RESULT_CREATED_OK) {
                     Log.i(TAG, "Create rule request code OK received.");
                     RuleEntity ruleEntity = (RuleEntity) data.getSerializableExtra(CreateRuleActivity.RULE_ENTITY_CODE);
+
                     arduinoRobot.addRule(ruleEntity);
                     stagedRulesAdapter.notifyItemInserted(arduinoRobot.getRulesManagerEntity().size() - 1);
 
@@ -169,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (resultCode == CreateRuleActivity.RESULT_EDITED_OK) {
                     int indexOfRuleEntity = data.getIntExtra(CreateRuleActivity.RULE_ENTITY_INDEX_CODE, -1);
                     RuleEntity ruleEntity = (RuleEntity) data.getSerializableExtra(CreateRuleActivity.RULE_ENTITY_CODE);
+
                     arduinoRobot.getRulesManagerEntity().getRules().set(indexOfRuleEntity, ruleEntity);
                     stagedRulesAdapter.notifyItemChanged(indexOfRuleEntity);
                 }

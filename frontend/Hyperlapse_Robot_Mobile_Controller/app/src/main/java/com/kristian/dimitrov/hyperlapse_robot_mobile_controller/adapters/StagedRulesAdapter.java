@@ -1,6 +1,7 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,6 +89,14 @@ public class StagedRulesAdapter extends RecyclerView.Adapter<StagedRulesAdapter.
                 descriptionBuilder.append(direction).append(distance).append("cm")
                         .append(" / ").append((int) ruleEntity.getLeftMotor().getExecutionTime()).append("sec\n");
             }
+        } else {
+            double leftMotorDistance = ruleEntity.getLeftMotor().getMeasurementValue();
+            double rightMotorDistance = ruleEntity.getRightMotor().getMeasurementValue();
+
+            descriptionBuilder.append("Left motor: ").append(String.format("%.2f", leftMotorDistance)).append("cm")
+                    .append(" / ").append((int) ruleEntity.getLeftMotor().getExecutionTime()).append("sec\n");
+            descriptionBuilder.append("Right motor: ").append(String.format("%.2f", rightMotorDistance)).append("cm")
+                    .append(" / ").append((int) ruleEntity.getLeftMotor().getExecutionTime()).append("sec\n");
         }
 
         if (ruleEntity.getPanMotor().getMeasurementValue() != 0) {

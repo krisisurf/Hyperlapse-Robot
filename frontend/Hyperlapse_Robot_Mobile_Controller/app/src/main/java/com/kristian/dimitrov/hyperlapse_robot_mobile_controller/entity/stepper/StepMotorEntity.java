@@ -56,4 +56,9 @@ public abstract class StepMotorEntity implements Serializable {
     public boolean equalsByMeasurementValueAndExecutionTime(@NonNull StepMotorEntity stepMotorEntity) {
         return getMeasurementValue() == stepMotorEntity.getMeasurementValue() && getExecutionTime() == stepMotorEntity.getExecutionTime();
     }
+
+    public static int getMinimalExecutionTimeCelled(StepMotorEntity stepMotorEntity, double val) {
+        double minExecTime = stepMotorEntity.getMinimalTimeRequired(Math.abs(val));
+        return (int) Math.ceil(minExecTime);
+    }
 }

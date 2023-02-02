@@ -3,33 +3,30 @@ package com.kristian.dimitrov.HyperlapseRobot.entity.stepper;
 import com.kristian.dimitrov.HyperlapseRobot.entity.ArduinoRobot;
 import com.kristian.dimitrov.HyperlapseRobot.exception.IncompatibleStepMotorArguments;
 
-public class MovementStepMotorEntity extends StepMotorEntity {
+import java.io.Serializable;
 
-    private float distance;
-    private float executionTime;
+public class MovementStepMotorEntity extends StepMotorEntity implements Serializable {
+
+    private double distance;
+    private double executionTime;
 
     private final double wheelRadius;
 
     /**
      * <p>Default initialization of step motor entity with rule for distance and execution time.</p>
-     * <b>NOTE:</b> THE HARDWARE STEP MOTOR STEPS COUNT ARE FIXED WITH DEFAULT VALUES
      */
-    public MovementStepMotorEntity(double wheelRadius) {
+    public MovementStepMotorEntity(double wheelRadius, int stepsPerRevolution, double maxSpeed) {
+        super(stepsPerRevolution, maxSpeed);
         this.wheelRadius = wheelRadius;
     }
 
     /**
-     * Initialization of step motor entity with rule for distance and execution time.
+     * Clone constructor
      *
-     * @param stepsPerRevolution Hardware limit of the motor steps count for one revolution (360 degrees)
-     * @param maxSpeed           Step motor max speed in steps per second
-     * @param distance           Distance which will be moved
-     * @param executionTime      Time for which the given distance will be traveled
+     * @param movementStepMotorEntity
      */
-    public MovementStepMotorEntity(double wheelRadius, int stepsPerRevolution, float maxSpeed, float distance, float executionTime) throws IncompatibleStepMotorArguments {
-        super(stepsPerRevolution, maxSpeed);
-        this.wheelRadius = wheelRadius;
-        setData(distance, executionTime);
+    public MovementStepMotorEntity(MovementStepMotorEntity movementStepMotorEntity) {
+        this(movementStepMotorEntity.wheelRadius, movementStepMotorEntity.stepsPerRevolution, movementStepMotorEntity.maxSpeed);
     }
 
     /**
@@ -38,11 +35,10 @@ public class MovementStepMotorEntity extends StepMotorEntity {
      * @param distance      Distance to travel in centimeters
      * @param executionTime Time to complete in seconds
      * @throws IncompatibleStepMotorArguments When it is impossible to travel the given distance for the execution time, because of hardware limitations.
-     * @see com.kristian.dimitrov.HyperlapseRobot.entity.RuleEntity
      */
-    public void setData(float distance, float executionTime) throws IncompatibleStepMotorArguments {
-        int stepsRequired = ArduinoRobot.convertCentimetersToSteps(distance, wheelRadius, stepsPerRevolution);
-        double minimalTimeRequired = ArduinoRobot.convertStepsToSeconds(stepsRequired, maxSpeed);
+    @Override
+    public void setData(double distance, double executionTime) throws IncompatibleStepMotorArguments {
+        double minimalTimeRequired = getMinimalTimeRequired(distance);
 
         if (minimalTimeRequired > executionTime)
             throw new IncompatibleStepMotorArguments("The given 'executionTime=" + executionTime + "' is too short for reaching the target 'distance=" + distance + "'. Minimal time for this distance is: " + minimalTimeRequired + " seconds");
@@ -51,11 +47,33 @@ public class MovementStepMotorEntity extends StepMotorEntity {
         this.executionTime = executionTime;
     }
 
-    public float getDistance() {
+    @Override
+    public double getMinimalTimeRequired(double distance) {
+        int stepsRequired = ArduinoRobot.convertCentimetersToSteps(distance, wheelRadius, stepsPerRevolution);
+        return ArduinoRobot.convertStepsToSeconds(stepsRequired, maxSpeed);
+    }
+
+    /**
+     *
+     * @return distance in cm
+     */
+    @Override
+    public double getMeasurementValue() {
         return distance;
     }
 
-    public float getExecutionTime() {
+    /**
+     * Does the same as getMeasurementValue().
+     * The reason why this method exist is that the name of the method must follow the name convention of java spring.
+     * Otherwise, there is a problem with receiving entity via http and parsing the values.
+     * @return distance in cm
+     */
+    public double getDistance(){
+        return getMeasurementValue();
+    }
+
+    @Override
+    public double getExecutionTime() {
         return executionTime;
     }
 

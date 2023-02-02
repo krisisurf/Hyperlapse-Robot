@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -90,7 +91,7 @@ public class CreateRuleActivity extends AppCompatActivity {
         numberInputPopupDialog = new NumberInputPopupDialog(CreateRuleActivity.this, true);
 
         forwardBackwardFragment = ForwardBackwardFragment.newInstance(numberInputPopupDialog, ruleEntity);
-        turningFragment = new TurningFragment();
+        turningFragment = TurningFragment.newInstance(numberInputPopupDialog, ruleEntity, arduinoRobot);
 
 
         btnPanDegree = findViewById(R.id.btnPanDegree);
@@ -233,7 +234,7 @@ public class CreateRuleActivity extends AppCompatActivity {
         numberInputPopupDialog.setNegativeNumbers(true);
         numberInputPopupDialog.addNumberSelectedListener(value -> {
             try {
-                int selectedExecutionTime = Math.max(getMinimalExecutionTimeCelled(stepMotorEntity, value), (int) stepMotorEntity.getExecutionTime());
+                int selectedExecutionTime = Math.max(StepMotorEntity.getMinimalExecutionTimeCelled(stepMotorEntity, value), (int) stepMotorEntity.getExecutionTime());
                 stepMotorEntity.setData(value, selectedExecutionTime);
 
                 Context context = currentTextView.getContext();
@@ -253,7 +254,7 @@ public class CreateRuleActivity extends AppCompatActivity {
      * @param stepMotorEntity        motor on which the input will be applied
      */
     private void clickListener_executionTime(NumberInputPopupDialog numberInputPopupDialog, TextView currentTextView, String popupTitle, StepMotorEntity stepMotorEntity) {
-        int minExecTimeCelled = getMinimalExecutionTimeCelled(stepMotorEntity, (int) stepMotorEntity.getMeasurementValue());
+        int minExecTimeCelled = StepMotorEntity.getMinimalExecutionTimeCelled(stepMotorEntity, (int) stepMotorEntity.getMeasurementValue());
 
         numberInputPopupDialog.setTitle(popupTitle);
         numberInputPopupDialog.setMinValue(minExecTimeCelled);
@@ -271,10 +272,5 @@ public class CreateRuleActivity extends AppCompatActivity {
             }
         });
         numberInputPopupDialog.show();
-    }
-
-    private int getMinimalExecutionTimeCelled(StepMotorEntity stepMotorEntity, int val) {
-        double minExecTime = stepMotorEntity.getMinimalTimeRequired(Math.abs(val));
-        return (int) Math.ceil(minExecTime);
     }
 }
