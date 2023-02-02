@@ -241,7 +241,7 @@ void resetMotors(){
   This function is registered as an event, see setup()
 */
 void receiveEvent(int howMany) {
-  static const char STOP_RULES_SIGNAL = '\n'; // When arduino receive this character, it will load the received json document with rules
+  static const char STOP_RULES_SIGNAL = '$'; // When arduino receive this character, it will load the received json document with rules
   static const char STOP_REQUEST_SIGNAL = '^'; // When arduino receive this character, it will load the received json document with rules
   isFullyReceivedFromMaster = false;
   

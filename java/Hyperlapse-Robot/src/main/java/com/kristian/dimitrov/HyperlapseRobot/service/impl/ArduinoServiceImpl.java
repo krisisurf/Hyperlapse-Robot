@@ -46,9 +46,12 @@ public class ArduinoServiceImpl implements ArduinoService {
         if (sendingData || receivingData)
             return;
 
-        sendDataToArduino(rulesManagerEntity.getShortenedJson(), '\n');
+        sendDataToArduino(rulesManagerEntity.getShortenedJson(), '$');
     }
 
+    /**
+     * Currently unused, because it does not work
+     */
     @Override
     public String requestData(ArduinoRequest request) {
         // TODO 1: Problem will appear when you try to receive data, before the send/receive process is not finished
@@ -71,7 +74,10 @@ public class ArduinoServiceImpl implements ArduinoService {
             data += STOP_SIGNAL;
 
             int chunkLength = 32;
-            int chunksCount = data.length() / chunkLength + 1;
+            int chunksCount = data.length() / chunkLength;
+            if(data.length() % chunkLength != 0)
+                chunksCount++;
+
             for (int i = 0; i < chunksCount; i++) {
                 String chunk = data.substring(i * chunkLength, Math.min((i + 1) * chunkLength, data.length()));
                 Logger.makeLog("Writing string chunk (No. " + (i + 1) + " ), data: " + chunk, t);
@@ -79,10 +85,12 @@ public class ArduinoServiceImpl implements ArduinoService {
                 byte[] writeData = chunk.getBytes();
                 device.write(chunk.getBytes(), 0, writeData.length);
             }
-
+            Thread.sleep(100);
             Logger.makeLog("All rules has been sent to Arduino.", t);
         } catch (IOException ex) {
             ex.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
         sendingData = false;
     }
