@@ -150,20 +150,24 @@ public class MainActivity extends AppCompatActivity {
                     arduinoRobotConnection.setConnectionData(ipAddress, portNumber);
 
                     // TODO: Handle exception when the newWheelRadius is -1
+                    String toastMessage = null;
                     double newWheelRadius = arduinoRobotConnection.getWheelRadius();
                     if (newWheelRadius != -1) {
-                        if (arduinoRobot.getWheelRadius() != newWheelRadius) {
-                            arduinoRobot.setWheelRadius(newWheelRadius);
-                            Toast.makeText(MainActivity.this, "Wheel Radius has been set to " + newWheelRadius + " centimeters.", Toast.LENGTH_LONG).show();
-                        }
+                        arduinoRobot.setWheelRadius(newWheelRadius);
+                        toastMessage += "Wheel Radius has been set to " + newWheelRadius + " cm.\n";
+                    } else {
+                        toastMessage += "ERROR, could no set Wheel Radius!!!";
                     }
+
                     double newAxleTrack = arduinoRobotConnection.getAxleTrack();
                     if (newAxleTrack != -1) {
-                        if (arduinoRobot.getAxleTrack() != newAxleTrack) {
-                            arduinoRobot.setAxleTrack(newAxleTrack);
-                            Toast.makeText(MainActivity.this, "Axle Track has been set to " + newAxleTrack + " centimeters.", Toast.LENGTH_LONG).show();
-                        }
+                        arduinoRobot.setAxleTrack(newAxleTrack);
+                        toastMessage += "Axle Track has been set to " + newAxleTrack + " cm.";
+                    } else {
+                        toastMessage += "ERROR, could no set Axle Track!!!";
                     }
+
+                    Toast.makeText(MainActivity.this, toastMessage, Toast.LENGTH_LONG).show();
                 }
                 break;
             }

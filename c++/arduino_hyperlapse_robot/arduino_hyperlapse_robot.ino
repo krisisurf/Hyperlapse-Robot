@@ -186,7 +186,7 @@ void loadRule(DynamicJsonDocument& rules, const int ruleIndexToLoad, const doubl
       double distance = rules["r"][ruleIndexToLoad][stepMotor.name]["ds"];
       double executionTime = rules["r"][ruleIndexToLoad][stepMotor.name]["t"];
       
-      int steps = convertCentimetersToSteps(distance, wheelRadius, LIB_STEPS_PER_REVOLUTION);
+      long steps = convertCentimetersToSteps(distance, wheelRadius, LIB_STEPS_PER_REVOLUTION);
       double speed = convertStepsAndExecutionTimeToSpeed(steps, executionTime);
 
       stepMotor.stepper.move(steps);
@@ -208,7 +208,7 @@ void loadRule(DynamicJsonDocument& rules, const int ruleIndexToLoad, const doubl
       double degrees = rules["r"][ruleIndexToLoad][stepMotor.name]["dg"];
       double executionTime = rules["r"][ruleIndexToLoad][stepMotor.name]["t"];
         
-      int steps = convertDegreesToSteps(degrees, LIB_STEPS_PER_REVOLUTION);
+      long steps = convertDegreesToSteps(degrees, LIB_STEPS_PER_REVOLUTION);
       double speed = convertStepsAndExecutionTimeToSpeed(steps, executionTime);
 
       stepMotor.stepper.move(steps);
@@ -305,14 +305,14 @@ void setStepMotorsOutputs(bool enabledOutputs){
     Returns:
     * The number of steps that it takes to travel the given distance
 */
-int convertCentimetersToSteps(double centimeters, double wheelRadiusInCentimeters, const int stepsPerRevolution){
+long convertCentimetersToSteps(double centimeters, double wheelRadiusInCentimeters, const int stepsPerRevolution){
   double pi = 3.141592;  
   double wheelPerimeter = 2 * pi * wheelRadiusInCentimeters;
   
   double revolutionsToMake = centimeters / wheelPerimeter;
   
-  int steps = stepsPerRevolution * revolutionsToMake;
-  return steps;  
+  long steps = stepsPerRevolution * revolutionsToMake;
+  return steps;
 }
 
 /*
@@ -323,7 +323,7 @@ int convertCentimetersToSteps(double centimeters, double wheelRadiusInCentimeter
     Returns:
     * time in seconds
 */
-double convertStepsToSeconds(int steps, double speed){
+double convertStepsToSeconds(long steps, double speed){
   double timeToCompleteInSeconds = 1.0 * steps / speed;
   return timeToCompleteInSeconds;
 }
@@ -336,7 +336,7 @@ double convertStepsToSeconds(int steps, double speed){
     Returns:
     * speed in steps per second
 */
-double convertStepsAndExecutionTimeToSpeed(int steps, double executionTime){
+double convertStepsAndExecutionTimeToSpeed(long steps, double executionTime){
   double speed = 1.0 * steps / executionTime;
   return speed;  
 }
@@ -349,6 +349,6 @@ double convertStepsAndExecutionTimeToSpeed(int steps, double executionTime){
     Returns:
     * The number of steps that it takes to move the given number of degrees
  */
-int convertDegreesToSteps(double degrees, const int stepsPerRevolution) {
-    return (int) (stepsPerRevolution * degrees / 360);
+long convertDegreesToSteps(double degrees, const int stepsPerRevolution) {
+    return (long) (stepsPerRevolution * degrees / 360);
 }

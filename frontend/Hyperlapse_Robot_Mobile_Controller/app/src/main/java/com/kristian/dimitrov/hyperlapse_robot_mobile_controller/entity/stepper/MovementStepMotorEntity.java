@@ -10,7 +10,11 @@ public class MovementStepMotorEntity extends StepMotorEntity implements Serializ
     private double distance;
     private double executionTime;
 
-    private final double wheelRadius;
+    private double wheelRadius;
+
+    public void setWheelRadius(double wheelRadius) {
+        this.wheelRadius = wheelRadius;
+    }
 
     /**
      * <p>Default initialization of step motor entity with rule for distance and execution time.</p>
