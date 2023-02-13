@@ -4,8 +4,15 @@ import com.kristian.dimitrov.HyperlapseRobot.entity.ArduinoRobot;
 import com.kristian.dimitrov.HyperlapseRobot.exception.IncompatibleStepMotorArguments;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 
 public class MovementStepMotorEntity extends StepMotorEntity implements Serializable {
+
+    private static final DecimalFormat decimalFormat;
+
+    static {
+        decimalFormat = new DecimalFormat("#.####");
+    }
 
     private double distance;
     private double executionTime;
@@ -54,7 +61,6 @@ public class MovementStepMotorEntity extends StepMotorEntity implements Serializ
     }
 
     /**
-     *
      * @return distance in cm
      */
     @Override
@@ -66,9 +72,10 @@ public class MovementStepMotorEntity extends StepMotorEntity implements Serializ
      * Does the same as getMeasurementValue().
      * The reason why this method exist is that the name of the method must follow the name convention of java spring.
      * Otherwise, there is a problem with receiving entity via http and parsing the values.
+     *
      * @return distance in cm
      */
-    public double getDistance(){
+    public double getDistance() {
         return getMeasurementValue();
     }
 
@@ -80,7 +87,7 @@ public class MovementStepMotorEntity extends StepMotorEntity implements Serializ
     @Override
     public String toString() {
         return "{" +
-                "distance: " + distance +
+                "distance: " + decimalFormat.format(distance) +
                 ", executionTime: " + executionTime +
                 '}';
     }
