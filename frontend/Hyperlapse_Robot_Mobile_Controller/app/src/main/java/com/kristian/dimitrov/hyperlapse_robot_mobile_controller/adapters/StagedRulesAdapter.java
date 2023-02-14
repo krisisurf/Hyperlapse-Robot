@@ -1,7 +1,6 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RuleEntity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.TurnEntity;
 
 import java.util.List;
 
@@ -90,13 +90,11 @@ public class StagedRulesAdapter extends RecyclerView.Adapter<StagedRulesAdapter.
                         .append(" / ").append((int) ruleEntity.getLeftMotor().getExecutionTime()).append("sec\n");
             }
         } else {
-            double leftMotorDistance = ruleEntity.getLeftMotor().getMeasurementValue();
-            double rightMotorDistance = ruleEntity.getRightMotor().getMeasurementValue();
-
-            descriptionBuilder.append("Left motor: ").append(String.format("%.2f", leftMotorDistance)).append("cm")
-                    .append(" / ").append((int) ruleEntity.getLeftMotor().getExecutionTime()).append("sec\n");
-            descriptionBuilder.append("Right motor: ").append(String.format("%.2f", rightMotorDistance)).append("cm")
-                    .append(" / ").append((int) ruleEntity.getLeftMotor().getExecutionTime()).append("sec\n");
+            TurnEntity turnEntity = ruleEntity.getTurnEntity();
+            descriptionBuilder.append(turnEntity.getTurnAngle() > 0 ? "Right" : "Left")
+                    .append(" Turn: ").append(context.getString(R.string.degree, turnEntity.getTurnAngle()))
+                    .append("\nTurn Radius: ").append(turnEntity.getTurnRadius()).append("cm")
+                    .append(" / ").append(turnEntity.getExecutionTime()).append("sec\n\n");
         }
 
         if (ruleEntity.getPanMotor().getMeasurementValue() != 0) {
