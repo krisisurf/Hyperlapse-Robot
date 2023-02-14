@@ -1,7 +1,10 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity;
 
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.utills.ConnectionHTTP;
 
 import java.text.MessageFormat;
@@ -30,7 +33,20 @@ public class ArduinoRobotConnection implements Runnable {
     public ArduinoRobotConnection(int testConnectionDelayMillis) {
         this.testConnDelay = testConnectionDelayMillis;
         connectionThread = new Thread(this);
-        gson = new Gson();
+
+        ExclusionStrategy strategy = new ExclusionStrategy() {
+
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                return f.getName().equals("turnEntity");
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                return false;
+            }
+        };
+        gson = new GsonBuilder().addSerializationExclusionStrategy(strategy).create();
         testConnectionRequest = null;
     }
 

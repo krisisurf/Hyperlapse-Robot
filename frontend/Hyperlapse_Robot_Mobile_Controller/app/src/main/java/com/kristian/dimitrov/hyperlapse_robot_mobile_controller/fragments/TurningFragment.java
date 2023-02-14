@@ -1,8 +1,6 @@
 package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +14,10 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.activities.NumberInputPopupDialog;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RuleEntity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.TurnEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.StepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.exception.IncompatibleStepMotorArguments;
 
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,14 +32,12 @@ public class TurningFragment extends Fragment {
     public static final String ARDUINO_ROBOT_PARAM = "ar";
 
     private NumberInputPopupDialog numberInputPopupDialog;
-    private ArduinoRobot arduinoRobot;
     private RuleEntity ruleEntity;
     private Button btnTurnAngle;
     private Button btnTurnRadius;
     private Button btnExecutionTime;
 
-    private int turnAngle;
-    private int turnRadius; // in centimeters
+    private TurnEntity turnEntity;
 
     public TurningFragment() {
         // Required empty public constructor
@@ -72,9 +68,7 @@ public class TurningFragment extends Fragment {
         if (getArguments() != null) {
             numberInputPopupDialog = (NumberInputPopupDialog) getArguments().getSerializable(NUMBER_INPUT_POPUP_DIALOG_PARAM);
             ruleEntity = (RuleEntity) getArguments().getSerializable(RULE_ENTITY_PARAM);
-            arduinoRobot = (ArduinoRobot) getArguments().getSerializable(ARDUINO_ROBOT_PARAM);
-            turnAngle = 0;
-            turnRadius = 0;
+            turnEntity = ruleEntity.getTurnEntity();
         }
     }
 
@@ -98,6 +92,14 @@ public class TurningFragment extends Fragment {
         btnExecutionTime = requireView().findViewById(R.id.btnExecutionTime);
         btnExecutionTime.setText(getString(R.string.execution_time, (int) ruleEntity.getLeftMotor().getExecutionTime()));
         btnExecutionTime.setOnClickListener(this::buttonExecutionTimeListener);
+
+        setupDefaultValues(view);
+    }
+
+    private void setupDefaultValues(View view) {
+        btnTurnAngle.setText(view.getContext().getString(R.string.degree, turnEntity.getTurnAngle()));
+        btnTurnRadius.setText(view.getContext().getString(R.string.centimeters, turnEntity.getTurnRadius()));
+        btnExecutionTime.setText(getString(R.string.execution_time, turnEntity.getExecutionTime()));
     }
 
     private void buttonTurnRadiusListener(View view) {
@@ -107,33 +109,9 @@ public class TurningFragment extends Fragment {
         numberInputPopupDialog.setValue(0);
         numberInputPopupDialog.setNegativeNumbers(true);
         numberInputPopupDialog.addNumberSelectedListener(turnRadius -> {
-            this.turnRadius = turnRadius;
-            double leftMotorDistance = calculateWheelTravelDistance(turnAngle, turnRadius, arduinoRobot.getAxleTrack(), true);
-            double rightMotorDistance = calculateWheelTravelDistance(turnAngle, turnRadius, arduinoRobot.getAxleTrack(), false);
-
-            try {
-                int selectedExecutionTime;
-                if (Math.abs(leftMotorDistance) > Math.abs(rightMotorDistance)) {
-                    StepMotorEntity shorterPathMotor = ruleEntity.getRightMotor();
-                    StepMotorEntity longerPathMotor = ruleEntity.getLeftMotor();
-                    selectedExecutionTime = Math.max(StepMotorEntity.getMinimalExecutionTimeCelled(longerPathMotor, leftMotorDistance), (int) longerPathMotor.getExecutionTime());
-
-                    shorterPathMotor.setData(rightMotorDistance, selectedExecutionTime);
-                    longerPathMotor.setData(leftMotorDistance, selectedExecutionTime);
-                } else {
-                    StepMotorEntity shorterPathMotor = ruleEntity.getLeftMotor();
-                    StepMotorEntity longerPathMotor = ruleEntity.getRightMotor();
-                    selectedExecutionTime = Math.max(StepMotorEntity.getMinimalExecutionTimeCelled(longerPathMotor, leftMotorDistance), (int) longerPathMotor.getExecutionTime());
-
-                    shorterPathMotor.setData(leftMotorDistance, selectedExecutionTime);
-                    longerPathMotor.setData(rightMotorDistance, selectedExecutionTime);
-                }
-
-                btnTurnRadius.setText(view.getContext().getString(R.string.centimeters, turnRadius));
-                btnExecutionTime.setText(view.getContext().getString(R.string.execution_time, selectedExecutionTime));
-            } catch (IncompatibleStepMotorArguments e) {
-                e.printStackTrace();
-            }
+            turnEntity.setTurnRadius(turnRadius);
+            btnTurnRadius.setText(view.getContext().getString(R.string.centimeters, turnRadius));
+            btnExecutionTime.setText(view.getContext().getString(R.string.execution_time, turnEntity.getExecutionTime()));
         });
         numberInputPopupDialog.show();
     }
@@ -145,33 +123,9 @@ public class TurningFragment extends Fragment {
         numberInputPopupDialog.setValue(0);
         numberInputPopupDialog.setNegativeNumbers(true);
         numberInputPopupDialog.addNumberSelectedListener(turnAngle -> {
-            this.turnAngle = turnAngle;
-            double leftMotorDistance = calculateWheelTravelDistance(turnAngle, turnRadius, arduinoRobot.getAxleTrack(), true);
-            double rightMotorDistance = calculateWheelTravelDistance(turnAngle, turnRadius, arduinoRobot.getAxleTrack(), false);
-
-            try {
-                int selectedExecutionTime;
-                if (Math.abs(leftMotorDistance) > Math.abs(rightMotorDistance)) {
-                    StepMotorEntity shorterPathMotor = ruleEntity.getRightMotor();
-                    StepMotorEntity longerPathMotor = ruleEntity.getLeftMotor();
-                    selectedExecutionTime = Math.max(StepMotorEntity.getMinimalExecutionTimeCelled(longerPathMotor, leftMotorDistance), (int) longerPathMotor.getExecutionTime());
-
-                    shorterPathMotor.setData(rightMotorDistance, selectedExecutionTime);
-                    longerPathMotor.setData(leftMotorDistance, selectedExecutionTime);
-                } else {
-                    StepMotorEntity shorterPathMotor = ruleEntity.getLeftMotor();
-                    StepMotorEntity longerPathMotor = ruleEntity.getRightMotor();
-                    selectedExecutionTime = Math.max(StepMotorEntity.getMinimalExecutionTimeCelled(longerPathMotor, leftMotorDistance), (int) longerPathMotor.getExecutionTime());
-
-                    shorterPathMotor.setData(leftMotorDistance, selectedExecutionTime);
-                    longerPathMotor.setData(rightMotorDistance, selectedExecutionTime);
-                }
-
-                btnTurnAngle.setText(view.getContext().getString(R.string.degree, turnAngle));
-                btnExecutionTime.setText(view.getContext().getString(R.string.execution_time, selectedExecutionTime));
-            } catch (IncompatibleStepMotorArguments e) {
-                e.printStackTrace();
-            }
+            turnEntity.setTurnAngle(turnAngle);
+            btnTurnAngle.setText(view.getContext().getString(R.string.degree, turnAngle));
+            btnExecutionTime.setText(view.getContext().getString(R.string.execution_time, turnEntity.getExecutionTime()));
         });
         numberInputPopupDialog.show();
     }
@@ -186,23 +140,14 @@ public class TurningFragment extends Fragment {
         numberInputPopupDialog.setMaxValue(Short.MAX_VALUE);
         numberInputPopupDialog.setValue(Math.max(minExecTimeCelled, Math.abs((int) longerPathMotor.getExecutionTime())));
         numberInputPopupDialog.setNegativeNumbers(false);
-        numberInputPopupDialog.addNumberSelectedListener(value -> {
+        numberInputPopupDialog.addNumberSelectedListener(executionTime -> {
             try {
-                ruleEntity.getLeftMotor().setData(ruleEntity.getLeftMotor().getMeasurementValue(), value);
-                ruleEntity.getRightMotor().setData(ruleEntity.getRightMotor().getMeasurementValue(), value);
-
-                btnExecutionTime.setText(getString(R.string.execution_time, value));
+                turnEntity.setExecutionTime(executionTime);
+                btnExecutionTime.setText(getString(R.string.execution_time, executionTime));
             } catch (IncompatibleStepMotorArguments e) {
                 e.printStackTrace();
             }
         });
         numberInputPopupDialog.show();
-    }
-
-    private double calculateWheelTravelDistance(double turnAngle, double turnRadius, double axleTrack, boolean isLeftSide) {
-        turnAngle = (isLeftSide) ? turnAngle : -turnAngle;
-        double motorPathRadius = turnRadius + (Math.signum(turnAngle) * axleTrack / 2);
-
-        return Math.toRadians(Math.abs(turnAngle)) * motorPathRadius;
     }
 }
