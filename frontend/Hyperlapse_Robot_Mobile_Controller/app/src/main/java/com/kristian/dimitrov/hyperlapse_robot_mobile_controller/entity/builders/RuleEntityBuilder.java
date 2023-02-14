@@ -2,6 +2,7 @@ package com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.builders
 
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RuleEntity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.TurnEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.CameraStepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.MovementStepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.exception.IncompatibleStepMotorArguments;
@@ -47,7 +48,7 @@ public class RuleEntityBuilder implements Serializable {
     }
 
     public RuleEntity build() {
-        return new RuleEntity(leftMotor, rightMotor, panMotor, tiltMotor);
+        return new RuleEntity(new TurnEntity(arduinoRobot), panMotor, tiltMotor);
     }
 
     public MovementStepMotorEntity getLeftMotor() {

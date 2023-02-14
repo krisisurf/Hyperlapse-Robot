@@ -5,16 +5,29 @@ import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.M
 
 import java.io.Serializable;
 
-public class RuleEntity implements Serializable, Cloneable{
+public class RuleEntity implements Serializable, Cloneable {
 
     private final MovementStepMotorEntity leftMotor;
     private final MovementStepMotorEntity rightMotor;
     private final CameraStepMotorEntity panMotor;
     private final CameraStepMotorEntity tiltMotor;
 
+
+    private TurnEntity turnEntity;
+
     public RuleEntity(MovementStepMotorEntity leftMotor, MovementStepMotorEntity rightMotor, CameraStepMotorEntity panMotor, CameraStepMotorEntity tiltMotor) {
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
+        this.panMotor = panMotor;
+        this.tiltMotor = tiltMotor;
+    }
+
+    public RuleEntity(TurnEntity turnEntity, CameraStepMotorEntity panMotor, CameraStepMotorEntity tiltMotor) {
+        this.turnEntity = turnEntity;
+        turnEntity.setRuleEntity(this);
+        this.leftMotor = turnEntity.getLeftMotor();
+        this.rightMotor = turnEntity.getRightMotor();
+
         this.panMotor = panMotor;
         this.tiltMotor = tiltMotor;
     }
@@ -41,7 +54,7 @@ public class RuleEntity implements Serializable, Cloneable{
                 '}';
     }
 
-    public String superToString(){
+    public String superToString() {
         return super.toString();
     }
 
@@ -70,5 +83,14 @@ public class RuleEntity implements Serializable, Cloneable{
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
+    }
+
+    public TurnEntity getTurnEntity() {
+        return turnEntity;
+    }
+
+    public void setTurnEntity(TurnEntity turnEntity) {
+        this.turnEntity = turnEntity;
+        turnEntity.setRuleEntity(this);
     }
 }

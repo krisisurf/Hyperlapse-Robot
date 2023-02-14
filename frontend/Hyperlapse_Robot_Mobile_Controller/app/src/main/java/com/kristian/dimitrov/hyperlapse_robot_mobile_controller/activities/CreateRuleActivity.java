@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.R;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.ArduinoRobot;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.RuleEntity;
+import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.TurnEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.builders.RuleEntityBuilder;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.entity.stepper.StepMotorEntity;
 import com.kristian.dimitrov.hyperlapse_robot_mobile_controller.exception.IncompatibleStepMotorArguments;
@@ -37,6 +38,7 @@ public class CreateRuleActivity extends AppCompatActivity {
 
     private final String[] directionStringOptions = {"Straight", "Turning"};
 
+    private ArduinoRobot arduinoRobot;
     private ForwardBackwardFragment forwardBackwardFragment;
     private TurningFragment turningFragment;
 
@@ -54,7 +56,7 @@ public class CreateRuleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_rule);
         setTitle(R.string.title_create_rule_activity);
 
-        ArduinoRobot arduinoRobot = (ArduinoRobot) getIntent().getSerializableExtra(ARDUINO_ROBOT_CODE);
+        arduinoRobot = (ArduinoRobot) getIntent().getSerializableExtra(ARDUINO_ROBOT_CODE);
         assert arduinoRobot != null : "arduinoRobot extra is null";
 
         int indexOfRuleEntity = getIntent().getIntExtra(RULE_ENTITY_INDEX_CODE, -1);
@@ -132,6 +134,8 @@ public class CreateRuleActivity extends AppCompatActivity {
             if (ruleEntity.getLeftMotor().getExecutionTime() > 0) {
                 setDirectionTypeFragmentView(true);
             }
+        } else {
+            setDirectionTypeFragmentView(false);
         }
 
         btnPanDegree.setText(getString(R.string.degree, (int) ruleEntity.getPanMotor().getMeasurementValue()));
@@ -139,6 +143,42 @@ public class CreateRuleActivity extends AppCompatActivity {
 
         btnTiltDegree.setText(getString(R.string.degree, (int) ruleEntity.getTiltMotor().getMeasurementValue()));
         btnTiltExecutionTime.setText(getString(R.string.execution_time, (int) ruleEntity.getTiltMotor().getExecutionTime()));
+    }
+
+    /**
+     * Sets the direction fragment view.
+     *
+     * @param isForwardBackwardDirection 'true' if the selected direction is for forwardBackwardFragment,
+     *                                   otherwise 'false' if the selected direction is turningFragment.
+     */
+    private void setDirectionTypeFragmentView(boolean isForwardBackwardDirection) {
+        if (isForwardBackwardDirection) {
+            if (turningFragment.isVisible()) {
+                try {
+                    ruleEntity.getLeftMotor().setData(0, 0);
+                    ruleEntity.getRightMotor().setData(0, 0);
+                } catch (IncompatibleStepMotorArguments e) {
+                    e.printStackTrace();
+                }
+            }
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.directionTypeFragment, forwardBackwardFragment).commit();
+        } else {
+            if (forwardBackwardFragment.isVisible()) {
+                if (ruleEntity.getTurnEntity() == null) {
+                    ruleEntity.setTurnEntity(new TurnEntity(arduinoRobot));
+                }
+                ruleEntity.getTurnEntity().setTurnRadius(0);
+                ruleEntity.getTurnEntity().setTurnAngle(0);
+                try {
+                    ruleEntity.getTurnEntity().setExecutionTime(0);
+                } catch (IncompatibleStepMotorArguments e) {
+                    e.printStackTrace();
+                }
+            }
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.directionTypeFragment, turningFragment).commit();
+        }
     }
 
     private void cancleButton(View view) {
@@ -200,23 +240,6 @@ public class CreateRuleActivity extends AppCompatActivity {
         }
 
         return warningsCount == 0 ? "" : warnings + "\nCreate the rule anyways?";
-    }
-
-    /**
-     * Sets the direction fragment view.
-     *
-     * @param isForwardBackwardDirection 'true' if the selected direction is for forwardBackwardFragment,
-     *                                   otherwise 'false' if the selected direction is turningFragment.
-     */
-    private void setDirectionTypeFragmentView(boolean isForwardBackwardDirection) {
-        if (isForwardBackwardDirection) {
-            //forwardBackwardFragment.setDirection(true);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.directionTypeFragment, forwardBackwardFragment).commit();
-        } else {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.directionTypeFragment, turningFragment).commit();
-        }
     }
 
     /**
