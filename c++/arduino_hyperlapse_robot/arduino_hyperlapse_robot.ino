@@ -11,10 +11,10 @@ const int BUZZER_TIME_MILLIS = 100; // How long will the buzzer make sound after
 #define MotorInterfaceType 8
 
 // Initialize with pin sequence IN1-IN3-IN2-IN4 for using the AccelStepper library with 28BYJ-48 stepper motor:
-AccelStepper stepperLeft = AccelStepper(MotorInterfaceType, 44, 40, 42, 38);  // IMPORTANT!!! THE PINS FOR THE LEFT SIDE MOTOR ARE FLIPPED. This will lead the left side motor to rotate in the opposite direction to the right side motor
-AccelStepper stepperRight = AccelStepper(MotorInterfaceType, 28, 32, 30, 34);
-AccelStepper stepperPan = AccelStepper(MotorInterfaceType, 35, 39, 37, 41);
-AccelStepper stepperTilt = AccelStepper(MotorInterfaceType, 47, 51, 49, 53);
+AccelStepper stepperLeft = AccelStepper(MotorInterfaceType, 50, 46, 48, 44);  // IMPORTANT!!! THE PINS FOR THE LEFT SIDE MOTOR ARE FLIPPED. This will lead the left side motor to rotate in the opposite direction to the right side motor
+AccelStepper stepperRight = AccelStepper(MotorInterfaceType, 45, 49, 47, 51);
+AccelStepper stepperPan = AccelStepper(MotorInterfaceType, 29, 25, 27, 23); // Flipped to be more user-intuitive
+AccelStepper stepperTilt = AccelStepper(MotorInterfaceType, 22, 26, 24, 28);
 
 
 
